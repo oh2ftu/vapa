@@ -1,0 +1,103 @@
+== README
+
+This is solely for auditing code. It has been up and running with ruby 2.1.2 and rails 4.1.6.
+
+Contributors are needed.
+
+== Who would use this?
+Any fire department or similar actor.
+
+=== What does it do?
+The app allows a user to add items, categories and subcategories. Subcategories belong to categories.
+An item may have a parent, but must have a category and sub_category.
+
+== What should be done next
+* Add automation for tagid: use selected category.acronym+sub_category.acronym + two last digits of purchase_at_date + first available running number starting from 1
+* Add automation for sub_category filteration
+* Recreate dropdown-menus to use autosearch-forms
+* Better styling
+* Add search/sorting (can be difficult when ancestry is in use)
+* authorization and authentication
+
+=== This should do this sometime in the future:
+Equipment/gear/item management:
+- All items are inventoried and uniquely tagged: Vehicles, toolboxes (in a vehicle), screw drivers (in a toolbox) and so on. Protective equipment (jackets, harnesses, helmets, boots, etc) are also listed
+- Other data that will be collected: tagid, rfid, item_class, item_subclass, item_subclass2, size, weight, description, purchased_at_date, purchased_at, warranty_until, 
+lifetime_until, serial, sku, price, owner, does_someone_else_pay_for_service (a better name required here), parent_id (see above), last_seen, service_interval
+- Automatic identifier creation based on item_classes
+- one item has many files (user manuals etc)
+- each item will have service history. service history forms are dependent on item_class. These will also log user_id of who did the service.
+- Additional data for service history events: serviced_at, service_cost, interval_service, many files
+- A user can check out a piece of equipment (for service, youth camps etc)
+- Example of equipment-tree:
++Station
+-+Garage
+--+Vehicle
+---+Locker1
+----+Toolbox
+-----+Screwdriver
+-----+Hammer
+----+Axe
+---+Locker2
+----+Radio
+-----+Battery for radio
+-----+Headset for radio
+
+UI for adding events is mostly by barcodes (identifier). (identifying user and is he allowed to do this etc)
+
+- Users are listed with a heap of information:
+-- firstname, surname, tel, shirt_size, jacket_size, boot_size, pants_size, hand_size, pos_lat, pos_lon, competencies (what courses has the user got; paramedic, first aid, SCBA, driving etc), userlevel, unavailable, unavailable_reason, unavailability_end_date
+and a whole lot I can't remember right now
+- Each user can have one item of each (predefined) class. One set of boots, one jacket, one pair of pants etc
+- When a new user is added with sizes, the form will show if there are any available in storage
+
+==== SMS-gateway (gammu) with multiple phones load balancing.
+- Users control some of their options via sms. (availability etc)
+- Sending sms:s to groups. One group has many users. One user can belong to many groups.
+- Only a certain userlevel is allowed to:
+-- CRUD groups
+-- CRUD users
+-- Send messages to groups
+
+==== Alert response
+- When a user receives an alert from dispatch, he well use either a web page, a sms or an app to notify the server if he is able to come or not. And if able, also estimated time to arrive.
+- A list of users is viewable for a certain user level (the chief can view this list while driving to the station and make decisions accordingly)
+- While at the station, the user checks in on a tablet (a button for each user).
+- $NAME receives an identical sms as the user receives from dispatch. All information is extracted from this message and added to db
+- At the station is a display with a view
+-- Map with driving plotted route to the scene
+-- A broader list of users (more information shown)
+-- Information extracted from the sms
+-- A clock showing remaining time to be en_route
+- The user on the list will be displayd in relation to: is_available, is_coming(or not), is_at_station
+- Users can check in and out from the station even if no alert is ongoing (useful for tracking weekly activity)
+
+==== Alert reporting
+- The vehicle/unit chief will create a report including:
+-- Who is in the vehicle
+-- Check the information in the db
+-- Add information of what has been done in each flat (one alert case can have many flats)
+-- Is equipment left at the scene
+-- Distance traveled
+-- timestamps: en_route, at_scene, left_scene, at_station
+-- Time equipment has been at the scene
+
+=== Units
+List information for each unit: id, lat, lon, maybe a log for en_route, at_scene, available, at_station instead?
+
+All events, alerts, equipment and users searchable, sortable and paginated
+All functions with login, mobile logins needs to be simple and fast to use (persistent login on mobile device?)
+All form fillings with ajax at some point, to update directly to db.
+Menubar that shows connection status, blockUI if connection is lost.
+
+
+== Future:
+- SCBA logging at the scene. Who went in, when and with what pressure. Same when he comes out.
+- The system calculates average air usage and can use this to display how much time he has left
+- Something like MRBS (can be connected to equipment)
+- in-vehicle rfid-readers.
+- Vehicle position display on map (maybe active plotting?)
+- Vehicle battery voltage and airsystem pressure monitoring (alert if battery level is below a certain level)
+- Possible to check in/out via access control system (for station door locks)
+- Possible to check in/out via bluetooth-presence (Bluetooth Positioning Reporting System)
+- localStorage, for when the vehicles internet connection is down.

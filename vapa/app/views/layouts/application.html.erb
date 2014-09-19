@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vapa</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div class="container">
+  <%= yield %>
+</div>
+<br>
+<%= link_to 'Items', items_path %> |
+<%= link_to 'Categories', categories_path %>
+<footer>
+<h4>Last updates:</h4>
+- Added calculation for item.subtree.sum(:weight)<br>
+- Add a bit of styles (courtesy of some website)<br>
+- Add restrictions when attempting to delete a category that is in use OR has subcategories, or subcategory that is in use<br>
+- Added some links<br>
+- display category+subcategory acronyms<br>
+- Rearranged category editing<br>
+<br>
+<h4>Todo:</h4>
+- Add automation for tagid: use selected category.acronym+sub_category.acronym + two last digits of purchase_at_date + first available running number starting from 1<br>
+- Add automation for sub_category filteration<br>
+- Recreate dropdown-menus to use autosearch-forms<br>
+- Better styling<br>
+- Calculate summarized weights for parents<br>
+- Add search/sorting (can be difficult when ancestry is in use)<br>
+<br>
+&copy Martin Koskinen 2014-<%= Time.now.year %>
+
+</footer>
+</body>
+</html>

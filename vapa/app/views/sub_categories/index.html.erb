@@ -1,0 +1,31 @@
+<h1>Listing sub_categories</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Acronym</th>
+      <th>Name</th>
+	<th>category_id</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sub_categories.each do |sub_category| %>
+      <tr>
+        <td><%= sub_category.acronym %></td>
+        <td><%= sub_category.name %></td>
+	<td><%= sub_category.category_id %></td>
+        <td><%= link_to 'Show', sub_category %></td>
+        <td><%= link_to 'Edit', edit_sub_category_path(sub_category) %></td>
+        <td><%= link_to 'Destroy', sub_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sub category', new_sub_category_path %><br>
+<%= link_to 'New Category', new_category_path %>
+

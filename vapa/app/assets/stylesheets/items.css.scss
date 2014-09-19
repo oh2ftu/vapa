@@ -1,0 +1,15 @@
+// Place all the styles related to the Items controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+@for $i from 0 through 6 {
+    .tree_#{$i} {
+      @if $i == 0{
+        font-weight: bold;
+        font-size: 14px;
+        color: #000;
+      }@else{
+        padding-left: #{$i * 10}px;
+        color: #333;
+      }
+    }
+}

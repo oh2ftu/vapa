@@ -1,0 +1,160 @@
+<p id="notice"><%= notice %></p>
+
+<p><strong>Parent:</strong> <%= @item.parent ? @item.parent.description : '---' %></p>
+<p>
+  <strong>Tagid:</strong>
+  <%= @item.tagid %>
+</p>
+
+<p>
+  <strong>Rfid:</strong>
+  <%= @item.rfid %>
+</p>
+
+<p>
+  <strong>Item category:</strong>
+  <%= @item.category.name %>
+</p>
+
+<p>
+  <strong>Item sub category:</strong>
+  <%= @item.sub_category.name %>
+</p>
+
+<p>
+  <strong>Weight:</strong>
+  <%= @item.weight %>
+</p>
+<p>
+  <strong>Size:</strong>
+  <%= @item.size %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @item.description %>
+</p>
+
+<p>
+  <strong>Purchased at date:</strong>
+  <%= @item.purchased_at_date %>
+</p>
+
+<p>
+  <strong>Purchased at:</strong>
+  <%= @item.purchased_at %>
+</p>
+
+<p>
+  <strong>Warranty until:</strong>
+  <%= @item.warranty_until %>
+</p>
+
+<p>
+  <strong>Lifetime until:</strong>
+  <%= @item.lifetime_until %>
+</p>
+
+<p>
+  <strong>Serial:</strong>
+  <%= @item.serial %>
+</p>
+
+<p>
+  <strong>Sku:</strong>
+  <%= @item.sku %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @item.price %>
+</p>
+
+<p>
+  <strong>Owner:</strong>
+  <%= @item.owner %>
+</p>
+
+<p>
+  <strong>Last seen:</strong>
+  <%= @item.last_seen %>
+</p>
+
+<p>
+  <strong>Service interval:</strong>
+  <%= @item.service_interval %>
+</p>
+<p>
+  <strong>tags</strong>
+  <%= @item.tag_list %>
+</p>
+
+<p>
+  <strong>Lup:</strong>
+  <%= @item.lup %>
+</p>
+<h2>Identifiers</h2>
+<table>
+<tr>
+<th>Type</th>
+<th>Barcode</th>
+<th></th>
+</tr>
+<% @item.identifiers.each do |identifier| %>
+<tr>
+<td><%= identifier.name %></td>
+<td><%= identifier.barcode %></td>
+<td> <%= link_to 'Destroy', [identifier.item, identifier],
+               method: :delete,
+               data: { confirm: 'Are you sure?' } %></td>
+</tr>
+<% end %>
+
+<%= form_for([@item, @item.identifiers.build]) do |f| %>
+<tr>
+<td><%= f.text_field :name %></td>
+<td><%= f.text_field :barcode %></td>
+</tr>
+</table>
+    <%= f.submit %>
+<% end %>
+<h2>Service events and comments</h2>
+<table>
+<tr>
+<th>Commenter</th>
+<th>Comment</th>
+<th>Place</th>
+<th>Price</th>
+<th></th>
+</tr>
+<% @item.comments.each do |comment| %>
+<tr>
+<td><%= comment.commenter %></td>
+<td><%= comment.body %></td>
+<td><%= comment.place %></td>
+<td><%= comment.price %></td>
+
+<td> <%= link_to 'Destroy', [comment.item, comment],
+               method: :delete,
+               data: { confirm: 'Are you sure?' } %></td>
+</tr>
+<% end %>
+
+<%= form_for([@item, @item.comments.build]) do |f| %>
+<tr>
+<td><%= f.text_field :commenter %></td>
+<td><%= f.text_area :body %></td>
+<td><%= f.text_field :place %></td>
+<td><%= f.text_field :price %></td>
+
+</tr>
+</table>
+    <%= f.submit %>
+<% end %>
+
+
+
+
+<br>
+<%= link_to 'Edit', edit_item_path(@item) %> |
+<%= link_to 'Back', items_path %>

@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Acronym:</strong>
+  <%= @category.acronym %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @category.name %>
+</p>
+
+<%= render @category.sub_categories %>
+
+<h3>Add a Sub Category:</h3>
+<%= form_for([@category, @category.sub_categories.build]) do |f| %>
+  <p>
+    <%= f.label :acronym %><br>
+    <%= f.text_field :acronym %>
+  </p>
+  <p>
+    <%= f.label :name %><br>
+    <%= f.text_area :name %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+
+<%= link_to 'Edit', edit_category_path(@category) %> |
+<%= link_to 'Back', categories_path %>
