@@ -17,3 +17,13 @@ body { padding-top: 60px; }
 footer { margin-top: 100px; }
 table, td, th { vertical-align: middle; border: none; padding: 3px; }
 th { border-bottom: 1px solid #DDD; }
+/* Pull in bootstrap */
+@import 'bootstrap';
+
+/* Import any app style files below this line */
+@import 'bootstrap-datepicker';
+
+@import 'components/filterrific_filter';
+@import 'components/chardinjs_overrides';
+
+@import 'chardinjs';

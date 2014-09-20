@@ -24,20 +24,33 @@
     <%= f.collection_select(:sub_category_id, @subcategories, :id, :name, :include_blank => "Please select") %>
   </div>
   <div class="field">
+    <%= f.label :make %><br>
+    <%= f.text_field :make %>
+  </div>
+  <div class="field">
+    <%= f.label :model %><br>
+    <%= f.text_field :model %>
+  </div>
+  <div class="field">
     <%= f.label :purchased_at %><br>
     <%= f.text_area :purchased_at %>
   </div>
   <div class="field">
     <%= f.label :purchased_at_date %><br>
-    <%= f.date_select :purchased_at_date %>
+    <%#= f.date_select :purchased_at_date %>
+    <%= f.date_field :purchased_at_date %>
+
   </div>
   <div class="field">
     <%= f.label :warranty_until %><br>
-    <%= f.date_select :warranty_until %>
+    <%= f.date_field :warranty_until %>
+    <%#= f.date_select :warranty_until %>
   </div>
   <div class="field">
     <%= f.label :lifetime_until %><br>
-    <%= f.date_select :lifetime_until %>
+    <%= f.date_field :lifetime_until %>
+    <%#= f.date_select :lifetime_until %>
+
   </div>
 
   <div class="field">

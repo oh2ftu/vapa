@@ -13,6 +13,7 @@ get 'tags/:tag', to: 'items#index', as: :tag
 	resources :identifiers
 	resources :comments
 	collection { post :import }
+ get :reset_filterrific, on: :collection
 end
 
   # The priority is based upon order of creation: first created -> highest priority.
