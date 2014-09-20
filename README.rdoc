@@ -4,6 +4,10 @@ This is solely for auditing code. It has been up and running with ruby 2.1.2 and
 
 Contributors are needed.
 
+== Known bugs
+* dropdown-menu for parent object can't populate over a certain amount of rows. Approx 250 seems to be the limit
+* Navigating through sub_categories will lead to an error
+
 == Who would use this?
 Any fire department or similar actor.
 

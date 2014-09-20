@@ -10,7 +10,25 @@
   <%= @category.name %>
 </p>
 
-<%= render @category.sub_categories %>
+<%#= render @category.sub_categories %>
+<h3>Sub categories</h3>
+<table>
+<tr>
+<th></th>
+<th>Name</th>
+<th colspan=2></th>
+</tr>
+
+<% @category.sub_categories.each do |sub_category| %>
+<tr>
+<td><%= sub_category.acronym %></td>
+<td><%= sub_category.name %></td>
+<td><%= link_to 'Edit', edit_sub_category_path(sub_category) %></td>
+<td><%= link_to 'Destroy', sub_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+
+</tr>
+<% end %>
+</table>
 
 <h3>Add a Sub Category:</h3>
 <%= form_for([@category, @category.sub_categories.build]) do |f| %>

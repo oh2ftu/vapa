@@ -14,3 +14,6 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+//= require filterrific-jquery
+//= require bootstrap-datepicker
+//= require chardinjs
