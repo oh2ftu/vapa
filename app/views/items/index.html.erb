@@ -4,53 +4,50 @@
   <% end %>
 </div>
 <h1>Listing items</h1>
+<%#
+  Filterrific adds some magic when you use form_for with @filterrific:
+  * adds dom id 'filterrific_filter'
+  * applies javascript behaviors:
+      * AJAX form submission on change
+      * AJAX spinner while AJAX request is being processed
+  * sets form_for options like :url, :method and input name prefix
+%>
+<%= form_for @filterrific do |f| %>
+  <div>
+    Search
+    <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+    <%= f.text_field(
+      :search_query,
+      class: 'filterrific-periodically-observed'
+    ) %>
+  </div>
+  <div>
+    Category
+    <%= f.select(
+      :with_category_id,
+      @filterrific.select_options[:with_category_id],
+      { include_blank: '- Any -' }
+    ) %>
+    <%# See below for the Category.options_for_select presenter method %>
+  </div>
+  <div>
+    Sorted by
+    <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
+    <%# See below for the Item.options_for_sorted_by presenter method %>
+  </div>
+  <div>
+    <%= link_to(
+      'Reset filters',
+      reset_filterrific_items_path,
+    ) %>
+  </div>
+  <%# add an automated spinner to your form when the list is refreshed %>
+  <%= render_filterrific_spinner %>
+<% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Tagid/ID:s</th>
-      <th>Cat</th>
-      <th>Weight</th>
-      <th>Description</th>
-	<th colspan="2">Parent</th>
-      <th>Purchase date</th>
-      <th>Lifetime until</th>
-      <th>Owner</th>
-      <th>Last seen</th>
-      <th>Service interval</th>
-      <th>Lup</th>
-      <th>Tags</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @items.each do |item| %>
-<tr style="background: <%= "red" if Date.today > item.last_seen+ 1.year %><%= "lightgreen" if Date.today < item.last_seen + 1.day %> ">
-<td><% item.identifiers.each do |identifier| %>
-<%= identifier.name %>: <%= identifier.barcode %><br>
-<% end %></td>
-        <td><%= item.category.acronym %>
-	<%= item.sub_category.acronym %></td>
-        <td><%= item.weight %> kg</td>
-        <td><%= item.name_for_tree %></td>
-	<td><%= item.parent ? item.parent.tagid + " " + item.parent.description : '---' %></td>
-	<td><%= item.children ? item.subtree.sum(:weight) : '' %> kg</td>
-        <td><%= item.purchased_at_date %></td>
-        <td><%= item.lifetime_until %></td>
-        <td><%= item.owner %></td>
-        <td><%= item.last_seen %></td>
-        <td><%= item.service_interval %></td>
-        <td><%= item.lup %></td>
-        <td><%= raw item.tag_list.map { |t| link_to t, tag_path(t) }.join(', ')  %></td>
-        <td><%= link_to 'Show', item %></td>
-        <td><%= link_to 'Edit', edit_item_path(item) %></td>
-        <td><%= link_to 'Destroy', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<br>
-<%= will_paginate %>
+<%= render(
+  partial: 'items/list',
+  locals: { items: @items }
+) %>
 <br>
 <%= link_to 'New Item', new_item_path %>
