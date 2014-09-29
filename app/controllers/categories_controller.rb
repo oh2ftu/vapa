@@ -1,6 +1,9 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
-
+def get_sub_categories
+  @category = Category.find params[:category_id]
+  @sub_categories = @category.sub_categories
+end 
   # GET /categories
   # GET /categories.json
   def index

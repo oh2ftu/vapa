@@ -1,49 +1,61 @@
-<p id="notice"><%= notice %></p>
+<%- model_class = Category -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
 
-<p>
-  <strong>Acronym:</strong>
-  <%= @category.acronym %>
-</p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @category.name %>
-</p>
-
-<%#= render @category.sub_categories %>
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:acronym) %>:</strong></dt>
+  <dd><%= @category.acronym %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @category.name %></dd>
+</dl>
 <h3>Sub categories</h3>
 <table>
 <tr>
 <th></th>
 <th>Name</th>
-<th colspan=2></th>
+<th></th>
 </tr>
 
 <% @category.sub_categories.each do |sub_category| %>
 <tr>
-<td><%= sub_category.acronym %></td>
+<td><%= sub_category.acronym %>:<%= sub_category.id %></td>
 <td><%= sub_category.name %></td>
-<td><%= link_to 'Edit', edit_sub_category_path(sub_category) %></td>
-<td><%= link_to 'Destroy', sub_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+<td>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_sub_category_path(sub_category), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              sub_category_path(@category),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
 
+</td>
 </tr>
 <% end %>
 </table>
 
 <h3>Add a Sub Category:</h3>
-<%= form_for([@category, @category.sub_categories.build]) do |f| %>
-  <p>
-    <%= f.label :acronym %><br>
-    <%= f.text_field :acronym %>
-  </p>
-  <p>
-    <%= f.label :name %><br>
-    <%= f.text_area :name %>
-  </p>
-  <p>
-    <%= f.submit %>
-  </p>
-<% end %>
+<%= simple_form_for([@category, @category.sub_categories.build]) do |f| %>
+<div class="control-group">
+<%= f.input :acronym %>
+</div>
+<div class="control-group">
+<%= f.input :name %>
+</div>
 
-<%= link_to 'Edit', edit_category_path(@category) %> |
-<%= link_to 'Back', categories_path %>
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            categories_path, :class => 'btn btn-default' %>
+
+<% end %>
+<br>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              categories_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_category_path(@category), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              category_path(@category),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>

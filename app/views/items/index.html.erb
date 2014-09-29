@@ -1,19 +1,11 @@
-<div id="tag_cloud">
-  <% tag_cloud Item.tag_counts, %w{s m l} do |tag, css_class| %>
-    <%= link_to tag.name, tag_path(tag.name), class: css_class %>
-  <% end %>
+<%- model_class = Item -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
-<h1>Listing items</h1>
-<%#
-  Filterrific adds some magic when you use form_for with @filterrific:
-  * adds dom id 'filterrific_filter'
-  * applies javascript behaviors:
-      * AJAX form submission on change
-      * AJAX spinner while AJAX request is being processed
-  * sets form_for options like :url, :method and input name prefix
-%>
+
 <%= form_for @filterrific do |f| %>
-  <div>
+<div class="row">
+  <div class="col-lg-2">
     Search
     <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
     <%= f.text_field(
@@ -21,21 +13,47 @@
       class: 'filterrific-periodically-observed'
     ) %>
   </div>
-  <div>
+  <div class="col-lg-2">
+    Sorted by
+    <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
+    <%# See below for the Item.options_for_sorted_by presenter method %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-2">
     Category
     <%= f.select(
       :with_category_id,
       @filterrific.select_options[:with_category_id],
       { include_blank: '- Any -' }
     ) %>
-    <%# See below for the Category.options_for_select presenter method %>
   </div>
-  <div>
-    Sorted by
-    <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
-    <%# See below for the Item.options_for_sorted_by presenter method %>
+  <div class="col-lg-2">
+    Status
+    <%= f.select(
+      :with_status_id,
+      @filterrific.select_options[:with_status_id],
+      { include_blank: '- Any -' }
+    ) %>
   </div>
-  <div>
+  <div class="col-lg-2">
+    Vendor<br>
+    <%= f.select(
+      :with_vendor_id,
+      @filterrific.select_options[:with_vendor_id],
+      { include_blank: '- Any -' }
+    ) %>
+  </div>
+  <div class="col-lg-2">
+    Unit<br>
+    <%= f.select(
+      :with_unit_id,
+      @filterrific.select_options[:with_unit_id],
+      { include_blank: '- Any -' }
+    ) %>
+  </div>
+
+</div>
     <%= link_to(
       'Reset filters',
       reset_filterrific_items_path,
@@ -44,10 +62,11 @@
   <%# add an automated spinner to your form when the list is refreshed %>
   <%= render_filterrific_spinner %>
 <% end %>
-
 <%= render(
   partial: 'items/list',
   locals: { items: @items }
 ) %>
-<br>
-<%= link_to 'New Item', new_item_path %>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_item_path,
+            :class => 'btn btn-primary' %>

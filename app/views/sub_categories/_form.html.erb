@@ -1,25 +1,45 @@
-<%= form_for(@sub_category) do |f| %>
-  <% if @sub_category.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@sub_category.errors.count, "error") %> prohibited this sub_category from being saved:</h2>
+<%= form_for @sub_category, :html => { :class => "form-horizontal sub_category" } do |f| %>
 
-      <ul>
-      <% @sub_category.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+    <% if @sub_category.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@sub_category.errors.count, "error") %> prohibited this sub_category from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @sub_category.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :acronym %><br>
-    <%= f.text_field :acronym %>
+  <div class="control-group">
+    <%= f.label :acronym, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :acronym, :class => 'form-control' %>
+    </div>
+    <%= error_span(@sub_category[:acronym]) %>
   </div>
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_area :name %>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'form-control' %>
+    </div>
+    <%= error_span(@sub_category[:name]) %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class="control-group">
+    <%= f.label :category_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :category_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@sub_category[:category_id]) %>
   </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            sub_categories_path, :class => 'btn btn-default' %>
+
 <% end %>

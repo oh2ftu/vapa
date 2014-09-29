@@ -1,10 +1,15 @@
 class ItemsController < ApplicationController
-  http_basic_authenticate_with name: "pj", password: "vpk", except: [:index, :show]
+#  http_basic_authenticate_with name: "pj", password: "vpk", except: [:index, :show]
   before_action :set_item, only: [:show, :edit, :update, :destroy]
 before_filter :prepare_categories
 require 'will_paginate/array'
   # GET /items
   # GET /items.json
+ def copy
+        @source = Item.find(params[:id])
+        @item = @source.dup
+        render 'new'
+      end
   def reset_filterrific
     # Clear session persistence
     session[:filterrific_items] = nil
@@ -19,8 +24,23 @@ require 'will_paginate/array'
     )
     @filterrific.select_options = {
       sorted_by: Item.options_for_sorted_by,
-      with_category_id: Category.options_for_select
+      with_category_id: Category.options_for_select,
+      with_status_id: Status.options_for_select,
+      with_vendor_id: Vendor.options_for_select,
+      with_unit_id: Unit.options_for_select
     }
+#    @filterrific.select_options = {
+#      sorted_by: Item.options_for_sorted_by,
+#     with_status_id: Status.options_for_selec
+#    }
+#    @filterrific.select_options = {
+#      sorted_by: Item.options_for_sorted_by,
+#      with_vendor_id: Vendor.options_for_select
+#    }
+
+
+
+
     @items = Item.filterrific_find(@filterrific).page(params[:page])
     session[:filterrific_items] = @filterrific.to_hash
     respond_to do |format|
@@ -109,6 +129,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :purchased_at, :warranty_until, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :lup, :ancestry, :parent_id, :tag_list, :make, :model)
+      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id)
     end
 end

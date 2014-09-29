@@ -1,107 +1,174 @@
-<%= form_for(@item) do |f| %>
-  <% if @item.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
+<%= simple_form_for @item, :html => { :class => "form-horizontal item" } do |f| %>
 
-      <ul>
-      <% @item.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+    <% if @item.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @item.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
     </div>
   <% end %>
+<div class="row">
+<div class="col-lg-3">
+  <div class="control-group">
+    <div class="controls">
+      <%#= f.input :tagid, :class => 'form-control' %>
+      <%= f.input :tagid %>
+    </div>
+    <%= error_span(@item[:tagid]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :rfid, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :rfid, :class => 'form-control' %>
+    </div>
+    <%= error_span(@item[:rfid]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :make, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :make, :class => 'form-control' %>
+    </div>
+    <%= error_span(@item[:make]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :model, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :model, :class => 'form-control' %>
+    </div>
+    <%= error_span(@item[:model]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :serial, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@item[:serial]) %>
+  </div>
+<!-- Test starts -->
+<%= f.association :category %>
+<%= f.input :sub_category_id, collection: @categories, as: :grouped_select, group_method: :sub_categories %>
 
-  <div class="field">
-    <%= f.label :parent_id %><br />
+  <div class="control-group">
+    <%= f.label :category, :class => 'control-label' %>
+    <div class="controls">
+     <%= f.collection_select(:category_id,@categories,:id,:name, {:prompt => "Please select a category"}, {:class => "category_selection"}) %><br>
+    </div>
+    <%= error_span(@item[:category]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :sub_category, :class => 'control-label' %>
+    <div class="controls">
+     <%= f.collection_select :sub_category_id, SubCategory.all, :id, :name, {:prompt => "Select a Subcategory"}, {:class=>"sub_category_selection"} %>
+    </div>
+    <%= error_span(@item[:category]) %>
+  </div>
+
+<!-- Test ends -->
+
+  <div class="control-group">
+      <%= f.input :description, :class => 'form-control' %>
+    <%= error_span(@item[:description]) %>
+  </div>
+  <div class="control-group">
+      <%= f.input :weight  %>
+    <%= error_span(@item[:weight]) %>
+  </div>
+  <div class="control-group">
+      <%= f.input :size, :class => 'form-control' %>
+    <%= error_span(@item[:size]) %>
+  </div>
+
+</div>
+<div class="col-lg-3">
+
+  <div class="control-group">
+    <%= f.label :owner, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :owner, :class => 'form-control' %>
+    </div>
+    <%= error_span(@item[:owner]) %>
+  </div>
+
+  <div class="control-group">
+      <%= f.association :vendor %>
+    <%= error_span(@item[:vendor_id]) %>
+  </div>
+  <div class="control-group">
+      <%= f.input :purchased_at_date %>
+    <%= error_span(@item[:purchased_at_date]) %>
+  </div>
+
+  <div class="control-group">
+      <%= f.input :warranty_time %>years
+    <%= error_span(@item[:warranty_time]) %>
+  </div>
+  <div class="control-group">
+      <%= f.input :life_time %>years
+    <%= error_span(@item[:life_time]) %>
+  </div>
+
+  <div class="control-group">
+      <%= f.input :price, :class => 'form-control' %>
+    <%= error_span(@item[:price]) %>
+  </div>
+
+  <div class="control-group">
+      <%= f.input :service_interval, :class => 'form-control' %>
+    <%= error_span(@item[:service_interval]) %>
+  </div>
+
+</div>
+<div class="col-lg-3">
+
+  <div class="control-group">
+      <%= f.input :memo, :class => 'form-control' %>
+    <%= error_span(@item[:memo]) %>
+  </div>
+ <div class="control-group">
+      <%= f.input :tag_list, :class => 'form-control' %>
+    <%= error_span(@item[:tag_list]) %>
+  </div>
+  <div class="control-group">
+      <%= f.association :status %>
+    <%= error_span(@item[:status_id]) %>
+  </div>
+  <div class="control-group">
+      <%= f.association :unit %>
+    <%= error_span(@item[:unit_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :parent_id, :class => 'control-label' %>
+    <div class="controls">
     <%= f.collection_select :parent_id, Item.arrange_as_array({:order => 'tagid'}, @item.possible_parents) , :id, :name_for_selects, :include_blank => true %>
+    </div>
+    <%= error_span(@item[:parent_id]) %>
   </div>
-  <div class="field">
-    <%= f.label :item_class %><br>
-    <%= f.collection_select(:category_id, @categories, :id, :name, :include_blank => "Please select") %>
-  </div>
-  <div class="field">
-    <%= f.label :item_subclass %><br>
-    <%= f.collection_select(:sub_category_id, @subcategories, :id, :name, :include_blank => "Please select") %>
-  </div>
-  <div class="field">
-    <%= f.label :make %><br>
-    <%= f.text_field :make %>
-  </div>
-  <div class="field">
-    <%= f.label :model %><br>
-    <%= f.text_field :model %>
-  </div>
-  <div class="field">
-    <%= f.label :purchased_at %><br>
-    <%= f.text_area :purchased_at %>
-  </div>
-  <div class="field">
-    <%= f.label :purchased_at_date %><br>
-    <%#= f.date_select :purchased_at_date %>
-    <%= f.date_field :purchased_at_date %>
-
-  </div>
-  <div class="field">
-    <%= f.label :warranty_until %><br>
-    <%= f.date_field :warranty_until %>
-    <%#= f.date_select :warranty_until %>
-  </div>
-  <div class="field">
-    <%= f.label :lifetime_until %><br>
-    <%= f.date_field :lifetime_until %>
-    <%#= f.date_select :lifetime_until %>
-
+  <div class="control-group">
+      <%= f.input :lup, label: false %><%= f.label :lup, :class => 'control-label' %>
+    <%= error_span(@item[:lup]) %>
   </div>
 
-  <div class="field">
-    <%= f.label :weight %><br>
-    <%= f.number_field :weight %>
+  <div class="control-group">
+      <%= f.input :tagged, label: false %><%= f.label :tagged, :class => 'control-label' %>
+    <%= error_span(@item[:tagged]) %>
   </div>
-  <div class="field">
-    <%= f.label :size %><br>
-    <%= f.text_field :size %>
+  <div class="control-group">
+      <%= f.input :last_seen %>
+    <%= error_span(@item[:last_seen]) %>
   </div>
-  <div class="field">
-    <%= f.label :description %><br>
-    <%= f.text_area :description %>
-  </div>
-  <div class="field">
-    <%= f.label :sku %><br>
-    <%= f.text_field :sku %>
-  </div>
-  <div class="field">
-    <%= f.label :price %><br>
-    <%= f.number_field :price %> EUR
-  </div>
-  <div class="field">
-    <%= f.label :owner %><br>
-    <%= f.text_field :owner %>
-  </div>
-  <div class="field">
-    <%= f.label :service_interval %><br>
-    <%= f.number_field :service_interval %> years
-  </div>
- <div class="field">
-  <%= f.label :tag_list, "Tags (separated by commas)" %><br />
-  <%= f.text_field :tag_list %>
+
 </div>
-LUP:
-<div class="field">
-<%= f.radio_button(:lup, "true") %> Kuuluu kalustoon ja huoltaa<br>
-<%= f.radio_button(:lup, "serv") %> Huoltaa<br>
-<%= f.radio_button(:lup, "false") %> ei huolla, ei kuulu kalustoon<br>
 </div>
+<br>
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            items_path, :class => 'btn btn-default' %>
 
-  <div class="field">
-    <%= f.label :memo %><br>
-    <%= f.text_area :memo %>
-  </div>
-  <div class="field">
-    <%= f.label :last_seen %><br>
-    <%= f.date_select :last_seen %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
 <% end %>

@@ -1,0 +1,5 @@
+<%# app/views/items/index.js.erb %>
+<% js = escape_javascript(
+  render(partial: 'items/list', locals: { items: @items })
+) %>
+$("#filterrific_results").html("<%= js %>");

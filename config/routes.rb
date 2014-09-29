@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+
+  resources :units
+
+  resources :vendors
+
+  resources :statuses
+
 resources :sub_categories do
   resources :items
 end
@@ -6,13 +13,23 @@ end
 resources :categories do
  resources :items
  resources :sub_categories
+ collection do
+ get 'get_sub_categories', to: "categories#get_sub_categories"
+ end
 end
 
 get 'tags/:tag', to: 'items#index', as: :tag
   resources :items do
 	resources :identifiers
 	resources :comments
+	resources :vendors
+	resources :statuses
+	resources :units
 	collection { post :import }
+        member do
+        get 'copy'
+        end
+
  get :reset_filterrific, on: :collection
 end
 

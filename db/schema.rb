@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919172251) do
+ActiveRecord::Schema.define(version: 20140927204859) do
 
   create_table "categories", force: true do |t|
     t.string   "acronym"
@@ -46,8 +46,6 @@ ActiveRecord::Schema.define(version: 20140919172251) do
   create_table "items", force: true do |t|
     t.string   "tagid"
     t.string   "rfid"
-    t.string   "item_class"
-    t.string   "item_subclass"
     t.integer  "weight"
     t.text     "description"
     t.date     "purchased_at_date"
@@ -60,7 +58,7 @@ ActiveRecord::Schema.define(version: 20140919172251) do
     t.string   "owner"
     t.date     "last_seen"
     t.integer  "service_interval"
-    t.boolean  "lup"
+    t.boolean  "lup",               default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ancestry"
@@ -70,10 +68,25 @@ ActiveRecord::Schema.define(version: 20140919172251) do
     t.string   "size"
     t.text     "make"
     t.text     "model"
+    t.boolean  "tagged"
+    t.integer  "vendor_id"
+    t.integer  "status_id"
+    t.integer  "life_time"
+    t.integer  "warranty_time"
+    t.integer  "unit_id"
   end
 
   add_index "items", ["category_id"], name: "index_items_on_category_id"
+  add_index "items", ["status_id"], name: "index_items_on_status_id"
   add_index "items", ["sub_category_id"], name: "index_items_on_sub_category_id"
+  add_index "items", ["unit_id"], name: "index_items_on_unit_id"
+  add_index "items", ["vendor_id"], name: "index_items_on_vendor_id"
+
+  create_table "statuses", force: true do |t|
+    t.text     "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "sub_categories", force: true do |t|
     t.string   "acronym"
@@ -105,6 +118,12 @@ ActiveRecord::Schema.define(version: 20140919172251) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true
 
+  create_table "units", force: true do |t|
+    t.text     "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -123,5 +142,18 @@ ActiveRecord::Schema.define(version: 20140919172251) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "vendors", force: true do |t|
+    t.text     "name"
+    t.text     "address"
+    t.text     "city"
+    t.text     "contact"
+    t.string   "phone"
+    t.string   "email"
+    t.text     "notes"
+    t.boolean  "billing"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
