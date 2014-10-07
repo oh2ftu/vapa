@@ -8,10 +8,8 @@
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:address) %></th>
       <th><%= model_class.human_attribute_name(:city) %></th>
-      <th><%= model_class.human_attribute_name(:contact) %></th>
       <th><%= model_class.human_attribute_name(:phone) %></th>
       <th><%= model_class.human_attribute_name(:email) %></th>
-      <th><%= model_class.human_attribute_name(:notes) %></th>
       <th><%= model_class.human_attribute_name(:billing) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -23,10 +21,8 @@
         <td><%= link_to vendor.name, vendor_path(vendor) %></td>
         <td><%= vendor.address %></td>
         <td><%= vendor.city %></td>
-        <td><%= vendor.contact %></td>
         <td><%= vendor.phone %></td>
         <td><%= vendor.email %></td>
-        <td><%= vendor.notes %></td>
         <td><%= vendor.billing %></td>
         <td><%=l vendor.created_at %></td>
         <td>
@@ -46,3 +42,8 @@
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_vendor_path,
             :class => 'btn btn-primary' %>
+<%= form_tag import_vendors_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>
+

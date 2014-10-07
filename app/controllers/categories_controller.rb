@@ -19,6 +19,10 @@ end
   def new
     @category = Category.new
   end
+def import
+  Category.import(params[:file])
+  redirect_to root_url, notice: "Items imported."
+end
 
   # GET /categories/1/edit
   def edit

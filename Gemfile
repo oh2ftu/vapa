@@ -47,8 +47,14 @@ gem 'acts-as-taggable-on'
 gem 'filterrific'
 gem 'bootstrap-datepicker-rails'
 gem 'chardinjs-rails'
-#gem 'bootstrap-sass'
+gem 'bootstrap-sass'
 #gem "therubyracer"
 #gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 gem "twitter-bootstrap-rails"
 gem 'simple_form'
+gem 'rails4-autocomplete'
+gem 'jquery-ui-rails'
+gem 'paper_trail', '~> 3.0.5'
+gem 'judge'
+gem 'judge-simple_form'
+gem 'paperclip'

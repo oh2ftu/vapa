@@ -16,5 +16,11 @@
 //= require turbolinks
 //= require_tree .
 //= require filterrific-jquery
-//= require bootstrap-datepicker
 //= require chardinjs
+//= require bootstrap
+//= require bootstrap-datepicker
+//= require jquery-ui
+//= require autocomplete-rails
+//= require underscore
+//= require json2
+//= require judge

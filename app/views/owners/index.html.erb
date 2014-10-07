@@ -1,4 +1,4 @@
-<%- model_class = SubCategory -%>
+<%- model_class = Owner -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
@@ -6,26 +6,22 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:acronym) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:category_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
-    <% @sub_categories.each do |sub_category| %>
+    <% @owners.each do |owner| %>
       <tr>
-        <td><%= link_to sub_category.id, sub_category_path(sub_category) %></td>
-        <td><%= sub_category.acronym %></td>
-        <td><%= sub_category.name %></td>
-        <td><%= sub_category.category_id %></td>
-        <td><%=l sub_category.created_at %></td>
+        <td><%= link_to owner.id, owner_path(owner) %></td>
+        <td><%= owner.name %></td>
+        <td><%=l owner.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_sub_category_path(sub_category), :class => 'btn btn-default btn-xs' %>
+                      edit_owner_path(owner), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      sub_category_path(sub_category),
+                      owner_path(owner),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
@@ -36,10 +32,5 @@
 </table>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
-            new_sub_category_path,
+            new_owner_path,
             :class => 'btn btn-primary' %>
-<%= form_tag import_sub_categories_path, multipart: true do %>
-  <%= file_field_tag :file %>
-  <%= submit_tag "Import" %>
-<% end %>
-

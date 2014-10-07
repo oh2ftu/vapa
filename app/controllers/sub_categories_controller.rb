@@ -15,6 +15,10 @@ class SubCategoriesController < ApplicationController
   def new
     @sub_category = SubCategory.new
   end
+def import
+  SubCategory.import(params[:file])
+  redirect_to root_url, notice: "Items imported."
+end
 
   # GET /sub_categories/1/edit
   def edit

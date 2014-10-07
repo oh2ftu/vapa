@@ -20,7 +20,7 @@ SimpleForm.setup do |config|
     # Calculates placeholders automatically from I18n
     # You can also pass a string as f.input placeholder: "Placeholder"
     b.use :placeholder
-
+    b.use :judge
     ## Optional extensions
     # They are disabled unless you pass `f.input EXTENSION_NAME => :lookup`
     # to the input. If so, they will retrieve the values from the model

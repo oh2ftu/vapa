@@ -16,6 +16,10 @@ class VendorsController < ApplicationController
   def new
     @vendor = Vendor.new
   end
+def import
+  Vendor.import(params[:file])
+  redirect_to root_url, notice: "Vendors imported."
+end
 
   # GET /vendors/1/edit
   def edit

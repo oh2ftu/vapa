@@ -1,17 +1,67 @@
 class Item < ActiveRecord::Base
 validates :category, :sub_category, :owner, :description, :vendor_id, :status_id, :life_time, :warranty_time, :unit_id, presence: true
 validates :tagid, presence: true, uniqueness: true
-validates :weight, numericality: { only_integer: true, greater_than: 0 }, presence: true
+#validates :weight, numericality: { only_integer: true, greater_than: 0 }
 belongs_to :category
 belongs_to :sub_category
 belongs_to :status
 belongs_to :vendor
 belongs_to :unit
+belongs_to :owner
 has_many :identifiers, dependent: :destroy
 has_many :comments, dependent: :destroy
 acts_as_taggable
+has_paper_trail :ignore => [:updated_at]
 #acts_as_taggable_on :category, :sub_category, :owner
-#has_ancestry
+include Tree
+has_ancestry :orphan_strategy => :rootify
+
+self.per_page = 50
+
+def pur_date(id)
+ id = Item.find(id)
+ if id.into_use.nil?
+  d = id.purchased_at_date
+ else
+  d = id.into_use
+ end
+ return d
+end
+
+def serv_overdue(id)
+  id = Item.find(id)
+  sd = id.comments.where(item_id: id).where(service: true)
+  if id.service_interval.nil?
+   return false
+  else
+   tdate = sd.last.try(:created_at) || id.purchased_at_date
+  end
+  if tdate + id.service_interval.year < Date.today
+   return true
+  else
+   return false
+  end
+end
+
+def insp_overdue(id)
+
+  id = Item.find(id)
+  sd = id.comments.where(item_id: id).where(inspection: true)
+  if id.inspection_interval.blank?
+   return false
+  else
+   tdate = sd.last.try(:created_at) || id.purchased_at_date
+  end
+  if tdate + id.inspection_interval.month < Date.today
+   return true
+  else
+   return false
+  end
+
+end
+
+
+
 
 def self.import(file)
   spreadsheet = open_spreadsheet(file)
@@ -36,21 +86,22 @@ end
 def self.options_for_sorted_by
   [
     ['Name (a-z)', 'description_asc'],
-    ['Registration date (newest first)', 'created_at_desc'],
-    ['Registration date (oldest first)', 'created_at_asc'],
-    ['Warranty end date (last first)', 'warranty_until_desc'],
-    ['Warranty end date (oldest first)', 'warranty_until_asc'],
-    ['Lifetime end date (newest first)', 'lifetime_until_desc'],
-    ['Lifetime end date (oldest first)', 'lifetime_until_asc'],
-    ['Last seen date (newest first)', 'last_seen_desc'],
-    ['Last seen date (oldest first)', 'last_seen_asc'],
+    ['Registration date (desc)', 'created_at_desc'],
+    ['Registration date (asc)', 'created_at_asc'],
+    ['Warranty end date (desc)', 'warranty_until_desc'],
+    ['Warranty end date (asc)', 'warranty_until_asc'],
+    ['Lifetime end date (desc)', 'lifetime_until_desc'],
+    ['Lifetime end date (asc)', 'lifetime_until_asc'],
+    ['Last seen date (desc)', 'last_seen_desc'],
+    ['Last seen date (asc)', 'last_seen_asc'],
+#    ['Last inspection date (desc)', 'last_insp_desc'],
+#    ['Last inspection date (asc)', 'last_insp_asc'],
+#    ['Last service date (desc)', 'last_serv_desc'],
+#    ['Last service date (asc)', 'last_serv_asc'],
     ['Category (a-z)', 'category_name_asc'],
     ['Category (z-a)', 'category_name_desc'],
     ['SubCategory (a-z)', 'subcategory_name_asc'],
     ['SubCategory (z-a)', 'subcategory_name_desc'],
-    ['LUP (a-z)', 'lup_asc'],
-    ['Tagged (a-z)', 'tagged_asc'],
-    ['Tagged (z-a)', 'tagged_desc'],
     ['Status (a-z)', 'status_asc'],
     ['Status (z-a)', 'status_desc'],
     ['owner (a-z)', 'owner_asc'],
@@ -68,12 +119,19 @@ filterrific(
     :search_query,
     :sorted_by,
     :with_category_id,
+    :with_sub_category_id,
     :with_status_id,
     :with_vendor_id,
+    :with_owner_id,
     :with_tagged,
     :with_owner,
-    :with_unit_id
-
+    :with_unit_id,
+    :with_lup_only,
+    :with_untagged_only,
+    :with_owner_lup_only,
+    :with_service_overdue,
+    :with_inspection_overdue,
+    :with_tagged_only
   ]
 )
 scope :search_query, lambda { |query|
@@ -104,12 +162,14 @@ scope :sorted_by, lambda { |sort_option|
     order("items.created_at #{ direction }")
   when /^last_seen_/
     order("items.last_seen #{ direction }")
+ when /^last_insp_/
+    order("items.last_inspection #{ direction }")
+ when /^last_serv_/
+    order("items.last_service #{ direction }")
   when /^warranty_until_/
     order("items.purchased_at_date + items.warranty_time #{ direction }")
   when /^lifetime_until_/
     order("items.purchased_at_date + items.life_time #{ direction }")
-  when /^lup_/
-    order("items.lup #{ direction }")
   when /^owner_/
     order("items.owner #{ direction }")
   when /^tagged_/
@@ -137,29 +197,67 @@ scope :sorted_by, lambda { |sort_option|
     raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
   end
 }
+scope :with_sservice_overdue, lambda {|flag|
+  return nil  if 0 == flag
+  where([
+  %(
+   EXISTS (
+    SELECT 1
+     FROM items, comments
+    WHERE items.id = comments.item_id
+     AND comments.service = true
+     AND comments.created_at >= ?)
+   ),
+  flag
+ ])
+}
+scope :with_service_overdue, lambda {|f|
+where("service_interval: > 0")
+};
 
-scope :with_category_id, lambda { |category_ids|
-  where(:category_id => [*category_ids])
+scope :with_tagged_only, lambda {|flag|
+  return nil  if 0 == flag
+  where(tagged: true)
+}
+scope :with_untagged_only, lambda {|flag|
+  return nil  if 0 == flag
+  where(tagged: [nil, false])
+}
+scope :with_lup_only, lambda {|flag|
+  return nil  if 0 == flag
+  where(lup: true)
+}
+scope :with_owner_lup_only, lambda {|flag|
+  return nil  if 0 == flag
+  where(owner: "LUP")
+}
+scope :with_owner_id, lambda { |unit_ids|
+  unit_ids = Owner.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
+  where(:owner_id => [*unit_ids])
+}
+scope :with_category_id, lambda { |unit_ids|
+  unit_ids = Category.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
+  where(:category_id => [*unit_ids])
+}
+scope :with_sub_category_id, lambda { |unit_ids|
+  unit_ids = SubCategory.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
+  where(:sub_category_id => [*unit_ids])
 }
 scope :with_unit_id, lambda { |unit_ids|
+  unit_ids = Unit.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
   where(:unit_id => [*unit_ids])
 }
 
-scope :with_status_id, lambda { |status_ids|
-  where(:status_id => [*status_ids])
+scope :with_status_id, lambda { |unit_ids|
+  unit_ids = Status.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
+  where(:status_id => [*unit_ids])
 }
 
 scope :with_vendor_id, lambda { |vendor_ids|
+  vendor_ids = Vendor.all.map(&:id) if vendor_ids.blank? || (vendor_ids.size == 1 && vendor_ids[0].blank?) || (vendor_ids.size == 2 && vendor_ids[1].blank?)
   where(:vendor_id => [*vendor_ids])
 }
-#scope :with_tagged, lambda { |tagged|
-#where(tagged: :tagged)
-#}
-#scope :with_category_id, lambda { |category_ids|
-#where(category: { name: category_name }).joins(:category)
-#}
 
-include Tree
 
 
 end

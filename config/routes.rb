@@ -1,16 +1,24 @@
 Rails.application.routes.draw do
+mount Judge::Engine => '/judge'
+
+  resources :owners
 
   resources :units
 
-  resources :vendors
+  resources :vendors do
+        collection { post :import }
+end
 
   resources :statuses
 
 resources :sub_categories do
   resources :items
+        collection { post :import }
+
 end
 
 resources :categories do
+        collection { post :import }
  resources :items
  resources :sub_categories
  collection do
@@ -25,6 +33,15 @@ get 'tags/:tag', to: 'items#index', as: :tag
 	resources :vendors
 	resources :statuses
 	resources :units
+	get :autocomplete_sub_category_name, :on => :collection
+        get :autocomplete_category_name, :on => :collection
+	collection do
+	 put :last_seen
+	end
+	collection do
+	 get :edit_multiple
+	 put :update_multiple
+	end
 	collection { post :import }
         member do
         get 'copy'

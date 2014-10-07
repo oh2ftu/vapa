@@ -5,6 +5,32 @@ before_filter :prepare_categories
 require 'will_paginate/array'
   # GET /items
   # GET /items.json
+def edit_multiple
+  @items = Item.find(params[:item_ids])
+end
+
+def update_multiple
+  @items = Item.find(params[:item_ids])
+  @items.reject! do |item|
+    item.update_attributes(item_params.reject { |k,v| v.blank? })
+  end
+  if @items.empty?
+    redirect_to items_url
+  else
+    @item = Item.new(params[:item])
+    render "edit_multiple"
+  end
+end
+
+
+
+ def history
+	@versions = PaperTrail::Version.order('created_at DESC')
+ end
+ def last_seen
+  Item.where(id: params[:item_ids]).update_all(last_seen: Date.today)
+  redirect_to items_url
+ end
  def copy
         @source = Item.find(params[:id])
         @item = @source.dup
@@ -25,9 +51,12 @@ require 'will_paginate/array'
     @filterrific.select_options = {
       sorted_by: Item.options_for_sorted_by,
       with_category_id: Category.options_for_select,
+      with_sub_category_id: SubCategory.options_for_select,
+      with_owner_id: Owner.options_for_select,
       with_status_id: Status.options_for_select,
       with_vendor_id: Vendor.options_for_select,
       with_unit_id: Unit.options_for_select
+
     }
 #    @filterrific.select_options = {
 #      sorted_by: Item.options_for_sorted_by,
@@ -41,7 +70,13 @@ require 'will_paginate/array'
 
 
 
+if params[:tag]
+@items = Item.tagged_with(params[:tag]).arrange_as_array({:order => 'tagid'}).paginate(:per_page => 50, :page => params[:page])
+##    @items = Item.all.paginate(:per_page => 10, :page => params[:page])
+else
+
     @items = Item.filterrific_find(@filterrific).page(params[:page])
+end
     session[:filterrific_items] = @filterrific.to_hash
     respond_to do |format|
       format.html
@@ -62,6 +97,11 @@ rescue ActiveRecord::RecordNotFound
   # GET /items/1
   # GET /items/1.json
   def show
+    @item = Item.find(params[:id])   
+    @versions = PaperTrail::Version.where(item_type: "Item", item_id: params[:id]).order('created_at DESC')
+
+    @previous = Item.where("tagid < ?", params[:tagid]).order(:tagid).first   
+    @next = Item.where("tagid > ?", params[:tagid]).order(:tagid).first 
   end
 
   # GET /items/new
@@ -129,6 +169,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id)
+      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id, :owner_id, :into_use, :ip, :inspection_interval, :item)
     end
 end

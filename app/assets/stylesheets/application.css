@@ -24,8 +24,14 @@ th { border-bottom: 1px solid #DDD; }
 
 /* Import any app style files below this line */
 @import 'bootstrap-datepicker';
-
 /*@import 'components/filterrific_filter';*/
 /*@import 'components/chardinjs_overrides'; */
 
 /*@import 'chardinjs';*/
+/*
+ *= require jquery-ui
+ */
+.hiddenRow {
+    padding: 0 !important;
+}
+

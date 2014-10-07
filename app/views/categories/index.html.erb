@@ -17,7 +17,7 @@
       <tr>
         <td><%= link_to category.id, category_path(category) %></td>
         <td><%= category.acronym %></td>
-        <td><%= category.name %></td>
+        <td><%= link_to category.name, category_path(category) %></td>
         <td><%=l category.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -36,3 +36,8 @@
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_category_path,
             :class => 'btn btn-primary' %>
+<%= form_tag import_categories_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>
+

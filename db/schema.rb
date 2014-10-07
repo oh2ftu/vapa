@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140927204859) do
+ActiveRecord::Schema.define(version: 20141003193029) do
 
   create_table "categories", force: true do |t|
     t.string   "acronym"
@@ -28,9 +28,13 @@ ActiveRecord::Schema.define(version: 20140927204859) do
     t.integer  "item_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "service"
+    t.boolean  "inspection"
+    t.integer  "vendor_id"
   end
 
   add_index "comments", ["item_id"], name: "index_comments_on_item_id"
+  add_index "comments", ["vendor_id"], name: "index_comments_on_vendor_id"
 
   create_table "identifiers", force: true do |t|
     t.string   "type"
@@ -46,7 +50,7 @@ ActiveRecord::Schema.define(version: 20140927204859) do
   create_table "items", force: true do |t|
     t.string   "tagid"
     t.string   "rfid"
-    t.integer  "weight"
+    t.decimal  "weight",              precision: 5, scale: 2
     t.text     "description"
     t.date     "purchased_at_date"
     t.text     "purchased_at"
@@ -58,7 +62,7 @@ ActiveRecord::Schema.define(version: 20140927204859) do
     t.string   "owner"
     t.date     "last_seen"
     t.integer  "service_interval"
-    t.boolean  "lup",               default: false
+    t.boolean  "lup",                                         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ancestry"
@@ -74,13 +78,27 @@ ActiveRecord::Schema.define(version: 20140927204859) do
     t.integer  "life_time"
     t.integer  "warranty_time"
     t.integer  "unit_id"
+    t.integer  "inspection_interval"
+    t.boolean  "service"
+    t.boolean  "inspection"
+    t.integer  "owner_id"
+    t.date     "last_service"
+    t.date     "last_inspection"
+    t.date     "into_use"
   end
 
   add_index "items", ["category_id"], name: "index_items_on_category_id"
+  add_index "items", ["owner_id"], name: "index_items_on_owner_id"
   add_index "items", ["status_id"], name: "index_items_on_status_id"
   add_index "items", ["sub_category_id"], name: "index_items_on_sub_category_id"
   add_index "items", ["unit_id"], name: "index_items_on_unit_id"
   add_index "items", ["vendor_id"], name: "index_items_on_vendor_id"
+
+  create_table "owners", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "statuses", force: true do |t|
     t.text     "name"
@@ -155,5 +173,18 @@ ActiveRecord::Schema.define(version: 20140927204859) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "versions", force: true do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+    t.text     "object_changes"
+    t.string   "ip"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
 
 end

@@ -6,67 +6,113 @@
 <%= form_for @filterrific do |f| %>
 <div class="row">
   <div class="col-lg-2">
-    Search
+    Search (* = wildcard)<br>
     <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
     <%= f.text_field(
       :search_query,
-      class: 'filterrific-periodically-observed'
+      class: 'filterrific-periodically-observed',
+      :autofocus => true
     ) %>
   </div>
   <div class="col-lg-2">
-    Sorted by
+    Sorted by<br>
     <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
     <%# See below for the Item.options_for_sorted_by presenter method %>
   </div>
-</div>
-<div class="row">
   <div class="col-lg-2">
-    Category
+  <%= f.check_box :with_tagged_only %>Is tagged?<br>
+  <%= f.check_box :with_untagged_only %>Is untagged?
+  </div>
+  <div class="col-lg-2">
+  <%= f.check_box :with_lup_only %>LUP Service?<br>
+  </div>
+  <div class="col-lg-2">
+  <%#= f.check_box :with_service_overdue %>[]EIJ TOIMI Service overdue?<br>
+  <%#= f.check_box :with_inspection_overdue %>[]EIJ TOIMI Inspection overdue?
+  </div>
+
+</div><!-- /row -->
+
+<div class="row">
+    <div class="col-lg-2">
+    Category<br>
     <%= f.select(
       :with_category_id,
       @filterrific.select_options[:with_category_id],
-      { include_blank: '- Any -' }
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
     ) %>
-  </div>
-  <div class="col-lg-2">
-    Status
+    </div><!-- /span -->
+    <div class="col-lg-2">
+    SubCategory<br>
     <%= f.select(
-      :with_status_id,
-      @filterrific.select_options[:with_status_id],
-      { include_blank: '- Any -' }
+      :with_sub_category_id,
+      @filterrific.select_options[:with_sub_category_id],
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
     ) %>
-  </div>
+    </div><!-- /col -->
+
   <div class="col-lg-2">
     Vendor<br>
     <%= f.select(
       :with_vendor_id,
       @filterrific.select_options[:with_vendor_id],
-      { include_blank: '- Any -' }
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
     ) %>
   </div>
-  <div class="col-lg-2">
+
+  <div class="col-lg-1">
+    Owner<br>
+    <%= f.select(
+      :with_owner_id,
+      @filterrific.select_options[:with_owner_id],
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
+    ) %>
+  </div>
+  <div class="col-lg-1">
+    Status<br>
+    <%= f.select(
+      :with_status_id,
+      @filterrific.select_options[:with_status_id],
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
+    ) %>
+  </div>
+  <div class="col-lg-1">
     Unit<br>
     <%= f.select(
       :with_unit_id,
       @filterrific.select_options[:with_unit_id],
-      { include_blank: '- Any -' }
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
     ) %>
   </div>
 
-</div>
+</div><!-- /row -->
+<div class="row">
     <%= link_to(
       'Reset filters',
       reset_filterrific_items_path,
     ) %>
-  </div>
+</div>
   <%# add an automated spinner to your form when the list is refreshed %>
   <%= render_filterrific_spinner %>
 <% end %>
+
 <%= render(
   partial: 'items/list',
   locals: { items: @items }
 ) %>
-
+<br>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_item_path,
             :class => 'btn btn-primary' %>
+<h2>Import items</h2>
+
+<%= form_tag import_items_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>

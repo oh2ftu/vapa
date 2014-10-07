@@ -1,5 +1,5 @@
-<%= simple_form_for @item, :html => { :class => "form-horizontal item" } do |f| %>
-
+<%= simple_form_for @item, :html => { :class => "form-horizontal" }, defaults: { input_html: {class: 'form-control has-feedback' } } do |f| %>
+<%= f.error_notification %>
     <% if @item.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
@@ -16,27 +16,12 @@
   <% end %>
 <div class="row">
 <div class="col-lg-3">
-  <div class="control-group">
-    <div class="controls">
-      <%#= f.input :tagid, :class => 'form-control' %>
-      <%= f.input :tagid %>
-    </div>
+      <%= f.input :tagid, :autofocus => true, :validate => true %>
     <%= error_span(@item[:tagid]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :rfid, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :rfid, :class => 'form-control' %>
-    </div>
+    <%= f.input :rfid %>
     <%= error_span(@item[:rfid]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :make, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :make, :class => 'form-control' %>
-    </div>
+      <%= f.input :make  %>
     <%= error_span(@item[:make]) %>
-  </div>
   <div class="control-group">
     <%= f.label :model, :class => 'control-label' %>
     <div class="controls">
@@ -54,22 +39,6 @@
 <!-- Test starts -->
 <%= f.association :category %>
 <%= f.input :sub_category_id, collection: @categories, as: :grouped_select, group_method: :sub_categories %>
-
-  <div class="control-group">
-    <%= f.label :category, :class => 'control-label' %>
-    <div class="controls">
-     <%= f.collection_select(:category_id,@categories,:id,:name, {:prompt => "Please select a category"}, {:class => "category_selection"}) %><br>
-    </div>
-    <%= error_span(@item[:category]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :sub_category, :class => 'control-label' %>
-    <div class="controls">
-     <%= f.collection_select :sub_category_id, SubCategory.all, :id, :name, {:prompt => "Select a Subcategory"}, {:class=>"sub_category_selection"} %>
-    </div>
-    <%= error_span(@item[:category]) %>
-  </div>
-
 <!-- Test ends -->
 
   <div class="control-group">
@@ -77,7 +46,8 @@
     <%= error_span(@item[:description]) %>
   </div>
   <div class="control-group">
-      <%= f.input :weight  %>
+      <%= f.input :weight, :class => 'form-control' %>
+
     <%= error_span(@item[:weight]) %>
   </div>
   <div class="control-group">
@@ -89,19 +59,27 @@
 <div class="col-lg-3">
 
   <div class="control-group">
-    <%= f.label :owner, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :owner, :class => 'form-control' %>
-    </div>
-    <%= error_span(@item[:owner]) %>
+      <%= f.association :owner %>
+    <%= error_span(@item[:owner_id]) %>
   </div>
 
   <div class="control-group">
       <%= f.association :vendor %>
     <%= error_span(@item[:vendor_id]) %>
   </div>
+
   <div class="control-group">
-      <%= f.input :purchased_at_date %>
+    <%= f.label :purchased_at_date, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.date_field :purchased_at_date %>
+    </div>
+    <%= error_span(@item[:purchased_at_date]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :into_use, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.date_field :into_use %>
+    </div>
     <%= error_span(@item[:purchased_at_date]) %>
   </div>
 
@@ -121,6 +99,10 @@
 
   <div class="control-group">
       <%= f.input :service_interval, :class => 'form-control' %>
+    <%= error_span(@item[:service_interval]) %>
+  </div>
+  <div class="control-group">
+      <%= f.input :inspection_interval, :class => 'form-control' %>
     <%= error_span(@item[:service_interval]) %>
   </div>
 
@@ -146,21 +128,24 @@
   <div class="control-group">
     <%= f.label :parent_id, :class => 'control-label' %>
     <div class="controls">
-    <%= f.collection_select :parent_id, Item.arrange_as_array({:order => 'tagid'}, @item.possible_parents) , :id, :name_for_selects, :include_blank => true %>
+    <%= f.collection_select :parent_id, Item.arrange_as_array({:order => 'description'}, @item.possible_parents) , :id, :name_for_selects, :include_blank => true %>
     </div>
     <%= error_span(@item[:parent_id]) %>
   </div>
   <div class="control-group">
-      <%= f.input :lup, label: false %><%= f.label :lup, :class => 'control-label' %>
+      <%= f.input_field :lup, as: :boolean, boolean_style: :inline  %> <%= f.label :lup, :class => 'control-label' %> service
     <%= error_span(@item[:lup]) %>
   </div>
 
   <div class="control-group">
-      <%= f.input :tagged, label: false %><%= f.label :tagged, :class => 'control-label' %>
+      <%= f.input_field :tagged, as: :boolean, boolean_style: :inline %> <%= f.label :tagged, :class => 'control-label' %>
     <%= error_span(@item[:tagged]) %>
   </div>
   <div class="control-group">
-      <%= f.input :last_seen %>
+    <%= f.label :last_seen, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.date_field :last_seen %>
+    </div>
     <%= error_span(@item[:last_seen]) %>
   </div>
 

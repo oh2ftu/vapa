@@ -1,4 +1,4 @@
-class Unit < ActiveRecord::Base
+class Owner < ActiveRecord::Base
 has_paper_trail
 has_many :items, :dependent => :restrict_with_error
 def self.options_for_select
