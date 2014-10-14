@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require turbolinks
@@ -23,4 +24,27 @@
 //= require autocomplete-rails
 //= require underscore
 //= require json2
-//= require judge
+//= require select2
+var typewatch = (function () {
+    var timer = 0;
+    return function (ms, callback) {
+        clearTimeout(timer);
+        timer = setTimeout(callback, ms);
+    }
+})();
+ 
+$(document).ready(function () {
+    $('.watched').on('input', function () {
+        var elem = $(this);
+        typewatch(500, function () {
+            elem.closest("form").submit();
+        });
+    });
+ 
+    $('.watched2').change(function () {
+        var elem = $(this);
+        typewatch(500, function () {
+            elem.closest("form").submit();
+        });
+    });
+});

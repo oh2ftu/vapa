@@ -4,9 +4,9 @@
 </div>
 
 <div class="row">
-<div class="col-md-9 col-xs-9">
+<div class="col-md-9 col-xs-12">
 <div class="row">
-<div class="col-md-5 col-xs-5">
+<div class="col-md-5 col-xs-12">
 <h2>Item info</h2>
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:tagid) %>:</strong></dt>
@@ -56,6 +56,8 @@
   </dd>
   <dt><strong><%= model_class.human_attribute_name(:lup) %>:</strong></dt>
   <dd><%= @item.lup %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:lup_inc) %>:</strong></dt>
+  <dd><%= @item.lup_inc %></dd>
   <dt><strong><%= model_class.human_attribute_name(:parent_id) %>:</strong></dt>
   <dd><%#= @item.ancestry %><%= @item.parent ? @item.parent.description : '---' %></dd>
   <dt><strong><%= model_class.human_attribute_name(:memo) %>:</strong></dt>
@@ -87,7 +89,7 @@
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
 </div><!-- /div span4 item -->
-<div class="col-md-4 col-xs-4"><!-- vendor and identifier -->
+<div class="col-md-4 col-xs-12"><!-- vendor and identifier -->
 <h2>Vendor</h2>
 <dl class="dl-horizontal">
 <dt><strong>Vendor:</strong></dt>
@@ -125,8 +127,10 @@
                data: { confirm: 'Are you sure?' } %></td>
 </tr>
 <% end %>
-
+</table>
 <%= form_for([@item, @item.identifiers.build]) do |f| %>
+<table class="table table-striped">
+
 <tr>
 <td><%= f.text_field :name %></td>
 <td><%= f.text_field :barcode %></td>
@@ -138,9 +142,9 @@
 </div><!-- /row for main info -->
 
 <div class="row">
-<div class="col-md-9 col-xs-9">
+<div class="col-md-9 col-xs-12">
 <h2>Service events and comments</h2>
-
+<%= simple_form_for([@item, @item.comments.build]) do |f| %>
 <table class="table table-striped">
 <tr>
 <th>* Who?</th>
@@ -152,7 +156,6 @@
 <th>Date</th>
 <th></th>
 </tr>
-<%= simple_form_for([@item, @item.comments.build]) do |f| %>
 <tr>
 <td><%= f.input :commenter,  :input_html => { :maxlength => 5, :style => 'width: 60px' }, label: false %></td>
 <td><%= f.input :body, label: false %></td>
@@ -163,14 +166,16 @@
 <td></td>
 <td><%= f.submit nil, :class => 'btn btn-primary btn-xs' %></td>
 </tr>
+</table>
 <% end %>
 
+<table class="table table-striped">
 <% @item.comments.reverse.each do |comment| %>
 <tr>
 <td><%= comment.commenter %></td>
 <td><%= comment.body %></td>
-<td><%= comment.vendor_id.nil? ? '' : comment.vendor.name %></td>
-<td><%= comment.price %></td>
+<td><%= comment.vendor_id.nil? ? '--' : comment.vendor.name %></td>
+<td>EUR <%= comment.price %></td>
 <td><%= comment.service ? '[x]' : '[ ]' %></td>
 <td><%= comment.inspection ? '[x]' : '[ ]' %></td>
 <td><%= comment.created_at %></td>
@@ -182,6 +187,7 @@
 </tr>
 <% end %>
 </table>
+
 </div><!-- /span comments -->
 </div><!-- /row comments -->
 </div><!-- /span split main -->
@@ -189,15 +195,15 @@
 
 <h2>History</h2>
   <% if @versions != nil %>
-  <% @versions.each do |v| %>
+  <% versions = @versions.last(5) %>
+  <% versions.each do |v| %>
    <b><%= v.event %></b> at <%= v.created_at %>:<br>
    from: <%= v.ip %><br>
 <pre>
-<% v.changeset.each do |variable| %>
-  <% variable.each do |key,value| %>
-    <%= key %>-><%= value %>
-  <% end %>
-<% end %>
+<ul>
+<% v.changeset.each{|k,v| %>
+<li><b><%=h k%>:</b> <%=h v[0]%> -&gt; <%=h v[1]%></li> <% } %>
+</ul>
 </pre>
 
   <% end %>

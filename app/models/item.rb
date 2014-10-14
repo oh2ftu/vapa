@@ -127,6 +127,7 @@ filterrific(
     :with_owner,
     :with_unit_id,
     :with_lup_only,
+    :with_lup_inc_only,
     :with_untagged_only,
     :with_owner_lup_only,
     :with_service_overdue,
@@ -222,6 +223,10 @@ scope :with_tagged_only, lambda {|flag|
 scope :with_untagged_only, lambda {|flag|
   return nil  if 0 == flag
   where(tagged: [nil, false])
+}
+scope :with_lup_inc_only, lambda {|flag|
+  return nil  if 0 == flag
+  where(lup_inc: true)
 }
 scope :with_lup_only, lambda {|flag|
   return nil  if 0 == flag

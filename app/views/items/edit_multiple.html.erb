@@ -44,11 +44,13 @@
 <div class="col-lg-3">
 
   <div class="control-group">
+	<%= f.label :owner %><br>
       <%= f.collection_select :owner_id, Owner.order("name"), :id, :name, include_blank: true %>
 
   </div>
 
   <div class="control-group">
+        <%= f.label :vendor %><br>
       <%= f.collection_select :vendor_id, Vendor.order("name"), :id, :name, include_blank: true %>
   </div>
 
@@ -93,10 +95,12 @@
       <%= f.input :tag_list, :class => 'form-control' %>
   </div>
   <div class="control-group">
+        <%= f.label :status %><br>
       <%= f.collection_select :status_id, Status.order("name"), :id, :name, include_blank: true %>
 
   </div>
   <div class="control-group">
+        <%= f.label :unit %><br>
       <%= f.collection_select :unit_id, Unit.order("name"), :id, :name, include_blank: true %>
   </div>
   <div class="control-group">
@@ -109,6 +113,11 @@
       <%= f.label :lup %><br />
       <%= f.select :lup, [["Yes", true], ["No", false]], include_blank: true %> 
      <%#= f.input_field :lup, as: :boolean, boolean_style: :inline  %> <%= f.label :lup, :class => 'control-label' %> service
+  </div>
+  <div class="control-group">
+      <%= f.label :lup_inc %><br />
+      <%= f.select :lup_inc, [["Yes", true], ["No", false]], include_blank: true %>
+     <%#= f.input_field :lup_inc, as: :boolean, boolean_style: :inline  %> <%= f.label :lup_inc, :class => 'control-label' %> required
   </div>
 
   <div class="control-group">

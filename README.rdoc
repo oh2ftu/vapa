@@ -4,9 +4,13 @@ This is solely for auditing code. It has been up and running with ruby 2.1.2 and
 
 Contributors are needed.
 
+== Last updates
+Added lup_inc to mark if item is listed as required.
+
 == Known bugs
-* dropdown-menu for parent object can't populate over a certain amount of rows. Approx 250 seems to be the limit
+* dropdown-menu for parent object can't populate over a certain amount of rows. Approx 250 seems to be the limit -> solved with select2
 * Navigating through sub_categories will lead to an error
+* Some styling -issues
 
 == Who would use this?
 Any fire department or similar actor.
@@ -17,11 +21,13 @@ An item may have a parent, but must have a category and sub_category.
 
 == What should be done next
 * Add automation for tagid: use selected category.acronym+sub_category.acronym + two last digits of purchase_at_date + first available running number starting from 1
-* Add automation for sub_category filteration
-* Recreate dropdown-menus to use autosearch-forms
-* Better styling
-* Add search/sorting (can be difficult when ancestry is in use)
+* Add automation for sub_category filteration (done with select2 for now)
 * authorization and authentication
+* Refine styling and views
+* Refine usage and showing of paper_trail.changesets
+* After adding authorization and authentication, add user management
+* After user management, add user_id field to items, assign items to users.
+* Add a top-level for items (department) to use a common user and item db for multiple fd:s
 
 === This should do this sometime in the future:
 Equipment/gear/item management:

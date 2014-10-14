@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141003193029) do
+ActiveRecord::Schema.define(version: 20141013192442) do
 
   create_table "categories", force: true do |t|
     t.string   "acronym"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 20141003193029) do
     t.date     "last_service"
     t.date     "last_inspection"
     t.date     "into_use"
+    t.boolean  "lup_inc"
   end
 
   add_index "items", ["category_id"], name: "index_items_on_category_id"

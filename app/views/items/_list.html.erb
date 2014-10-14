@@ -46,7 +46,7 @@
         <td><%= item.children ? item.subtree.sum(:weight) : '' %> kg</td>
         <td><%= item.owner_id.nil? ? 'NO OWNER' : item.owner.name %></td>
         <td><%= item.last_seen.year %></td>
-        <td><%= item.lup ? '[x]' : '[ ]' %></td>
+        <td><%= item.lup ? '[x]' : '[  ]' %><%= item.lup_inc ? '[x]' : '[  ]' %></td>
 	<td><%= item.unit.name %></td>
         <td><%= raw item.tag_list.map { |t| link_to t, tag_path(t) }.join(', ')  %></td>
         <td>
@@ -69,7 +69,7 @@
 	<dt><strong>Serial</strong>:</dt>
         <dd><%= item.serial %></dd>
          <% item.identifiers.each do |identifier| %>
-          <dt><strong><%= identifier.name %>:</strong>:</dt> 
+          <dt><strong><%= identifier.name %></strong>:</dt> 
 	  <dd><%= identifier.barcode %></dd>
          <% end %>
   <dt><strong>Owner</strong>:</dt>
@@ -78,12 +78,12 @@
   <dd><%= item.category.name %></dd>
   <dt><strong>SubCategory</strong>:</dt>
   <dd><%= item.sub_category.name %></dd>
+  </div>
+  <div class="col-md-3">
   <dt><strong>Status</strong>:</dt>
   <dd><%= item.status.name %></dd>
   <dt><strong>Tagged</strong>:</dt>
   <dd><%= item.tagged %></dd>
-  </div>
-  <div class="col-md-3">
   <dt><strong>Service</strong>:</dt>
   <dd>Every <%= item.service_interval %> years,<br>last service:<br>
   <%= item.comments.where(service: true).last.try(:created_at) %>

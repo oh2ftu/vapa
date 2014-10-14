@@ -5,11 +5,11 @@ module Tree
   included do
     has_ancestry
     def name_for_selects
-      "#{'|' if depth > 0}" + "#{'---' * depth} #{description}"
+      "#{'|' if depth > 0}" + "#{'---' * depth} #{tagid + " " + description.truncate(15)}"
     end
 
     def name_for_tree
-      "<span class='tree_#{depth}'>#{description}</span>".html_safe
+      "<span class='tree_#{depth}'>#{tagid + " " + description.truncate(15)}</span>".html_safe
     end
 
     def possible_parents

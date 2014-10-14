@@ -23,13 +23,15 @@ th { border-bottom: 1px solid #DDD; }
 @import 'bootstrap';
 
 /* Import any app style files below this line */
-@import 'bootstrap-datepicker';
+/* @import 'bootstrap-datepicker3' */
 /*@import 'components/filterrific_filter';*/
 /*@import 'components/chardinjs_overrides'; */
-
 /*@import 'chardinjs';*/
 /*
+ *= require select2-bootstrap
  *= require jquery-ui
+ *= require select2
+ *= require bootstrap-datepicker3
  */
 .hiddenRow {
     padding: 0 !important;

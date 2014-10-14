@@ -118,6 +118,26 @@ end
 
   # POST /items
   # POST /items.json
+  def tagid
+   if request.xhr?
+    a = Category.find(params[:category_id])
+    b = SubCategory.find(params[:sub_category_id])
+    c = 14
+#    c = params[:purchased_at_date].strftime(%y)
+    abc = a + b + c
+    find = Item.where("tagid LIKE 'abc%'").last
+    if find.size.nil?
+     d = 01.to_s
+    else
+     d = find[-2,2].to_i +=1
+     d = d.to_s.rjust(2, '0')
+    end
+    if Item.where("tagid = abc+d").size.nil?
+    @tagid = abc + d
+    end
+   end
+  end
+
   def create
     @item = Item.new(item_params)
 
@@ -169,6 +189,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id, :owner_id, :into_use, :ip, :inspection_interval, :item)
+      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id, :owner_id, :into_use, :ip, :inspection_interval, :item, :memo, :lup_inc)
     end
 end
