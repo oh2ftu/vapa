@@ -44,15 +44,13 @@
   </dd>
   <dt><strong><%= model_class.human_attribute_name(:service_interval) %>:</strong></dt>
   <dd>Every <%= @item.service_interval %> years, last service:<br> 
-<%= @item.comments.where(service: true).last.try(:created_at) %>
-<%= @item.serv_overdue(params[:id]) ? (raw "<br> OVERDUE") : "" %>
-
+   <%= @item.comments.where(service: true).last.try(:created_at) %>
+   <%= @item.serv_overdue(params[:id]) ? (raw "<br> OVERDUE") : "" %>
   </dd>
   <dt><strong><%= model_class.human_attribute_name(:inspection_interval) %>:</strong></dt>
   <dd>Every <%= @item.inspection_interval %> months, last inspection:<br>
-<%= @item.comments.where(inspection: true).last.try(:created_at) %>
-<%= @item.insp_overdue(params[:id]) ? (raw "<br> OVERDUE") : "" %>
-
+   <%= @item.comments.where(inspection: true).last.try(:created_at) %>
+   <%= @item.insp_overdue(params[:id]) ? (raw "<br> OVERDUE") : "" %>
   </dd>
   <dt><strong><%= model_class.human_attribute_name(:lup) %>:</strong></dt>
   <dd><%= @item.lup %></dd>
@@ -74,6 +72,8 @@
   <dd><%= @item.unit.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:tagged) %>:</strong></dt>
   <dd><%= @item.tagged %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:Issued) %>:</strong></dt>
+  <dd><%= @item.user.try(:firstname) %></dd>
 
 </dl>
 
@@ -144,7 +144,6 @@
 <div class="row">
 <div class="col-md-9 col-xs-12">
 <h2>Service events and comments</h2>
-<%= simple_form_for([@item, @item.comments.build]) do |f| %>
 <table class="table table-striped">
 <tr>
 <th>* Who?</th>
@@ -156,6 +155,7 @@
 <th>Date</th>
 <th></th>
 </tr>
+<%= simple_form_for([@item, @item.comments.build]) do |f| %>
 <tr>
 <td><%= f.input :commenter,  :input_html => { :maxlength => 5, :style => 'width: 60px' }, label: false %></td>
 <td><%= f.input :body, label: false %></td>
@@ -166,8 +166,8 @@
 <td></td>
 <td><%= f.submit nil, :class => 'btn btn-primary btn-xs' %></td>
 </tr>
-</table>
 <% end %>
+</table>
 
 <table class="table table-striped">
 <% @item.comments.reverse.each do |comment| %>
@@ -195,7 +195,7 @@
 
 <h2>History</h2>
   <% if @versions != nil %>
-  <% versions = @versions.last(5) %>
+  <% versions = @versions.first(5) %>
   <% versions.each do |v| %>
    <b><%= v.event %></b> at <%= v.created_at %>:<br>
    from: <%= v.ip %><br>

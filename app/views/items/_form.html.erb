@@ -16,8 +16,12 @@
   <% end %>
 <div class="row">
 <div class="col-lg-3">
-      <%= f.input :tagid, :autofocus => true, :validate => true %>
-    <%= error_span(@item[:tagid]) %>
+    <% if @item.tagged? %>
+     <%= f.input :tagid, disabled: true, hint: 'Already tagged' %>
+    <% else %>
+     <%= f.input :tagid, :autofocus => true, :validate => true %>
+     <%= error_span(@item[:tagid]) %>
+    <% end %>
     <%= f.input :rfid %>
     <%= error_span(@item[:rfid]) %>
       <%= f.input :make  %>
@@ -123,6 +127,7 @@
   <div class="control-group">
       <%= f.association :unit %>
     <%= error_span(@item[:unit_id]) %>
+      <%= f.association :user, label_method: :firstname %>
   </div>
   <div class="control-group">
     <%= f.label :parent_id, :class => 'control-label' %><br>

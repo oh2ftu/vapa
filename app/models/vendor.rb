@@ -1,8 +1,9 @@
 class Vendor < ActiveRecord::Base
-has_paper_trail
-validates :name, presence: true, uniqueness: true
-has_many :items, :dependent => :restrict_with_error
-has_many :comments, :dependent => :restrict_with_error
+  has_paper_trail
+  validates :name, presence: true, uniqueness: true
+  has_many :items, :dependent => :restrict_with_error
+  has_many :comments, :dependent => :restrict_with_error
+
 def self.import(file)
   spreadsheet = open_spreadsheet(file)
   header = spreadsheet.row(1)

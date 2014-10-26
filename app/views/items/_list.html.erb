@@ -4,7 +4,6 @@
     <%= page_entries_info items %>
   </div>
 <%= form_tag edit_multiple_items_path, method: :get do %>
-<%#= form_tag last_seen_items_path, method: :put do %>
 <div class="table-responsive">
 <table class="table table-striped table-hover table-condensed">
   <thead>
@@ -18,12 +17,11 @@
       <th colspan="2"><%#= model_class.human_attribute_name(:parent_id) %></th>
       <th>Owner<%#= model_class.human_attribute_name(:owner) %></th>
       <th>Last Seen<%#= model_class.human_attribute_name(:last_seen) %><br>
->1 year ago: 
-<%= @items.where("last_seen < :foo", { :foo => 1.year.ago} ).size %>
-</th>
+	>1 year ago: 
+	<%= @items.where("last_seen < :foo", { :foo => 1.year.ago} ).size %>
+      </th>
       <th>LUP<%#= model_class.human_attribute_name(:lup) %></th>
       <th>Unit</th>
-      <th>tags</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -39,8 +37,8 @@
         <%= raw "[x] Service!!<br>" if item.serv_overdue(item.id) %>
 	</td>
         <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.make %></td>
-        <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.model.nil? ? '--' : item.model.truncate(10) %></td>
-        <td><%= item.weight %> kg</td>
+        <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.model.nil? ? '--' : item.model.truncate(15) %></td>
+        <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.weight %> kg</td>
         <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.description.nil? ? '--' : item.description.truncate(20) %></td>
         <td><%= item.parent ? link_to(item.parent.tagid, item_path(item.parent.id)) : '--' %></td>
         <td><%= item.children ? item.subtree.sum(:weight) : '' %> kg</td>
@@ -48,7 +46,6 @@
         <td><%= item.last_seen.year %></td>
         <td><%= item.lup ? '[x]' : '[  ]' %><%= item.lup_inc ? '[x]' : '[  ]' %></td>
 	<td><%= item.unit.name %></td>
-        <td><%= raw item.tag_list.map { |t| link_to t, tag_path(t) }.join(', ')  %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_item_path(item), :class => 'btn btn-default btn-xs' %>
@@ -60,73 +57,74 @@
         </td>
       </tr>
       <tr>
-        <td colspan="14" style="padding: 0 !important;">
-<div class="accordian-body collapse" id="<%= item.id %>">
-<dl class="dl-horizontal">
- <div class="row">
-  <div class="col-md-3">
-         <h3><%= item.description %></h3>
-	<dt><strong>Serial</strong>:</dt>
-        <dd><%= item.serial %></dd>
-         <% item.identifiers.each do |identifier| %>
-          <dt><strong><%= identifier.name %></strong>:</dt> 
-	  <dd><%= identifier.barcode %></dd>
-         <% end %>
-  <dt><strong>Owner</strong>:</dt>
-  <dd><%= item.owner.name %></dd>
-  <dt><strong>Category</strong>:</dt>
-  <dd><%= item.category.name %></dd>
-  <dt><strong>SubCategory</strong>:</dt>
-  <dd><%= item.sub_category.name %></dd>
-  </div>
-  <div class="col-md-3">
-  <dt><strong>Status</strong>:</dt>
-  <dd><%= item.status.name %></dd>
-  <dt><strong>Tagged</strong>:</dt>
-  <dd><%= item.tagged %></dd>
-  <dt><strong>Service</strong>:</dt>
-  <dd>Every <%= item.service_interval %> years,<br>last service:<br>
-  <%= item.comments.where(service: true).last.try(:created_at) %>
-  <%= item.serv_overdue(item.id) ? (raw "<br> OVERDUE") : "" %>
-
-  </dd>
-  <dt><strong>Inspection</strong>:</dt>
-  <dd>Every <%= item.inspection_interval %> months,<br>last inspection:<br>
-  <%= item.comments.where(inspection: true).last.try(:created_at) %>
-  <%= item.insp_overdue(item.id) ? (raw "<br> OVERDUE") : "" %>  
-  </dd>
-  </div>
-  <div class="col-md-3">
-  <dt><strong>Last seen</strong>:</dt>
-  <dd><%= item.last_seen %></dd>
-  <dt><strong>Purchased at</strong>:</dt>
-  <dd><%= item.purchased_at_date %></dd>
-  <dt><strong>Into use</strong>:</dt>
-  <dd><%= item.try(:into_use) %></dd>
-  <dt><strong>Warranty until</strong>:</dt>
-  <dd><%= item.try(:purchased_at_date) + item.try(:warranty_time).year %></dd>
-  <dt><strong>Lifetime until</strong>:</dt>
-  <dd><%= item.pur_date(item.id) + item.life_time.year %></dd>
-  </div>
-  <div class="col-md-2">
-   <strong>Parent:</strong><br>
-        <%= item.parent ? link_to(item.parent.tagid, item_path(item.parent.id)) : '--' %><br>
-   <strong>Grand/children:</strong><br>
-   <% item.children.each do |child| %>
-<%= link_to(child.tagid, item_path(child.id)) %><br>
-    <% child.children.each do |schild| %>
-	<%= link_to(schild.tagid, item_path(schild.id)) %><br>
-    <% end %>
-   <% end %>
-  </div>
-
-  <div class="col-md-1">
-          <%= link_to t('.show', :default => t("helpers.links.show")),
+        <td colspan="13" style="padding: 0 !important;">
+	 <div class="accordian-body collapse" id="<%= item.id %>">
+	  <dl class="dl-horizontal">
+ 	  <div class="row">
+  	   <div class="col-xs-12 col-md-3">
+            <h3><%= item.description %></h3>
+            <dt><strong>Make</strong>:</dt>
+            <dd><%= item.try(:make) %></dd>
+            <dt><strong>Model</strong>:</dt>
+            <dd><%= item.try(:model) %></dd>
+            <dt><strong>Serial</strong>:</dt>
+            <dd><%= item.serial %></dd>
+             <% item.identifiers.each do |identifier| %>
+             <dt><strong><%= identifier.name %></strong>:</dt> 
+	     <dd><%= identifier.barcode %></dd>
+            <% end %>
+            <dt><strong>Owner</strong>:</dt>
+            <dd><%= item.owner.name %></dd>
+           </div>
+           <div class="col-xs-12 col-md-3">
+            <dt><strong>Category</strong>:</dt>
+            <dd><%= item.category.name %></dd>
+            <dt><strong>SubCategory</strong>:</dt>
+            <dd><%= item.sub_category.name %></dd>
+	    <dt><strong>Status</strong>:</dt>
+ 	    <dd><%= item.status.name %></dd>
+	    <dt><strong>Tagged</strong>:</dt>
+	    <dd><%= item.tagged %></dd>
+	    <dt><strong>Service</strong>:</dt>
+	    <dd>Every <%= item.service_interval %> years,<br>last service:<br>
+	     <%= item.comments.where(service: true).last.try(:created_at) %>
+	     <%= item.serv_overdue(item.id) ? (raw "<br> OVERDUE") : "" %>
+	    </dd>
+ 	    <dt><strong>Inspection</strong>:</dt>
+ 	    <dd>Every <%= item.inspection_interval %> months,<br>last inspection:<br>
+	     <%= item.comments.where(inspection: true).last.try(:created_at) %>
+ 	     <%= item.insp_overdue(item.id) ? (raw "<br> OVERDUE") : "" %>  
+ 	    </dd>
+	   </div>
+	   <div class="col-xs-12 col-md-3">
+	    <dt><strong>Last seen</strong>:</dt>
+	    <dd><%= item.last_seen %></dd>
+	    <dt><strong>Purchased at</strong>:</dt>
+       	    <dd><%= item.purchased_at_date %></dd>
+	    <dt><strong>Into use</strong>:</dt>
+	    <dd><%= item.try(:into_use) %></dd>
+	    <dt><strong>Warranty until</strong>:</dt>
+	    <dd><%= item.try(:purchased_at_date) + item.try(:warranty_time).year %></dd>
+	    <dt><strong>Lifetime until</strong>:</dt>
+	    <dd><%= item.pur_date(item.id) + item.life_time.year %></dd>
+	   </div>
+	   <div class="col-xs-12 col-md-2">
+	    <strong>Parent:</strong><br>
+	     <%= item.parent ? link_to(item.parent.tagid, item_path(item.parent.id)) : '--' %><br>
+	    <strong>Grand/children:</strong><br>
+	    <% item.children.each do |child| %>
+	     <%= link_to(child.tagid, item_path(child.id)) %><br>
+	      <% child.children.each do |schild| %>
+	       <%= link_to(schild.tagid, item_path(schild.id)) %><br>
+	      <% end %>
+	     <% end %>
+	   </div>
+	   <div class="col-md-1">
+           <%= link_to t('.show', :default => t("helpers.links.show")),
                       item_path(item), :class => 'btn btn-default btn-xs' %>
-
-  </div>
- </div>
-</div>
+	   </div>
+          </div>
+         </div>
         </td>
       </tr>
 

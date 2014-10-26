@@ -1,0 +1,16 @@
+<%= simple_form_for(@address) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :line1 %>
+    <%= f.input :line2 %>
+    <%= f.input :city %>
+    <%= f.input :zip %>
+    <%= f.input :addressable_id %>
+    <%= f.input :addressable_type %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

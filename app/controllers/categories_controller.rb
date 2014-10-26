@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
+load_and_authorize_resource
 def get_sub_categories
   @category = Category.find params[:category_id]
   @sub_categories = @category.sub_categories

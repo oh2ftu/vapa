@@ -1,4 +1,5 @@
 class UnitsController < ApplicationController
+load_and_authorize_resource
   before_action :set_unit, only: [:show, :edit, :update, :destroy]
 
   # GET /units
@@ -69,6 +70,6 @@ class UnitsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def unit_params
-      params.require(:unit).permit(:name)
+      params.require(:unit).permit(:name, :department_id, :unit_type_id)
     end
 end

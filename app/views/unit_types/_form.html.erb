@@ -1,0 +1,10 @@
+<%= simple_form_for @unit_type, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name %>
+  <%= error_span(@unit_type[:name]) %>
+  <%= f.input :acronym %>
+  <%= error_span(@unit_type[:acronym]) %>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                unit_types_path, :class => 'btn btn-default' %>
+<% end %>

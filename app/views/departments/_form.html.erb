@@ -1,0 +1,33 @@
+<%= simple_form_for @department, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name %>
+  <%= error_span(@department[:name]) %>
+  <%= f.input :station %>
+  <%= error_span(@department[:station]) %>
+
+  <% f.fields_for :address do |add| %>
+    <%#= render :partial => 'shared/address', :locals => {:f => address} %>
+  <%# end %>
+<p>
+  <%= add.label :line1, 'Address 1' %><br />
+  <%= add.input :line1 %>
+</p>
+
+<p>
+  <%= add.label :line2, 'Address 2' %><br />
+  <%= add.input :line2 %>
+</p>
+
+<p>
+  <%= add.label :city %><br />
+  <%= add.input :city %>
+</p>
+
+<p>
+  <%= add.label :zip, 'Zip Code' %><br />
+  <%= add.input :zip %>
+</p>
+<% end %>
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                departments_path, :class => 'btn btn-default' %>
+<% end %>

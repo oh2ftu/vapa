@@ -1,0 +1,17 @@
+  <%= form_tag :controller => 'items', :action => 'last_seen', method:  "get" do %>
+	Weight:<%= text_field_tag :weight, params[:weight], :autofocus => true, :value => "" %><br>
+	Tagid:<%= text_field_tag :search, params[:search], :value => "" %><br>
+      <%= submit_tag "Search", :name => nil %> 
+
+  <% end %> 
+
+<% @item.each do |it| %>
+Updated 
+<%= it.tagid %>
+<%= it.make %>
+<%= it.model %>
+with weight
+<%= it.weight %>
+and last_seen:
+<%= it.last_seen %>
+<% end %>

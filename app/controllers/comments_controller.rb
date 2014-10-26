@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+load_and_authorize_resource
 def create
     @item = Item.find(params[:item_id])
     @item.update(last_seen: Date.today)

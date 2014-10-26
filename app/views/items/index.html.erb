@@ -5,7 +5,7 @@
 
 <%= form_for @filterrific do |f| %>
 <div class="row">
-  <div class="col-xs-6 col-md-3">
+  <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
     Search (* = wildcard)<br>
     <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
     <%= f.text_field(
@@ -14,28 +14,33 @@
       :autofocus => true
     ) %>
   </div>
-  <div class="col-xs-6 col-md-3">
+  <div class="col-xs-6 col-md-4 col-lg-3">
     Sorted by<br>
     <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
     <%# See below for the Item.options_for_sorted_by presenter method %>
   </div>
-  <div class="col-xs-6 col-md-2">
-  <%= f.check_box :with_tagged_only %>Is tagged?<br>
-  <%= f.check_box :with_untagged_only %>Is untagged?
+  <div class="col-xs-6 col-md-4 col-lg-1">
+  <%= f.check_box :with_tagged_only %>Tagged?<br>
+  <%= f.check_box :with_untagged_only %>Untagged?
   </div>
-  <div class="col-xs-6 col-md-2">
+  <div class="col-xs-6 col-md-4 col-lg-2">
   <%= f.check_box :with_lup_only %>LUP Service?<br>
-  <%= f.check_box :with_lup_inc_only %>LUP Required?<br>
+  <%= f.check_box :with_lup_not %>LUP not serv?<br>
   </div>
-  <div class="col-xs-6 col-md-2">
-  <%#= f.check_box :with_service_overdue %>[]EIJ TOIMI Service overdue?<br>
-  <%#= f.check_box :with_inspection_overdue %>[]EIJ TOIMI Inspection overdue?
+  <div class="col-xs-6 col-md-4 col-lg-2">
+  <%= f.check_box :with_lup_inc_only %>LUP Required?<br>
+  <%= f.check_box :with_lup_inc_not %>LUP not Required?<br>
+  </div>
+  <div class="col-xs-6 col-md-4 col-lg-2">
+  <%= f.check_box :with_service_overdue %>Service overdue?<br>
+  <%= f.check_box :with_inspection_overdue %>Inspection overdue?<br>
+  <%= f.check_box :with_last_seen_overdue %>Last seen overdue?
   </div>
 
 </div><!-- /row -->
 
 <div class="row">
-    <div class="col-xs-6 col-md-2">
+    <div class="col-xs-6 col-md-4 col-lg-2">
     Category<br>
     <%= f.select(
       :with_category_id,
@@ -44,7 +49,7 @@
       { :multiple => true, :size => 5 }
     ) %>
     </div><!-- /span -->
-    <div class="col-xs-6 col-md-2">
+    <div class="col-xs-6 col-md-4 col-lg-2">
     SubCategory<br>
     <%= f.select(
       :with_sub_category_id,
@@ -54,7 +59,7 @@
     ) %>
     </div><!-- /col -->
 
-  <div class="col-xs-6 col-md-2">
+  <div class="col-xs-6 col-md-4 col-lg-2">
     Vendor<br>
     <%= f.select(
       :with_vendor_id,
@@ -64,7 +69,7 @@
     ) %>
   </div>
 
-  <div class="col-xs-6 col-md-1">
+  <div class="col-xs-6 col-md-4 col-lg-2">
     Owner<br>
     <%= f.select(
       :with_owner_id,
@@ -73,7 +78,7 @@
       { :multiple => true, :size => 5 }
     ) %>
   </div>
-  <div class="col-xs-6 col-md-1">
+  <div class="col-xs-6 col-md-4 col-lg-2">
     Status<br>
     <%= f.select(
       :with_status_id,
@@ -82,7 +87,7 @@
       { :multiple => true, :size => 5 }
     ) %>
   </div>
-  <div class="col-xs-6 col-md-1">
+  <div class="col-xs-6 col-md-4 col-lg-2">
     Unit<br>
     <%= f.select(
       :with_unit_id,

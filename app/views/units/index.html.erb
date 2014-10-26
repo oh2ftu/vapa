@@ -7,6 +7,7 @@
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:department_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= link_to unit.id, unit_path(unit) %></td>
         <td><%= unit.name %></td>
+        <td><%= unit.department.try(:name) %></td>
         <td><%=l unit.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

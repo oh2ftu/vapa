@@ -1,0 +1,7 @@
+<dd>
+<% items.each do |i| %>
+ <%= [i.tagid, i.serial].join ", " %><br>
+ <%= [i.make, i.model].join " " %><br>
+ issued: <%= i.into_use %>
+<% end %>
+</dd>

@@ -1,17 +1,27 @@
 class Item < ActiveRecord::Base
-validates :category, :sub_category, :owner, :description, :vendor_id, :status_id, :life_time, :warranty_time, :unit_id, presence: true
+validates :category, :sub_category, :owner, :description, :vendor_id, :status_id, :life_time, :warranty_time, :unit_id, :purchased_at_date, presence: true
 validates :tagid, presence: true, uniqueness: true
 #validates :weight, numericality: { only_integer: true, greater_than: 0 }
+belongs_to :department
 belongs_to :category
 belongs_to :sub_category
 belongs_to :status
 belongs_to :vendor
 belongs_to :unit
 belongs_to :owner
+belongs_to :user, inverse_of: :items
 has_many :identifiers, dependent: :destroy
 has_many :comments, dependent: :destroy
 acts_as_taggable
 has_paper_trail :ignore => [:updated_at]
+
+scope :jackets, -> { where(sub_category_id: "16") }
+scope :trousers, -> { where(sub_category_id: "17") }
+scope :helmets, -> { where(sub_category_id: "18") }
+scope :boots, -> { where(sub_category_id: "14") }
+scope :pagers, -> { where(sub_category_id: "268") }
+scope :headsets, -> { where(sub_category_id: "105") }
+
 #acts_as_taggable_on :category, :sub_category, :owner
 include Tree
 has_ancestry :orphan_strategy => :rootify
@@ -28,34 +38,42 @@ def pur_date(id)
  return d
 end
 
+def self.last_seen
+  item = Item.where("tagid = ?", params[:search])
+  if item.size = 1
+  item.update(last_seen: Date.today)
+  end
+end
+
 def serv_overdue(id)
   id = Item.find(id)
   sd = id.comments.where(item_id: id).where(service: true)
-  if id.service_interval.nil?
+  if id.service_interval == 0 || id.service_interval.blank?
    return false
   else
    tdate = sd.last.try(:created_at) || id.purchased_at_date
+   if tdate + id.service_interval.year < Date.today
+    return true
+   else
+    return false
+   end
   end
-  if tdate + id.service_interval.year < Date.today
-   return true
-  else
-   return false
-  end
+
 end
 
 def insp_overdue(id)
 
   id = Item.find(id)
   sd = id.comments.where(item_id: id).where(inspection: true)
-  if id.inspection_interval.blank?
+  if id.inspection_interval == 0 || id.inspection_interval.blank?
    return false
   else
    tdate = sd.last.try(:created_at) || id.purchased_at_date
-  end
-  if tdate + id.inspection_interval.month < Date.today
-   return true
-  else
-   return false
+   if tdate + id.inspection_interval.month < Date.today
+    return true
+   else
+    return false
+   end
   end
 
 end
@@ -126,12 +144,15 @@ filterrific(
     :with_tagged,
     :with_owner,
     :with_unit_id,
+    :with_lup_not,
     :with_lup_only,
     :with_lup_inc_only,
+    :with_lup_inc_not,
     :with_untagged_only,
     :with_owner_lup_only,
     :with_service_overdue,
     :with_inspection_overdue,
+    :with_last_seen_overdue,
     :with_tagged_only
   ]
 )
@@ -198,23 +219,26 @@ scope :sorted_by, lambda { |sort_option|
     raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
   end
 }
-scope :with_sservice_overdue, lambda {|flag|
+scope :with_service_overdue, lambda {|flag|
   return nil  if 0 == flag
-  where([
-  %(
-   EXISTS (
-    SELECT 1
-     FROM items, comments
-    WHERE items.id = comments.item_id
-     AND comments.service = true
-     AND comments.created_at >= ?)
-   ),
-  flag
- ])
+Item.joins("LEFT JOIN comments ON comments.item_id=items.id AND comments.service='TRUE'")
+        .joins("LEFT JOIN comments c2 ON c2.item_id=items.id AND c2.service='TRUE' AND (datediff(NOW(),  COALESCE(c2.created_at, items.into_use, items.purchased_at_date)) > items.service_interval * 365) AND c2.id <> comments.id")
+	.where("datediff(NOW(), COALESCE(comments.created_at, items.into_use, items.purchased_at_date)) > items.service_interval * 365")
+	.where("c2.id IS NULL")
+	.where("items.service_interval IS NOT NULL AND items.service_interval > 0")
 }
-scope :with_service_overdue, lambda {|f|
-where("service_interval: > 0")
+scope :with_inspection_overdue, lambda {|flag|
+  return nil  if 0 == flag
+Item.joins("LEFT JOIN comments ON comments.item_id=items.id AND comments.inspection='TRUE'")
+        .joins("LEFT JOIN comments c2 ON c2.item_id=items.id AND c2.inspection='TRUE' AND (datediff(NOW(),  COALESCE(c2.created_at, items.into_use, items.purchased_at_date)) > items.inspection_interval * 30) AND c2.id <> comments.id")
+        .where("datediff(NOW(), COALESCE(comments.created_at, items.into_use, items.purchased_at_date)) > items.inspection_interval * 30")
+        .where("c2.id IS NULL")
+        .where("items.inspection_interval IS NOT NULL AND items.inspection_interval > 0")
 };
+scope :with_last_seen_overdue, lambda {|flag|
+  return nil  if 0 == flag
+  where("last_seen < ?", 1.year.ago)
+}
 
 scope :with_tagged_only, lambda {|flag|
   return nil  if 0 == flag
@@ -228,6 +252,15 @@ scope :with_lup_inc_only, lambda {|flag|
   return nil  if 0 == flag
   where(lup_inc: true)
 }
+scope :with_lup_inc_not, lambda {|flag|
+  return nil  if 0 == flag
+  where(lup_inc: [nil, false])
+}
+scope :with_lup_not, lambda {|flag|
+  return nil  if 0 == flag
+  where(lup: [nil, false])
+}
+
 scope :with_lup_only, lambda {|flag|
   return nil  if 0 == flag
   where(lup: true)

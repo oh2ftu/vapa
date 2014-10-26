@@ -1,12 +1,18 @@
 class ItemsController < ApplicationController
 #  http_basic_authenticate_with name: "pj", password: "vpk", except: [:index, :show]
+  load_and_authorize_resource
   before_action :set_item, only: [:show, :edit, :update, :destroy]
-before_filter :prepare_categories
-require 'will_paginate/array'
+  before_filter :prepare_categories
+  require 'will_paginate/array'
+
   # GET /items
   # GET /items.json
 def edit_multiple
   @items = Item.find(params[:item_ids])
+end
+
+def inventory
+
 end
 
 def update_multiple
@@ -27,9 +33,16 @@ end
  def history
 	@versions = PaperTrail::Version.order('created_at DESC')
  end
+
  def last_seen
-  Item.where(id: params[:item_ids]).update_all(last_seen: Date.today)
-  redirect_to items_url
+	@item = Item.where("tagid = ?", params[:search])
+        if @item.size == 1
+         @item.update_all(last_seen: Date.today)
+	 @item.update_all(tagged: true)
+	 if !params[:weight].blank?
+	 @item.update_all(weight: params[:weight])
+	 end
+        end
  end
  def copy
         @source = Item.find(params[:id])
@@ -189,6 +202,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id, :owner_id, :into_use, :ip, :inspection_interval, :item, :memo, :lup_inc)
+      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id, :owner_id, :into_use, :ip, :inspection_interval, :item, :memo, :lup_inc, :search, :department_id, :user_id)
     end
 end

@@ -11,11 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141013192442) do
+ActiveRecord::Schema.define(version: 20141025183700) do
+
+  create_table "addresses", force: true do |t|
+    t.string   "line1"
+    t.string   "line2"
+    t.string   "city"
+    t.string   "zip"
+    t.integer  "addressable_id"
+    t.string   "addressable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "addresses", ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id", unique: true, using: :btree
 
   create_table "categories", force: true do |t|
     t.string   "acronym"
-    t.text     "name"
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -23,18 +36,24 @@ ActiveRecord::Schema.define(version: 20141013192442) do
   create_table "comments", force: true do |t|
     t.string   "commenter"
     t.text     "body"
-    t.text     "place"
-    t.integer  "price"
+    t.integer  "price",      default: 0,     null: false
     t.integer  "item_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "service"
-    t.boolean  "inspection"
+    t.boolean  "service",    default: false, null: false
+    t.boolean  "inspection", default: false, null: false
     t.integer  "vendor_id"
   end
 
-  add_index "comments", ["item_id"], name: "index_comments_on_item_id"
-  add_index "comments", ["vendor_id"], name: "index_comments_on_vendor_id"
+  add_index "comments", ["item_id"], name: "index_comments_on_item_id", using: :btree
+  add_index "comments", ["vendor_id"], name: "index_comments_on_vendor_id", using: :btree
+
+  create_table "departments", force: true do |t|
+    t.string   "name"
+    t.string   "station"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "identifiers", force: true do |t|
     t.string   "type"
@@ -45,24 +64,20 @@ ActiveRecord::Schema.define(version: 20141013192442) do
     t.string   "name"
   end
 
-  add_index "identifiers", ["item_id"], name: "index_identifiers_on_item_id"
+  add_index "identifiers", ["item_id"], name: "index_identifiers_on_item_id", using: :btree
 
   create_table "items", force: true do |t|
-    t.string   "tagid"
+    t.string   "tagid",                                                               null: false
     t.string   "rfid"
-    t.decimal  "weight",              precision: 5, scale: 2
-    t.text     "description"
+    t.decimal  "weight",              precision: 10, scale: 2
+    t.string   "description"
     t.date     "purchased_at_date"
-    t.text     "purchased_at"
-    t.date     "warranty_until"
-    t.date     "lifetime_until"
     t.string   "serial"
     t.string   "sku"
-    t.integer  "price"
-    t.string   "owner"
-    t.date     "last_seen"
-    t.integer  "service_interval"
-    t.boolean  "lup",                                         default: false
+    t.integer  "price",                                        default: 0,            null: false
+    t.date     "last_seen",                                    default: '2014-10-18', null: false
+    t.integer  "service_interval",                             default: 0,            null: false
+    t.boolean  "lup",                                          default: false,        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ancestry"
@@ -70,52 +85,68 @@ ActiveRecord::Schema.define(version: 20141013192442) do
     t.integer  "category_id"
     t.integer  "sub_category_id"
     t.string   "size"
-    t.text     "make"
-    t.text     "model"
-    t.boolean  "tagged"
+    t.string   "make"
+    t.string   "model"
+    t.boolean  "tagged",                                       default: false,        null: false
     t.integer  "vendor_id"
     t.integer  "status_id"
-    t.integer  "life_time"
-    t.integer  "warranty_time"
+    t.integer  "life_time",                                    default: 0,            null: false
+    t.integer  "warranty_time",                                default: 0,            null: false
     t.integer  "unit_id"
-    t.integer  "inspection_interval"
+    t.integer  "inspection_interval",                          default: 0,            null: false
     t.boolean  "service"
     t.boolean  "inspection"
     t.integer  "owner_id"
-    t.date     "last_service"
-    t.date     "last_inspection"
     t.date     "into_use"
-    t.boolean  "lup_inc"
+    t.boolean  "lup_inc",                                      default: false,        null: false
+    t.integer  "department_id"
+    t.integer  "user_id"
   end
 
-  add_index "items", ["category_id"], name: "index_items_on_category_id"
-  add_index "items", ["owner_id"], name: "index_items_on_owner_id"
-  add_index "items", ["status_id"], name: "index_items_on_status_id"
-  add_index "items", ["sub_category_id"], name: "index_items_on_sub_category_id"
-  add_index "items", ["unit_id"], name: "index_items_on_unit_id"
-  add_index "items", ["vendor_id"], name: "index_items_on_vendor_id"
+  add_index "items", ["category_id"], name: "index_items_on_category_id", using: :btree
+  add_index "items", ["department_id"], name: "index_items_on_department_id", using: :btree
+  add_index "items", ["owner_id"], name: "index_items_on_owner_id", using: :btree
+  add_index "items", ["status_id"], name: "index_items_on_status_id", using: :btree
+  add_index "items", ["sub_category_id"], name: "index_items_on_sub_category_id", using: :btree
+  add_index "items", ["unit_id"], name: "index_items_on_unit_id", using: :btree
+  add_index "items", ["user_id"], name: "index_items_on_user_id", using: :btree
+  add_index "items", ["vendor_id"], name: "index_items_on_vendor_id", using: :btree
 
   create_table "owners", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "department_id"
+  end
+
+  add_index "owners", ["department_id"], name: "index_owners_on_department_id", using: :btree
+
+  create_table "roles", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roles_users", id: false, force: true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
   end
 
   create_table "statuses", force: true do |t|
-    t.text     "name"
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "sub_categories", force: true do |t|
     t.string   "acronym"
-    t.text     "name"
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "category_id"
   end
 
-  add_index "sub_categories", ["category_id"], name: "index_sub_categories_on_category_id"
+  add_index "sub_categories", ["category_id"], name: "index_sub_categories_on_category_id", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"
@@ -127,21 +158,33 @@ ActiveRecord::Schema.define(version: 20141013192442) do
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
 
   create_table "tags", force: true do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
-  create_table "units", force: true do |t|
-    t.text     "name"
+  create_table "unit_types", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "acronym"
   end
+
+  create_table "units", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "department_id"
+    t.integer  "unit_type_id"
+  end
+
+  add_index "units", ["department_id"], name: "index_units_on_department_id", using: :btree
+  add_index "units", ["unit_type_id"], name: "index_units_on_unit_type_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -154,23 +197,38 @@ ActiveRecord::Schema.define(version: 20141013192442) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "unconfirmed_email"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "roles_mask"
+    t.string   "firstname"
+    t.string   "lastname"
+    t.integer  "role_id"
+    t.integer  "department_id"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+  add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["role_id"], name: "index_users_on_role_id", using: :btree
+
+  create_table "users_roles", id: false, force: true do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+  end
 
   create_table "vendors", force: true do |t|
-    t.text     "name"
-    t.text     "address"
-    t.text     "city"
-    t.text     "contact"
+    t.string   "name"
+    t.string   "address"
+    t.string   "city"
+    t.string   "contact"
     t.string   "phone"
     t.string   "email"
     t.text     "notes"
-    t.boolean  "billing"
+    t.boolean  "billing",    default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -186,6 +244,6 @@ ActiveRecord::Schema.define(version: 20141013192442) do
     t.string   "ip"
   end
 
-  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
 end

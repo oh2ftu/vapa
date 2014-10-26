@@ -1,6 +1,15 @@
 Rails.application.routes.draw do
-mount Judge::Engine => '/judge'
+  resources :unit_types
 
+  resources :departments
+
+  resources :addresses
+
+  resources :roles
+
+  devise_for :users
+mount Judge::Engine => '/judge'
+  resources :users
   resources :owners
 
   resources :units
@@ -36,8 +45,10 @@ get 'tags/:tag', to: 'items#index', as: :tag
 	get :autocomplete_sub_category_name, :on => :collection
         get :autocomplete_category_name, :on => :collection
 	collection do
-	 put :last_seen
+	 get 'last_seen'
+	 post 'last_seen'
 	end
+#	get :last_seen, :on => :collection
 	collection do
 	 get :edit_multiple
 	 put :update_multiple

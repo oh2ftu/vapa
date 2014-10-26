@@ -1,6 +1,10 @@
 <%= simple_form_for @unit, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :name %>
   <%= error_span(@unit[:name]) %>
+  <%= f.association :department %>
+  <%= error_span(@unit[:department]) %>
+  <%= f.association :unit_type %>
+  <%= error_span(@unit[:unit_type]) %>
 
   <%= f.button :submit, :class => 'btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
