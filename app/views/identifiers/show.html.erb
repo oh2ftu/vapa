@@ -3,17 +3,21 @@
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:type) %>:</strong></dt>
-  <dd><%= @identifier.type %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:barcode) %>:</strong></dt>
-  <dd><%= @identifier.barcode %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:item_id) %>:</strong></dt>
-  <dd><%= @identifier.item_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @identifier.name %></dd>
-</dl>
-
+<div class="row">
+ <div class="col-xs-12 col-md-6">
+  <dl class="dl-horizontal">
+    <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+    <dd><%= @identifier.name %></dd>
+    <dt><strong><%= model_class.human_attribute_name(:barcode) %>:</strong></dt>
+    <dd><%= @identifier.barcode %></dd>
+    <dt><strong><%= model_class.human_attribute_name(:item_id) %>:</strong></dt>
+    <dd><%= @identifier.item_id %></dd>
+  </dl>
+ </div>
+ <div class="col-xs-12 col-md-6">
+  <%= render partial: "items", locals: { items: @identifier.items } %>
+ </div>
+</div>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               identifiers_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),

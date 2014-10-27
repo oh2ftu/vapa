@@ -5,6 +5,26 @@ class Ability
     user ||= User.new # guest user (not logged in)
     if user.has_role? :superuser
       can :manage, :all
+    elsif user.has_role? :LUP
+      can :read, :all
+    elsif user.has_role? :view
+      can :view, :all, :department_id => user.department_id
+      cannot :manage, [Roles, Departments, UnitTypes]
+    elsif user.has_role? :admin
+      can :manage, :all, :department_id => user.department_id
+      cannot :manage, [Roles, Departments, UnitTypes]
+      can [:create, :read, :update], [Categories, SubCategories, Statuses]
+    elsif user.has_role? :manager
+      can [:read, :create, :update], :all, :department_id => user.department_id
+      cannot :manage, [Roles, Departments, UnitTypes]
+      can [:create, :read, :update], [Categories, SubCategories, Statuses]
+    elsif user.has_role? :service
+      can :manage, [Comments, Identifiers], :department_id => user.department_id
+      cannot :manage, [Roles, Departments, UnitTypes]
+    elsif user.has_role? :sms
+      can :manage, [Comments, Identifiers], :department_id => user.department_id
+      cannot :manage, [Roles, Departments, UnitTypes]
+
     else
       can :read, :all
     end

@@ -1,27 +1,53 @@
 class CommentsController < ApplicationController
 load_and_authorize_resource
-def create
-    @item = Item.find(params[:item_id])
-    @item.update(last_seen: Date.today)
-    if(inspection = true)
-	@item.update(last_inspection: Date.today)
-    end
-    if(service = true)
-        @item.update(last_service: Date.today)
-    end
-    @comment = @item.comments.create(comment_params)
-    redirect_to item_path(@item)
+
+  def index
+    @comment = Comment.where(department_id: current_user.department_id).all
+	@comment = Comment.all
   end
+
+  def show
+    @comment = Comment.find(params[:id])
+  end
+
+  def new
+    @comment = Comment.new
+  end
+
+  def edit
+    @comment = Comment.find(params[:id])
+  end
+
+ def create
+    @comment = Comment.new(comment_params)
+    @comment.department_id = current_user.department_id
+    if @comment.save
+      redirect_to @comment, :flash => { :success => 'Comment was successfully created.' }
+    else
+      render :action => 'new'
+    end
+  end
+
+
+  def update
+    @comments = Comment.find(params[:id])
+
+    if @comment.update_attributes(comment_params)
+      redirect_to @comment, :flash => { :success => 'Comment was successfully updated.' }
+    else
+      render :action => 'edit'
+    end
+  end
+
  
   def destroy
-    @item = Item.find(params[:item_id])
-    @comment = @item.comments.find(params[:id])
+    @comment = Comment.find(params[:id])
     @comment.destroy
-    redirect_to item_path(@item)
+    redirect_to comments_path, :flash => { :success => 'Comment was successfully deleted.' }
   end
  
   private
     def comment_params
-      params.require(:comment).permit(:commenter, :body, :price, :place, :service, :inspection, :vendor_id)
+      params.require(:comment).permit(:commenter, :body, :price, :place, :service, :inspection, :vendor_id, :item_ids,  {:item_ids => []})
     end
 end

@@ -1,0 +1,6 @@
+  <dl class="dl-horizontal">
+   <% items.each do |item| %>
+    <dt><strong><%= link_to item.tagid, item_path(item) %></strong>:</dt>
+    <dd><%= [item.make, item.model, item.description].join " " %></dd>
+   <% end %>
+  </dl>

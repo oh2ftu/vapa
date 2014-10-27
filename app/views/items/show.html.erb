@@ -74,6 +74,8 @@
   <dd><%= @item.tagged %></dd>
   <dt><strong><%= model_class.human_attribute_name(:Issued) %>:</strong></dt>
   <dd><%= @item.user.try(:firstname) %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:terminate_at_eol) %>:</strong></dt>
+  <dd><%= @item.terminate_at_eol %></dd>
 
 </dl>
 
@@ -89,6 +91,7 @@
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
 </div><!-- /div span4 item -->
+
 <div class="col-md-4 col-xs-12"><!-- vendor and identifier -->
 <h2>Vendor</h2>
 <dl class="dl-horizontal">
@@ -111,6 +114,7 @@
   <dd><%= @item.vendor.billing %></dd>
 
 </dl>
+<div class="hidden-xs">
 <h2>Identifiers</h2>
 <table class="table table-striped">
 <tr>
@@ -122,28 +126,26 @@
 <tr>
 <td><%= identifier.name %></td>
 <td><%= identifier.barcode %></td>
-<td><%= link_to 'Destroy', [identifier.item, identifier],
-               method: :delete,
-               data: { confirm: 'Are you sure?' } %></td>
+<td>
+           <%= link_to t('.show', :default => t("helpers.links.show")),
+                      identifier_path(identifier), :class => 'btn btn-default btn-xs' %>
 </tr>
 <% end %>
 </table>
-<%= form_for([@item, @item.identifiers.build]) do |f| %>
-<table class="table table-striped">
-
-<tr>
-<td><%= f.text_field :name %></td>
-<td><%= f.text_field :barcode %></td>
-<td> <%= f.submit nil, :class => 'btn btn-primary btn-xs' %></td>
-</tr>
-</table>
-<% end %> 
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_identifier_path,
+            :class => 'btn btn-primary btn-xs' %>
+</div>
 </div><!-- /span for vendor and ident -->
 </div><!-- /row for main info -->
 
 <div class="row">
 <div class="col-md-9 col-xs-12">
 <h2>Service events and comments</h2>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_comment_path,
+            :class => 'btn btn-primary btn-xs' %>
+
 <table class="table table-striped">
 <tr>
 <th>* Who?</th>
@@ -155,21 +157,6 @@
 <th>Date</th>
 <th></th>
 </tr>
-<%= simple_form_for([@item, @item.comments.build]) do |f| %>
-<tr>
-<td><%= f.input :commenter,  :input_html => { :maxlength => 5, :style => 'width: 60px' }, label: false %></td>
-<td><%= f.input :body, label: false %></td>
-<td><%= f.association :vendor, label: false %></td>
-<td><%= f.input :price, :input_html => { :maxlength => 5, :style => 'width: 50px' }, label: false %>EUR</td>
-<td><%= f.input_field :service, as: :boolean, boolean_style: :inline %></td>
-<td><%= f.input_field :inspection, as: :boolean, boolean_style: :inline  %></td>
-<td></td>
-<td><%= f.submit nil, :class => 'btn btn-primary btn-xs' %></td>
-</tr>
-<% end %>
-</table>
-
-<table class="table table-striped">
 <% @item.comments.reverse.each do |comment| %>
 <tr>
 <td><%= comment.commenter %></td>
@@ -180,9 +167,9 @@
 <td><%= comment.inspection ? '[x]' : '[ ]' %></td>
 <td><%= comment.created_at %></td>
 <td> 
-<%= link_to 'Destroy', [comment.item, comment],
-               method: :delete,
-               data: { confirm: 'Are you sure?' } %>
+           <%= link_to t('.show', :default => t("helpers.links.show")),
+                      comment_path(comment), :class => 'btn btn-default btn-xs' %>
+
 </td>
 </tr>
 <% end %>
@@ -191,7 +178,7 @@
 </div><!-- /span comments -->
 </div><!-- /row comments -->
 </div><!-- /span split main -->
-<div class="col-md-3 col-xs-3">
+<div class="hidden-xs col-md-3">
 
 <h2>History</h2>
   <% if @versions != nil %>

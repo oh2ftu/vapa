@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 #load_and_authorize_resource
   def index
+#    @users = User.where(department_id: current_user.department_id).all
     @users = User.all
   end
 

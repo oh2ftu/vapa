@@ -28,13 +28,15 @@
   <tbody>
     <% @items.each do |item| %>
 	<tr class="
-	<%= raw "danger " if (item.last_seen) < 1.year.ago %><%= raw "info " if (item.last_seen) < 6.months.ago %><%= raw "success " if (item.last_seen) > 2.days.ago %>
-	<%= raw "danger " if item.serv_overdue(item.id) %><%= raw "danger " if item.insp_overdue(item.id) %>">
+	<%= raw "warning " if (item.last_seen) < 1.year.ago %><%= raw "info " if (item.last_seen) < 6.months.ago %><%= raw "success " if (item.last_seen) > 2.days.ago %>
+	<%= raw "warning " if item.serv_overdue(item.id) %><%= raw "warning " if item.insp_overdue(item.id) %>
+	<%= raw "danger " if item.pur_date(item.id) < item.life_time.year.ago && item.terminate_at_eol %>">
         <td><%= check_box_tag "item_ids[]", item.id %></td>
         <td>
 	 <%= item.tagged ? '[x]' : '[ ]' %> <%= link_to item.tagid, item_path(item) %><br>
         <%= raw "[x] Inspect!!<br>" if item.insp_overdue(item.id) %>
         <%= raw "[x] Service!!<br>" if item.serv_overdue(item.id) %>
+        <%= raw "[x] DISCARD!!<br>" if item.pur_date(item.id) < item.life_time.year.ago && item.terminate_at_eol %>
 	</td>
         <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.make %></td>
         <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.model.nil? ? '--' : item.model.truncate(15) %></td>
@@ -47,13 +49,17 @@
         <td><%= item.lup ? '[x]' : '[  ]' %><%= item.lup_inc ? '[x]' : '[  ]' %></td>
 	<td><%= item.unit.name %></td>
         <td>
+	 <% if can? :update, Item %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_item_path(item), :class => 'btn btn-default btn-xs' %>
+	 <% end %>
+         <% if can? :destroy, Item %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       item_path(item),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
+	<% end %>
         </td>
       </tr>
       <tr>
@@ -106,7 +112,14 @@
 	    <dt><strong>Warranty until</strong>:</dt>
 	    <dd><%= item.try(:purchased_at_date) + item.try(:warranty_time).year %></dd>
 	    <dt><strong>Lifetime until</strong>:</dt>
-	    <dd><%= item.pur_date(item.id) + item.life_time.year %></dd>
+	    <dd><%= item.pur_date(item.id) + item.life_time.year %>
+	    <% if item.pur_date(item.id) < item.life_time.year.ago %>
+	     <br>Lifetime ENDED, discard item!
+	    <% end %>
+	    </dd>
+            <dt><strong>Terminate at eol</strong>:</dt>
+            <dd><%= item.terminate_at_eol %></dd>
+
 	   </div>
 	   <div class="col-xs-12 col-md-2">
 	    <strong>Parent:</strong><br>

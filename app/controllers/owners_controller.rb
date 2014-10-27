@@ -5,7 +5,7 @@ load_and_authorize_resource
   # GET /owners
   # GET /owners.json
   def index
-    @owners = Owner.all
+    @owners = Owner.where(department_id: current_user.department_id).all
   end
 
   # GET /owners/1
@@ -26,6 +26,7 @@ load_and_authorize_resource
   # POST /owners.json
   def create
     @owner = Owner.new(owner_params)
+    @owner.department_id = current_user.department_id
 
     respond_to do |format|
       if @owner.save

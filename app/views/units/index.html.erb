@@ -20,19 +20,25 @@
         <td><%= unit.department.try(:name) %></td>
         <td><%=l unit.created_at %></td>
         <td>
+	 <% if can? :edit, Unit %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_unit_path(unit), :class => 'btn btn-default btn-xs' %>
+	 <% end %>
+	 <% if can? :destroy, Unit %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       unit_path(unit),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
+
+         <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
+<% if can? :create, Unit %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_unit_path,
             :class => 'btn btn-primary' %>
+<% end %>

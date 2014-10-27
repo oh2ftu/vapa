@@ -1,4 +1,4 @@
 class Identifier < ActiveRecord::Base
 has_paper_trail
-  belongs_to :item
+  has_and_belongs_to_many :items
 end

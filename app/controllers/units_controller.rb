@@ -5,7 +5,11 @@ load_and_authorize_resource
   # GET /units
   # GET /units.json
   def index
-    @units = Unit.all
+    if current_user.roles.where(name: "superuser").size == 1
+     @units = Unit.all
+    else
+     @units = Unit.where(department_id: current_user.department_id).all
+    end
   end
 
   # GET /units/1
@@ -26,6 +30,7 @@ load_and_authorize_resource
   # POST /units.json
   def create
     @unit = Unit.new(unit_params)
+    @unit.department_id = current_user.department_id
 
     respond_to do |format|
       if @unit.save

@@ -1,0 +1,35 @@
+<%= simple_form_for @comment, :html => { :class => 'form-horizontal' } do |f| %>
+<div class="row">
+ <div class="col-xs-12 col-md-4">
+  <%#= f.association :items, label_method: :tagid, :autofocus => true, input_html: { class: "col-md-4" } %>
+  <%#= error_span(@comment[:items]) %>
+
+  <%= f.association :items, value_method: :id, label_method: :tagid, :autofocus => true, input_html: { id: 'item-select4'}, :autofocus => true %>
+  <%= error_span(@comment[:items]) %>
+
+ </div>
+ <div class="col-xs-12 col-md-4">
+  <%= f.input :commenter %>
+  <%= error_span(@comment[:commenter]) %>
+  <%= f.input :body %>
+  <%= error_span(@comment[:body]) %>
+  <%= f.input :price %>
+  <%= error_span(@comment[:price]) %>
+  <%= f.association :vendor, input_html: {id: 'item-select5'} %>
+  <%= error_span(@comment[:vendor]) %>
+  <div class="control-group">
+      <%= f.label :service, :class => 'control-label' %>
+      <%= f.input_field :service, as: :boolean, boolean_style: :inline %>
+    <%= error_span(@comment[:service]) %>
+  </div>
+  <div class="control-group">
+      <%= f.label :inspection, :class => 'control-label' %>
+      <%= f.input_field :inspection, as: :boolean, boolean_style: :inline %>
+    <%= error_span(@comment[:inspection]) %>
+  </div>
+ </div>
+</div>
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                comments_path, :class => 'btn btn-default' %>
+<% end %>

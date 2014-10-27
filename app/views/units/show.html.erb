@@ -9,15 +9,8 @@
   <dt><strong><%= model_class.human_attribute_name(:department_id) %>:</strong></dt>
   <dd><%= @unit.department.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:unit_type_id) %>:</strong></dt>
-  <dd><%= @unit.unit_type.name %></dd>
+  <dd><%= @unit.unit_type.try(:name) %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               units_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_unit_path(@unit), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              unit_path(@unit),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>

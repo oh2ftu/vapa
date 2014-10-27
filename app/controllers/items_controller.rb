@@ -88,7 +88,7 @@ if params[:tag]
 ##    @items = Item.all.paginate(:per_page => 10, :page => params[:page])
 else
 
-    @items = Item.filterrific_find(@filterrific).page(params[:page])
+    @items = Item.where(department_id: current_user.department_id).filterrific_find(@filterrific).page(params[:page])
 end
     session[:filterrific_items] = @filterrific.to_hash
     respond_to do |format|
@@ -153,6 +153,7 @@ end
 
   def create
     @item = Item.new(item_params)
+    @item.department_id = current_user.department_id
 
     respond_to do |format|
       if @item.save
@@ -202,6 +203,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id, :owner_id, :into_use, :ip, :inspection_interval, :item, :memo, :lup_inc, :search, :department_id, :user_id)
+      params.require(:item).permit(:tagid, :rfid, :category_id, :sub_category_id, :weight, :description, :purchased_at_date, :vendor_id, :warranty_time, :lifetime_until, :serial, :sku, :price, :owner, :last_seen, :service_interval, :tagged, :status_id, :lup, :ancestry, :parent_id, :tag_list, :make, :model, :warranty_time, :life_time, :unit_id, :owner_id, :into_use, :ip, :inspection_interval, :item, :memo, :lup_inc, :search, :department_id, :user_id, :terminate_at_eol)
     end
 end

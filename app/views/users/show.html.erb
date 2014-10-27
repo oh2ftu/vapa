@@ -14,7 +14,13 @@
    <dt><strong><%= model_class.human_attribute_name(:lastname) %>:</strong></dt>
    <dd><%= @user.lastname %></dd>
    <dt><strong><%= model_class.human_attribute_name(:roles) %>:</strong></dt>
-   <dd><%= @user.roles.first.try(:name) %></dd>
+   <dd>
+    <% @user.roles.each do |role| %>
+     <%= role.name %><br>
+    <% end %>
+   </dd>
+   <dt><strong><%= model_class.human_attribute_name(:department) %>:</strong></dt>
+   <dd><%= @user.department.try(:name) %></dd>
    <dt><strong><%= model_class.human_attribute_name(:reset_password_sent_at) %>:</strong></dt>
    <dd><%= @user.reset_password_sent_at %></dd>
    <dt><strong><%= model_class.human_attribute_name(:remember_created_at) %>:</strong></dt>
@@ -50,6 +56,13 @@
     <%= render partial: "equipment", locals: { items: @user.items.boots } %>
    <dt><strong><%= model_class.human_attribute_name(:pager) %>:</strong></dt>
     <%= render partial: "equipment", locals: { items: @user.items.pagers } %>
+  </dl>
+ </div>
+ <div class="col-xs-12 col-md-6 col-lg-4">
+  <h3>Access</h3>
+  <dl class="dl-horizontal">
+   Manage user: <% if can? :manage, User %>True<% end %><br>
+   Manage department: <% if can? :manage, Department %>True<% end %>
   </dl>
  </div>
 </div>

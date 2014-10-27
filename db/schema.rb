@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141025183700) do
+ActiveRecord::Schema.define(version: 20141027185043) do
 
   create_table "addresses", force: true do |t|
     t.string   "line1"
@@ -36,17 +36,23 @@ ActiveRecord::Schema.define(version: 20141025183700) do
   create_table "comments", force: true do |t|
     t.string   "commenter"
     t.text     "body"
-    t.integer  "price",      default: 0,     null: false
-    t.integer  "item_id"
+    t.integer  "price",         default: 0,     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "service",    default: false, null: false
-    t.boolean  "inspection", default: false, null: false
+    t.boolean  "service",       default: false, null: false
+    t.boolean  "inspection",    default: false, null: false
     t.integer  "vendor_id"
+    t.integer  "item_id"
+    t.integer  "department_id"
   end
 
-  add_index "comments", ["item_id"], name: "index_comments_on_item_id", using: :btree
+  add_index "comments", ["department_id"], name: "index_comments_on_department_id", using: :btree
   add_index "comments", ["vendor_id"], name: "index_comments_on_vendor_id", using: :btree
+
+  create_table "comments_items", id: false, force: true do |t|
+    t.integer "comment_id", null: false
+    t.integer "item_id",    null: false
+  end
 
   create_table "departments", force: true do |t|
     t.string   "name"
@@ -62,9 +68,16 @@ ActiveRecord::Schema.define(version: 20141025183700) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.integer  "department_id"
   end
 
+  add_index "identifiers", ["department_id"], name: "index_identifiers_on_department_id", using: :btree
   add_index "identifiers", ["item_id"], name: "index_identifiers_on_item_id", using: :btree
+
+  create_table "identifiers_items", id: false, force: true do |t|
+    t.integer "identifier_id", null: false
+    t.integer "item_id",       null: false
+  end
 
   create_table "items", force: true do |t|
     t.string   "tagid",                                                               null: false
@@ -101,6 +114,7 @@ ActiveRecord::Schema.define(version: 20141025183700) do
     t.boolean  "lup_inc",                                      default: false,        null: false
     t.integer  "department_id"
     t.integer  "user_id"
+    t.boolean  "terminate_at_eol",                             default: false,        null: false
   end
 
   add_index "items", ["category_id"], name: "index_items_on_category_id", using: :btree

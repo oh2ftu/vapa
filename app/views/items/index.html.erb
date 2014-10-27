@@ -113,12 +113,14 @@
   locals: { items: @items }
 ) %>
 <br>
-<%= link_to t('.new', :default => t("helpers.links.new")),
+<% if can? :create, Item %>
+ <%= link_to t('.new', :default => t("helpers.links.new")),
             new_item_path,
             :class => 'btn btn-primary' %>
-<h2>Import items</h2>
+ <h2>Import items</h2>
 
-<%= form_tag import_items_path, multipart: true do %>
+ <%= form_tag import_items_path, multipart: true do %>
   <%= file_field_tag :file %>
   <%= submit_tag "Import" %>
+ <% end %>
 <% end %>

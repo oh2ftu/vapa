@@ -16,6 +16,9 @@
   <% end %>
 <div class="row">
 <div class="col-lg-3">
+    <% if can? :edit, @item.department_id %>
+     <%= f.association :department %>
+    <% end %>
     <% if @item.tagged? %>
      <%= f.input :tagid, disabled: true, hint: 'Already tagged' %>
     <% else %>
@@ -150,6 +153,11 @@
       <%= f.label :tagged, :class => 'control-label' %>
       <%= f.input_field :tagged, as: :boolean, boolean_style: :inline %> 
     <%= error_span(@item[:tagged]) %>
+  </div>
+  <div class="control-group">
+      <%= f.label :terminate_at_eol, :class => 'control-label' %>
+      <%= f.input_field :terminate_at_eol, as: :boolean, boolean_style: :inline %>
+    <%= error_span(@item[:terminate_at_eol]) %>
   </div>
   <div class="control-group">
     <%#= f.label :last_seen, :class => 'control-label' %>

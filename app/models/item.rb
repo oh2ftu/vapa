@@ -10,8 +10,8 @@ belongs_to :vendor
 belongs_to :unit
 belongs_to :owner
 belongs_to :user, inverse_of: :items
-has_many :identifiers, dependent: :destroy
-has_many :comments, dependent: :destroy
+has_and_belongs_to_many :identifiers, dependent: :destroy
+has_and_belongs_to_many :comments, dependent: :destroy, inverse_of: :items
 acts_as_taggable
 has_paper_trail :ignore => [:updated_at]
 
@@ -47,7 +47,7 @@ end
 
 def serv_overdue(id)
   id = Item.find(id)
-  sd = id.comments.where(item_id: id).where(service: true)
+  sd = id.comments.where(service: true)
   if id.service_interval == 0 || id.service_interval.blank?
    return false
   else
@@ -64,7 +64,7 @@ end
 def insp_overdue(id)
 
   id = Item.find(id)
-  sd = id.comments.where(item_id: id).where(inspection: true)
+  sd = id.comments.where(inspection: true)
   if id.inspection_interval == 0 || id.inspection_interval.blank?
    return false
   else
@@ -221,11 +221,19 @@ scope :sorted_by, lambda { |sort_option|
 }
 scope :with_service_overdue, lambda {|flag|
   return nil  if 0 == flag
-Item.joins("LEFT JOIN comments ON comments.item_id=items.id AND comments.service='TRUE'")
+Item.joins("LEFT JOIN comments_items ON comments_items.item_id = items.id LEFT JOIN comments ON comments.id = comments_items.comment_id  AND comments.service='TRUE'")
         .joins("LEFT JOIN comments c2 ON c2.item_id=items.id AND c2.service='TRUE' AND (datediff(NOW(),  COALESCE(c2.created_at, items.into_use, items.purchased_at_date)) > items.service_interval * 365) AND c2.id <> comments.id")
 	.where("datediff(NOW(), COALESCE(comments.created_at, items.into_use, items.purchased_at_date)) > items.service_interval * 365")
 	.where("c2.id IS NULL")
 	.where("items.service_interval IS NOT NULL AND items.service_interval > 0")
+}
+scope :with_sservice_overdue, lambda {|flag|
+  return nil  if 0 == flag
+Item.joins("LEFT JOIN comments ON comments.item_id=items.id AND comments.service='TRUE'")
+        .joins("LEFT JOIN comments c2 ON c2.item_id=items.id AND c2.service='TRUE' AND (datediff(NOW(),  COALESCE(c2.created_at, items.into_use, items.purchased_at_date)) > items.service_interval * 365) AND c2.id <> comments.id")
+        .where("datediff(NOW(), COALESCE(comments.created_at, items.into_use, items.purchased_at_date)) > items.service_interval * 365")
+        .where("c2.id IS NULL")
+        .where("items.service_interval IS NOT NULL AND items.service_interval > 0")
 }
 scope :with_inspection_overdue, lambda {|flag|
   return nil  if 0 == flag

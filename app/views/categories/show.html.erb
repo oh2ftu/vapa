@@ -18,33 +18,38 @@
 </tr>
 
 <% @category.sub_categories.each do |sub_category| %>
-<tr>
-<td><%= sub_category.id %></td>
-<td><%= sub_category.acronym %></td>
-<td><%= sub_category.name %></td>
-<td>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
+ <tr>
+  <td><%= sub_category.id %></td>
+  <td><%= sub_category.acronym %></td>
+  <td><%= sub_category.name %></td>
+  <td>
+   <% if can? :update, SubCategory %>
+    <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_sub_category_path(sub_category), :class => 'btn btn-default btn-xs' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+   <% end %>
+   <% if can? :destroy, SubCategory %>
+    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               sub_category_path(@category),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger btn-xs' %>
-
-</td>
-</tr>
+   <% end %>
+  </td>
+ </tr>
 <% end %>
-<tr>
-<%= simple_form_for([@category, @category.sub_categories.build]) do |f| %>
-<td></td>
-<td><%= f.input :acronym, label: false %></td>
-<td><%= f.input :name, label: false %></td>
-<td>
-  <%= f.submit nil, :class => 'btn btn-primary btn-xs' %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+<% if can? :create, SubCategory %>
+  <tr>
+   <%= simple_form_for([@category, @category.sub_categories.build]) do |f| %>
+   <td></td>
+   <td><%= f.input :acronym, label: false %></td>
+   <td><%= f.input :name, label: false %></td>
+   <td>
+    <%= f.submit nil, :class => 'btn btn-primary btn-xs' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             categories_path, :class => 'btn btn-default btn-xs' %>
-</td>
-</tr>
+   </td>
+  </tr>
+ <% end %>
 <% end %>
 
 </table>
@@ -52,10 +57,14 @@
 <br>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               categories_path, :class => 'btn btn-default'  %>
+<% if can? :edit, Category %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_category_path(@category), :class => 'btn btn-default' %>
+<% end %>
+<% if can? :destroy, Category %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               category_path(@category),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+<% end %>

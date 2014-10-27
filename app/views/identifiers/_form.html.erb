@@ -1,52 +1,17 @@
-<%= form_for @identifier, :html => { :class => "form-horizontal identifier" } do |f| %>
-
-    <% if @identifier.errors.any? %>
-    <div id="error_expl" class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@identifier.errors.count, "error") %> prohibited this identifier from being saved:</h3>
-      </div>
-      <div class="panel-body">
-        <ul>
-        <% @identifier.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-        </ul>
-      </div>
-    </div>
-  <% end %>
-
-  <div class="control-group">
-    <%= f.label :type, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :type, :class => 'form-control' %>
-    </div>
-    <%= error_span(@identifier[:type]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :barcode, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :barcode, :class => 'form-control' %>
-    </div>
-    <%= error_span(@identifier[:barcode]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :item_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :item_id, :class => 'form-control' %>
-    </div>
-    <%= error_span(@identifier[:item_id]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
-    </div>
-    <%= error_span(@identifier[:name]) %>
-  </div>
-
-
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+<%= simple_form_for @identifier, :html => { :class => 'form-horizontal' } do |f| %>
+<div class="row">
+ <div class="col-xs-12 col-md-4">
+  <%= f.association :items, value_method: :id, label_method: :tagid, input_html: { id: 'item-select5'} %>
+  <%= error_span(@identifier[:items]) %>
+ </div>
+ <div class="col-xs-12 col-md-4">
+  <%= f.input :name %>
+  <%= error_span(@identifier[:name]) %>
+  <%= f.input :barcode %>
+  <%= error_span(@identifier[:barcode]) %>
+ </div>
+</div>
+  <%= f.button :submit, :class => 'btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            identifiers_path, :class => 'btn btn-default' %>
-
+                identifiers_path, :class => 'btn btn-default' %>
 <% end %>

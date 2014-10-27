@@ -10,8 +10,10 @@ Rails.application.routes.draw do
   devise_for :users
 mount Judge::Engine => '/judge'
   resources :users
-  resources :owners
-
+  resources :owners do
+   resources :users
+  end
+  resources :identifiers
   resources :units
 
   resources :vendors do
@@ -19,7 +21,7 @@ mount Judge::Engine => '/judge'
 end
 
   resources :statuses
-
+  resources :comments
 resources :sub_categories do
   resources :items
         collection { post :import }
