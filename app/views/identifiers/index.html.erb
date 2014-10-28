@@ -8,7 +8,7 @@
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:barcode) %></th>
       <th><%= model_class.human_attribute_name(:items) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th class="hidden-xs hidden-sm"><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -19,10 +19,14 @@
         <td><%= identifier.barcode %></td>
 	<% if identifier.item_id.nil? ||identifier.item_id.blank? ||identifier.item_id == 0 %>
          <td data-toggle="collapse" data-target="#<%= identifier.id %>" class="accordion-toggle">Click to show items (<%= identifier.items.size %>)</td>
+	<% elsif identifier.items.size == 1 %>
+	 <% identifier.items.each do |i| %>
+	  <td><%= link_to i.tagid, item_path(i) %></td>
+	  <% end %>
 	<% else %>
 	 <td><%= identifier.item_id %></td>
 	<% end %>
-        <td><%=l identifier.created_at %></td>
+        <td class="hidden-xs hidden-sm"><%=l identifier.created_at %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       identifier_path(identifier), :class => 'btn btn-default btn-xs' %>

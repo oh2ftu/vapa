@@ -5,4 +5,5 @@ validates :commenter, :body, presence: true
 
   has_and_belongs_to_many :items, inverse_of: :comments
 belongs_to :vendor
+belongs_to :department
 end

@@ -1,8 +1,11 @@
 class UsersController < ApplicationController
 #load_and_authorize_resource
   def index
-#    @users = User.where(department_id: current_user.department_id).all
-    @users = User.all
+    if current_user.roles.where(name: "superuser").size == 1
+     @users = User.all
+    else
+     @users = User.where(department_id: current_user.department_id).all
+    end
   end
 
   def show

@@ -21,7 +21,7 @@ scope :helmets, -> { where(sub_category_id: "18") }
 scope :boots, -> { where(sub_category_id: "14") }
 scope :pagers, -> { where(sub_category_id: "268") }
 scope :headsets, -> { where(sub_category_id: "105") }
-
+scope :filtered, -> { where(department_id: current_user.department_id) }
 #acts_as_taggable_on :category, :sub_category, :owner
 include Tree
 has_ancestry :orphan_strategy => :rootify
@@ -153,6 +153,8 @@ filterrific(
     :with_service_overdue,
     :with_inspection_overdue,
     :with_last_seen_overdue,
+    :with_department_id,
+    :with_unit_type_id,
     :with_tagged_only
   ]
 )
@@ -281,6 +283,10 @@ scope :with_owner_id, lambda { |unit_ids|
   unit_ids = Owner.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
   where(:owner_id => [*unit_ids])
 }
+scope :with_department_id, lambda { |unit_ids|
+  unit_ids = Department.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
+  where(:department_id => [*unit_ids])
+}
 scope :with_category_id, lambda { |unit_ids|
   unit_ids = Category.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
   where(:category_id => [*unit_ids])
@@ -293,7 +299,10 @@ scope :with_unit_id, lambda { |unit_ids|
   unit_ids = Unit.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
   where(:unit_id => [*unit_ids])
 }
-
+scope :with_unit_type_id, lambda { |unit_ids|
+  unit_ids = UnitType.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
+  where(:unit_id => [*unit_ids])
+}
 scope :with_status_id, lambda { |unit_ids|
   unit_ids = Status.all.map(&:id) if unit_ids.blank? || (unit_ids.size == 1 && unit_ids[0].blank?) || (unit_ids.size == 2 && unit_ids[1].blank?)
   where(:status_id => [*unit_ids])

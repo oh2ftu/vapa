@@ -8,8 +8,8 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:acronym) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:category_id) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th class="hidden-xs"><%= model_class.human_attribute_name(:category_id) %></th>
+      <th class="hidden-xs hidden-sm"><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -19,8 +19,8 @@
         <td><%= link_to sub_category.id, sub_category_path(sub_category) %></td>
         <td><%= sub_category.acronym %></td>
         <td><%= sub_category.name %></td>
-        <td><%= sub_category.category_id %></td>
-        <td><%=l sub_category.created_at %></td>
+        <td class="hidden-xs"><%= sub_category.category.try(:name) %></td>
+        <td class="hidden-xs hidden-sm"><%=l sub_category.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_sub_category_path(sub_category), :class => 'btn btn-default btn-xs' %>

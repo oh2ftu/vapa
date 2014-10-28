@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+<div class="panel-heading"><%= model %></div>
+<table class="table table-striped">
+<thead>
+ <tr>
+  <th></th>
+  <th>Create</th>
+  <th>Read</th>
+  <th>Update</th>
+  <th>destroy</th>
+ </tr>
+</thead>
+<tbody>
+ <tr>
+  <td>global</td>
+  <td class="<%= (@user.can? :create, model) ? "success" : "danger" %>	"><%= @user.can? :create, model %></td>
+  <td class="<%= (@user.can? :read, model) ? "success" : "danger" %>	"><%= @user.can? :read, model %></td>
+  <td class="<%= (@user.can? :update, model) ? "success" : "danger" %>	"><%= @user.can? :update, model %></td>
+  <td class="<%= (@user.can? :destroy, model) ? "success" : "danger" %>	"><%= @user.can? :destroy, model %></td>
+ </tr>
+ <tr>
+  <td>department_id</td>
+  <td class="<%= (@user.can? :create, model, :department_id => @user.department_id) ? "success" : "danger" %>  "><%= @user.can? :create, model, :department_id => @user.department_id %></td>
+  <td class="<%= (@user.can? :read, model, :department_id => @user.department_id) ? "success" : "danger" %>    "><%= @user.can? :read, model, :department_id => @user.department_id %></td>
+  <td class="<%= (@user.can? :update, model, :department_id => @user.department_id) ? "success" : "danger" %>  "><%= @user.can? :update, model, :department_id => @user.department_id %></td>
+  <td class="<%= (@user.can? :destroy, model, :department_id => @user.department_id) ? "success" : "danger" %> "><%= @user.can? :destroy, model, :department_id => @user.department_id %></td>
+ </tr>
+
+</tbody>
+</table>
+</div>

@@ -1,7 +1,7 @@
 <%= simple_form_for @identifier, :html => { :class => 'form-horizontal' } do |f| %>
 <div class="row">
  <div class="col-xs-12 col-md-4">
-  <%= f.association :items, value_method: :id, label_method: :tagid, input_html: { id: 'item-select5'} %>
+  <%= f.association :items, collection: Item.where(department_id: current_user.department_id), value_method: :id, label_method: :tagid, input_html: { id: 'item-select5'} %>
   <%= error_span(@identifier[:items]) %>
  </div>
  <div class="col-xs-12 col-md-4">

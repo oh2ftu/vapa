@@ -3,7 +3,7 @@ load_and_authorize_resource
 
   def index
     @comment = Comment.where(department_id: current_user.department_id).all
-	@comment = Comment.all
+    @comment = Comment.all
   end
 
   def show

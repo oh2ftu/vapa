@@ -6,13 +6,13 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:commenter) %></th>
-      <th><%= model_class.human_attribute_name(:body) %></th>
-      <th><%= model_class.human_attribute_name(:price) %></th>
-      <th><%= model_class.human_attribute_name(:item_id) %></th>
+      <th class="hidden-xs"><%= model_class.human_attribute_name(:body) %></th>
+      <th class="visible-lg"><%= model_class.human_attribute_name(:department) %></th>
+      <th class="hidden-xs"><%= model_class.human_attribute_name(:item_id) %></th>
       <th><%= model_class.human_attribute_name(:service) %></th>
       <th><%= model_class.human_attribute_name(:inspection) %></th>
-      <th><%= model_class.human_attribute_name(:vendor_id) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th class="visible-lg"><%= model_class.human_attribute_name(:vendor_id) %></th>
+      <th class="hidden-xs hidden-sm"><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -20,17 +20,17 @@
     <% @comments.reverse.each do |comment| %>
       <tr>
         <td><%= comment.commenter %></td>
-        <td><%= comment.body %></td>
-        <td><%= comment.price %></td>
+        <td class="hidden-xs"><%= comment.body %></td>
+        <td class="visible-lg"><%= comment.department.try(:name) %></td>
 	<% if comment.item_id.nil? ||comment.item_id.blank? ||comment.item_id == 0 %>
-         <td data-toggle="collapse" data-target="#<%= comment.id %>" class="accordion-toggle">Click to show items (<%= comment.items.size %>)</td>
+         <td  class="hidden-xs" data-toggle="collapse" data-target="#<%= comment.id %>" class="accordion-toggle">Click to show items (<%= comment.items.size %>)</td>
 	<% else %>
-	 <td><%= comment.item_id %></td>
+	 <td class="hidden-xs"><%= comment.item_id %></td>
 	<% end %>
         <td><%= comment.service %></td>
         <td><%= comment.inspection %></td>
-        <td><%= comment.vendor.try(:name) %></td>
-        <td><%=l comment.created_at %></td>
+        <td class="visible-lg"><%= comment.vendor.try(:name) %></td>
+        <td class="hidden-xs hidden-sm"><%=l comment.created_at %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       comment_path(comment), :class => 'btn btn-default btn-xs' %>

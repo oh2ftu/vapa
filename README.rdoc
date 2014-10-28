@@ -16,11 +16,15 @@ Added lup_inc to mark if item is listed as required.
 * Added check for last_seen overdue (1 year hard-coded)
 * Added the ability to assign an item to user (from the item-form)
 * The user shows certain items (scoped)
+* Comments and identifiers as many-to-many, select2 for barcode usage. Works nicely!
+* broke inspection or service_overdue -checkboxes
+* Finetuned scalability for smaller devices
 
 == Known bugs
 * dropdown-menu for parent object can't populate over a certain amount of rows. Approx 250 seems to be the limit -> solved with select2
 * Navigating through sub_categories will lead to an error
 * Some styling -issues
+* service_overdue and insp_overdue do not work
 
 == Who would use this?
 Any fire department or similar actor.
@@ -35,13 +39,13 @@ An item may have a parent, but must have a category and sub_category.
 * Refine styling and views
 * A datepicker would be nice!
 * Refine usage and showing of paper_trail.changesets
-* Add a top-level for items (department) to use a common user and item db for multiple fd:s
+* DONE Add a top-level for items (department) to use a common user and item db for multiple fd:s
 * Departments are added, but not yet as references for other than users.
 * Department_id will be added to: units, users, vendors and owners.
 * Vendors might be global by name and address, contacts and billing information should be department-specific
 * Authorization that divides based on department_id should be done
 * granular authorization. There's currently a superuser and visitor made.
-* Fix the hot mess of a view for item show. It's horrible.
+* Fix the (hot) mess of a view for item show. It's horrible.
 
 === This should do this sometime in the future:
 Equipment/gear/item management:

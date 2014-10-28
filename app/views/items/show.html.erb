@@ -4,9 +4,7 @@
 </div>
 
 <div class="row">
-<div class="col-md-9 col-xs-12">
-<div class="row">
-<div class="col-md-5 col-xs-12">
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-6">
 <h2>Item info</h2>
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:tagid) %>:</strong></dt>
@@ -92,7 +90,7 @@
               :class => 'btn btn-danger' %>
 </div><!-- /div span4 item -->
 
-<div class="col-md-4 col-xs-12"><!-- vendor and identifier -->
+<div class="hidden-xs col-sm-6 col-md-5 col-lg-3"><!-- vendor and identifier -->
 <h2>Vendor</h2>
 <dl class="dl-horizontal">
 <dt><strong>Vendor:</strong></dt>
@@ -114,33 +112,31 @@
   <dd><%= @item.vendor.billing %></dd>
 
 </dl>
-<div class="hidden-xs">
-<h2>Identifiers</h2>
-<table class="table table-striped">
-<tr>
-<th>Type</th>
-<th>Barcode</th>
-<th></th>
-</tr>
-<% @item.identifiers.each do |identifier| %>
-<tr>
-<td><%= identifier.name %></td>
-<td><%= identifier.barcode %></td>
-<td>
+ </div>
+ <div class="hidden-xs col-sm-6 col-md-4 col-lg-3">
+  <h2>Identifiers</h2>
+  <table class="table table-striped">
+  <tr>
+  <th>Type</th>
+  <th>Barcode</th>
+  <th></th>
+  </tr>
+  <% @item.identifiers.each do |identifier| %>
+  <tr>
+  <td><%= identifier.name %></td>
+  <td><%= identifier.barcode %></td>
+  <td>
            <%= link_to t('.show', :default => t("helpers.links.show")),
                       identifier_path(identifier), :class => 'btn btn-default btn-xs' %>
-</tr>
-<% end %>
-</table>
-<%= link_to t('.new', :default => t("helpers.links.new")),
+  </tr>
+  <% end %>
+  </table>
+  <%= link_to t('.new', :default => t("helpers.links.new")),
             new_identifier_path,
             :class => 'btn btn-primary btn-xs' %>
-</div>
-</div><!-- /span for vendor and ident -->
-</div><!-- /row for main info -->
+ </div>
 
-<div class="row">
-<div class="col-md-9 col-xs-12">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 <h2>Service events and comments</h2>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_comment_path,
@@ -148,10 +144,10 @@
 
 <table class="table table-striped">
 <tr>
-<th>* Who?</th>
-<th>* Comment</th>
-<th>Place</th>
-<th>Price</th>
+<th class="hidden-xs">* Who?</th>
+<th class="hidden-xs">* Comment</th>
+<th class="hidden-xs hidden-sm">Place</th>
+<th class="hidden-xs hidden-sm">Price</th>
 <th>Serv.?</th>
 <th>Insp.?</th>
 <th>Date</th>
@@ -159,10 +155,10 @@
 </tr>
 <% @item.comments.reverse.each do |comment| %>
 <tr>
-<td><%= comment.commenter %></td>
-<td><%= comment.body %></td>
-<td><%= comment.vendor_id.nil? ? '--' : comment.vendor.name %></td>
-<td>EUR <%= comment.price %></td>
+<td class="hidden-xs"><%= comment.commenter %></td>
+<td class="hidden-xs"><%= comment.body %></td>
+<td class="hidden-xs hidden-sm"><%= comment.vendor_id.nil? ? '--' : comment.vendor.name %></td>
+<td class="hidden-xs hidden-sm">EUR <%= comment.price %></td>
 <td><%= comment.service ? '[x]' : '[ ]' %></td>
 <td><%= comment.inspection ? '[x]' : '[ ]' %></td>
 <td><%= comment.created_at %></td>
@@ -175,15 +171,17 @@
 <% end %>
 </table>
 
-</div><!-- /span comments -->
-</div><!-- /row comments -->
 </div><!-- /span split main -->
-<div class="hidden-xs col-md-3">
+</div> <!-- /main row ok -->
+
+
+<div clas="row">
 
 <h2>History</h2>
   <% if @versions != nil %>
-  <% versions = @versions.first(5) %>
+  <% versions = @versions.first(4) %>
   <% versions.each do |v| %>
+<div class="hidden-xs hidden-sm col-md-6 col-lg-3">
    <b><%= v.event %></b> at <%= v.created_at %>:<br>
    from: <%= v.ip %><br>
 <pre>
@@ -192,8 +190,7 @@
 <li><b><%=h k%>:</b> <%=h v[0]%> -&gt; <%=h v[1]%></li> <% } %>
 </ul>
 </pre>
-
+</div>
   <% end %>
   <% end %>
-</div> <!-- /span main split -->
-</div> <!-- /main row ok -->
+</div> <!-- history row -->

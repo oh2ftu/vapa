@@ -8,20 +8,20 @@
 <table class="table table-striped table-hover table-condensed">
   <thead>
     <tr>
-      <th>&nbsp;</th>
+      <th class="hidden-xs hidden-sm">&nbsp;</th>
       <th>tagid<%#= model_class.human_attribute_name(:tagid) %></th>
       <th>Make<%#= model_class.human_attribute_name(:make) %></th>
-      <th>Model<%#= model_class.human_attribute_name(:model) %></th>
-      <th>Total weight:<br><%= @items.sum(:weight) %> kg<%#= model_class.human_attribute_name(:weight) %></th>
+      <th class="hidden-xs hidden-sm">Model<%#= model_class.human_attribute_name(:model) %></th>
+      <th class="hidden-xs hidden-sm hidden-md">Total weight:<br><%= @items.sum(:weight) %> kg<%#= model_class.human_attribute_name(:weight) %></th>
       <th>Description<%#= model_class.human_attribute_name(:description) %></th>
-      <th colspan="2"><%#= model_class.human_attribute_name(:parent_id) %></th>
-      <th>Owner<%#= model_class.human_attribute_name(:owner) %></th>
-      <th>Last Seen<%#= model_class.human_attribute_name(:last_seen) %><br>
+      <th class="hidden-xs hidden-sm hidden-md" colspan="2"><%#= model_class.human_attribute_name(:parent_id) %></th>
+      <th class="hidden-xs hidden-sm">Owner<%#= model_class.human_attribute_name(:owner) %></th>
+      <th class="hidden-xs hidden-sm hidden-sm">Last Seen<%#= model_class.human_attribute_name(:last_seen) %><br>
 	>1 year ago: 
 	<%= @items.where("last_seen < :foo", { :foo => 1.year.ago} ).size %>
       </th>
-      <th>LUP<%#= model_class.human_attribute_name(:lup) %></th>
-      <th>Unit</th>
+      <th class="hidden-xs hidden-sm">LUP<%#= model_class.human_attribute_name(:lup) %></th>
+      <th class="hidden-xs">Unit</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -31,7 +31,7 @@
 	<%= raw "warning " if (item.last_seen) < 1.year.ago %><%= raw "info " if (item.last_seen) < 6.months.ago %><%= raw "success " if (item.last_seen) > 2.days.ago %>
 	<%= raw "warning " if item.serv_overdue(item.id) %><%= raw "warning " if item.insp_overdue(item.id) %>
 	<%= raw "danger " if item.pur_date(item.id) < item.life_time.year.ago && item.terminate_at_eol %>">
-        <td><%= check_box_tag "item_ids[]", item.id %></td>
+        <td class="hidden-xs hidden-sm"><%= check_box_tag "item_ids[]", item.id %></td>
         <td>
 	 <%= item.tagged ? '[x]' : '[ ]' %> <%= link_to item.tagid, item_path(item) %><br>
         <%= raw "[x] Inspect!!<br>" if item.insp_overdue(item.id) %>
@@ -39,15 +39,19 @@
         <%= raw "[x] DISCARD!!<br>" if item.pur_date(item.id) < item.life_time.year.ago && item.terminate_at_eol %>
 	</td>
         <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.make %></td>
-        <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.model.nil? ? '--' : item.model.truncate(15) %></td>
-        <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.weight %> kg</td>
+        <td class="hidden-xs hidden-sm" data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.model.nil? ? '--' : item.model.truncate(15) %></td>
+        <td class="hidden-xs hidden-sm hidden-md" data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.weight %> kg</td>
         <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.description.nil? ? '--' : item.description.truncate(20) %></td>
-        <td><%= item.parent ? link_to(item.parent.tagid, item_path(item.parent.id)) : '--' %></td>
-        <td><%= item.children ? item.subtree.sum(:weight) : '' %> kg</td>
-        <td><%= item.owner_id.nil? ? 'NO OWNER' : item.owner.name %></td>
-        <td><%= item.last_seen.year %></td>
-        <td><%= item.lup ? '[x]' : '[  ]' %><%= item.lup_inc ? '[x]' : '[  ]' %></td>
-	<td><%= item.unit.name %></td>
+        <td class="hidden-xs hidden-sm hidden-md"><%= item.parent ? link_to(item.parent.tagid, item_path(item.parent.id)) : '--' %></td>
+        <td class="hidden-xs hidden-sm hidden-md"><%= item.children ? item.subtree.sum(:weight) : '' %> kg</td>
+        <td class="hidden-xs hidden-sm"><%= item.owner_id.nil? ? 'NO OWNER' : item.owner.name %>
+	<% if can? :edit, item.department_id %>
+	 <br><%= item.department.try(:name) %>
+	<% end %>
+	</td>
+        <td class="hidden-xs hidden-sm hidden-sm"><%= item.last_seen.year %></td>
+        <td class="hidden-xs hidden-sm"><%= item.lup ? '[x]' : '[  ]' %><%= item.lup_inc ? '[x]' : '[  ]' %></td>
+	<td class="hidden-xs"><%= item.unit.name %></td>
         <td>
 	 <% if can? :update, Item %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -67,7 +71,7 @@
 	 <div class="accordian-body collapse" id="<%= item.id %>">
 	  <dl class="dl-horizontal">
  	  <div class="row">
-  	   <div class="col-xs-12 col-md-3">
+  	   <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
             <h3><%= item.description %></h3>
             <dt><strong>Make</strong>:</dt>
             <dd><%= item.try(:make) %></dd>
@@ -82,7 +86,7 @@
             <dt><strong>Owner</strong>:</dt>
             <dd><%= item.owner.name %></dd>
            </div>
-           <div class="col-xs-12 col-md-3">
+           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
             <dt><strong>Category</strong>:</dt>
             <dd><%= item.category.name %></dd>
             <dt><strong>SubCategory</strong>:</dt>
@@ -102,7 +106,7 @@
  	     <%= item.insp_overdue(item.id) ? (raw "<br> OVERDUE") : "" %>  
  	    </dd>
 	   </div>
-	   <div class="col-xs-12 col-md-3">
+	   <div class="col-xs-11 col-sm-11 col-md-6 col-lg-3">
 	    <dt><strong>Last seen</strong>:</dt>
 	    <dd><%= item.last_seen %></dd>
 	    <dt><strong>Purchased at</strong>:</dt>
@@ -121,7 +125,7 @@
             <dd><%= item.terminate_at_eol %></dd>
 
 	   </div>
-	   <div class="col-xs-12 col-md-2">
+	   <div class="hidden-xs hidden-sm col-md-5 col-lg-2">
 	    <strong>Parent:</strong><br>
 	     <%= item.parent ? link_to(item.parent.tagid, item_path(item.parent.id)) : '--' %><br>
 	    <strong>Grand/children:</strong><br>
@@ -132,7 +136,7 @@
 	      <% end %>
 	     <% end %>
 	   </div>
-	   <div class="col-md-1">
+	   <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
            <%= link_to t('.show', :default => t("helpers.links.show")),
                       item_path(item), :class => 'btn btn-default btn-xs' %>
 	   </div>

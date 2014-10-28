@@ -8,25 +8,26 @@ class Ability
     elsif user.has_role? :LUP
       can :read, :all
     elsif user.has_role? :view
-      can :view, :all, :department_id => user.department_id
-      cannot :manage, [Roles, Departments, UnitTypes]
+      can :view, [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
+      cannot :manage, [Role, Department, UnitType]
     elsif user.has_role? :admin
-      can :manage, :all, :department_id => user.department_id
-      cannot :manage, [Roles, Departments, UnitTypes]
-      can [:create, :read, :update], [Categories, SubCategories, Statuses]
+      can :manage, [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
+      cannot :manage, [Role, Department, UnitType]
+      can [:create, :read, :update], [Category, SubCategory, Status]
     elsif user.has_role? :manager
-      can [:read, :create, :update], :all, :department_id => user.department_id
-      cannot :manage, [Roles, Departments, UnitTypes]
-      can [:create, :read, :update], [Categories, SubCategories, Statuses]
+      can [:read, :create, :update], [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
+      cannot :manage, [Role, Department, UnitType]
+      can [:create, :read, :update], [Category, SubCategory, Status]
     elsif user.has_role? :service
-      can :manage, [Comments, Identifiers], :department_id => user.department_id
-      cannot :manage, [Roles, Departments, UnitTypes]
+      can [:read, :update], Item, :department_id => user.department_id
+      can :manage, [Comment, Identifier], :department_id => user.department_id
+      cannot :manage, [Role, Department, UnitType]
     elsif user.has_role? :sms
-      can :manage, [Comments, Identifiers], :department_id => user.department_id
-      cannot :manage, [Roles, Departments, UnitTypes]
+      can :manage, [Comment, Identifier], :department_id => user.department_id
+      cannot :manage, [Role, Department, UnitType]
 
     else
-      can :read, :all
+      can :read, Item
     end
     # Define abilities for the passed in user here. For example:
     #

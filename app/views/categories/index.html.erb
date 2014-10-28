@@ -8,7 +8,7 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:acronym) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th class="hidden-xs"><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -18,7 +18,7 @@
         <td><%= link_to category.id, category_path(category) %></td>
         <td><%= category.acronym %></td>
         <td><%= link_to category.name, category_path(category) %></td>
-        <td><%=l category.created_at %></td>
+        <td class="hidden-xs"><%=l category.created_at %></td>
         <td>
 	 <% if can? :edit, Category %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

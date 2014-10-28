@@ -14,24 +14,24 @@
       :autofocus => true
     ) %>
   </div>
-  <div class="col-xs-6 col-md-4 col-lg-3">
+  <div class="hidden-xs col-sm-6 col-md-4 col-lg-3">
     Sorted by<br>
     <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
     <%# See below for the Item.options_for_sorted_by presenter method %>
   </div>
-  <div class="col-xs-6 col-md-4 col-lg-1">
+  <div class="hidden-xs hidden-sm col-md-4 col-lg-1">
   <%= f.check_box :with_tagged_only %>Tagged?<br>
   <%= f.check_box :with_untagged_only %>Untagged?
   </div>
-  <div class="col-xs-6 col-md-4 col-lg-2">
+  <div class="hidden-xs hidden-sm col-md-4 col-lg-2">
   <%= f.check_box :with_lup_only %>LUP Service?<br>
   <%= f.check_box :with_lup_not %>LUP not serv?<br>
   </div>
-  <div class="col-xs-6 col-md-4 col-lg-2">
+  <div class="hidden-xs hidden-sm col-md-4 col-lg-2">
   <%= f.check_box :with_lup_inc_only %>LUP Required?<br>
   <%= f.check_box :with_lup_inc_not %>LUP not Required?<br>
   </div>
-  <div class="col-xs-6 col-md-4 col-lg-2">
+  <div class="hidden-xs hidden-sm col-md-4 col-lg-2">
   <%= f.check_box :with_service_overdue %>Service overdue?<br>
   <%= f.check_box :with_inspection_overdue %>Inspection overdue?<br>
   <%= f.check_box :with_last_seen_overdue %>Last seen overdue?
@@ -40,7 +40,7 @@
 </div><!-- /row -->
 
 <div class="row">
-    <div class="col-xs-6 col-md-4 col-lg-2">
+    <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
     Category<br>
     <%= f.select(
       :with_category_id,
@@ -49,7 +49,7 @@
       { :multiple => true, :size => 5 }
     ) %>
     </div><!-- /span -->
-    <div class="col-xs-6 col-md-4 col-lg-2">
+    <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
     SubCategory<br>
     <%= f.select(
       :with_sub_category_id,
@@ -59,7 +59,7 @@
     ) %>
     </div><!-- /col -->
 
-  <div class="col-xs-6 col-md-4 col-lg-2">
+  <div class="hidden-xs hidden-sm col-md-4 col-lg-2">
     Vendor<br>
     <%= f.select(
       :with_vendor_id,
@@ -69,7 +69,7 @@
     ) %>
   </div>
 
-  <div class="col-xs-6 col-md-4 col-lg-2">
+  <div class="hidden-xs hidden-sm col-md-4 col-lg-2">
     Owner<br>
     <%= f.select(
       :with_owner_id,
@@ -78,7 +78,7 @@
       { :multiple => true, :size => 5 }
     ) %>
   </div>
-  <div class="col-xs-6 col-md-4 col-lg-2">
+  <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
     Status<br>
     <%= f.select(
       :with_status_id,
@@ -87,7 +87,7 @@
       { :multiple => true, :size => 5 }
     ) %>
   </div>
-  <div class="col-xs-6 col-md-4 col-lg-2">
+  <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
     Unit<br>
     <%= f.select(
       :with_unit_id,
@@ -98,6 +98,29 @@
   </div>
 
 </div><!-- /row -->
+<% if current_user.roles.where(name: "superuser").size > 0 %>
+ <div class="row">
+    <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
+    Department<br>
+    <%= f.select(
+      :with_department_id,
+      @filterrific.select_options[:with_department_id],
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
+    ) %>
+    </div><!-- /span -->
+    <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
+    Unit Type<br>
+    <%= f.select(
+      :with_unit_type_id,
+      @filterrific.select_options[:with_unit_type_id],
+      { include_blank: '- Any -' },
+      { :multiple => true, :size => 5 }
+    ) %>
+    </div><!-- /span -->
+
+ </div>
+<% end %>
 <div class="row">
     <%= link_to(
       'Reset filters',

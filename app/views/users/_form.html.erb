@@ -7,7 +7,9 @@
   <%= error_span(@user[:firstname]) %>
   <%= f.input :lastname %>
   <%= error_span(@user[:lastname]) %>
+  <% if current_user.roles.where(name: "superuser").size > 0 %>
   <%= f.association :department %>
+  <% end %>
   <%= error_span(@user[:department]) %>
   <%= f.association :roles, as: :check_boxes %>
   <%= error_span(@user[:roles]) %>

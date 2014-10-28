@@ -1,6 +1,4 @@
-<%#= simple_form_for @item, :html => { :class => "form-horizontal" }, defaults: { input_html: {class: 'form-control has-feedback' } } do |f| %>
 <%= form_tag update_multiple_items_path, method: :put do %>
-
   <ul>
   <% @items.each do |item| %>
     <li>
@@ -25,6 +23,10 @@
     </div>
   </div>
 <!-- Test starts -->
+    <% if current_user.roles.where(name: "superuser").size > 0 %>
+     <%= f.label :department_id %><br>
+     <%= f.collection_select :department_id, Department.order("name"), :id, :name, include_blank: true %><br>
+    <% end %>
 <%= f.label :category_id %><br />
 <%= f.collection_select :category_id, Category.order("name"), :id, :name, include_blank: true %>
 <%= f.input :sub_category_id, collection: @categories, as: :grouped_select, group_method: :sub_categories, include_blank: true %>

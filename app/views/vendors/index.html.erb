@@ -8,10 +8,10 @@
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:address) %></th>
       <th><%= model_class.human_attribute_name(:city) %></th>
-      <th><%= model_class.human_attribute_name(:phone) %></th>
-      <th><%= model_class.human_attribute_name(:email) %></th>
-      <th><%= model_class.human_attribute_name(:billing) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th class="hidden-xs"><%= model_class.human_attribute_name(:phone) %></th>
+      <th class="hidden-xs hidden-sm"><%= model_class.human_attribute_name(:email) %></th>
+      <th class="hidden-xs hidden-sm hidden-md"><%= model_class.human_attribute_name(:billing) %></th>
+      <th class="hidden-xs hidden-sm hidden-md"><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -21,10 +21,10 @@
         <td><%= link_to vendor.name, vendor_path(vendor) %></td>
         <td><%= vendor.address %></td>
         <td><%= vendor.city %></td>
-        <td><%= vendor.phone %></td>
-        <td><%= vendor.email %></td>
-        <td><%= vendor.billing %></td>
-        <td><%=l vendor.created_at %></td>
+        <td class="hidden-xs"><%= vendor.phone %></td>
+        <td class="hidden-xs hidden-sm"><%= vendor.email %></td>
+        <td class="hidden-xs hidden-sm hidden-md"><%= vendor.billing %></td>
+        <td class="hidden-xs hidden-sm hidden-md"><%=l vendor.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_vendor_path(vendor), :class => 'btn btn-default btn-xs' %>

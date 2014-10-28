@@ -68,7 +68,11 @@ end
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
-root :to => redirect('/items')
+root :to => redirect('/home')
+get '/home' => 'pages#home'
+get '/about' => 'pages#about'
+get '/contact' => 'pages#contact'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

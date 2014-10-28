@@ -66,9 +66,11 @@ end
       with_category_id: Category.options_for_select,
       with_sub_category_id: SubCategory.options_for_select,
       with_owner_id: Owner.options_for_select,
+      with_department_id: Department.options_for_select,
       with_status_id: Status.options_for_select,
       with_vendor_id: Vendor.options_for_select,
-      with_unit_id: Unit.options_for_select
+      with_unit_id: Unit.options_for_select,
+      with_unit_type_id: UnitType.options_for_select
 
     }
 #    @filterrific.select_options = {
@@ -87,8 +89,11 @@ if params[:tag]
 @items = Item.tagged_with(params[:tag]).arrange_as_array({:order => 'tagid'}).paginate(:per_page => 50, :page => params[:page])
 ##    @items = Item.all.paginate(:per_page => 10, :page => params[:page])
 else
-
+   if current_user.roles.where(name: "superuser").size == 1
+    @items = Item.filterrific_find(@filterrific).page(params[:page])
+   else
     @items = Item.where(department_id: current_user.department_id).filterrific_find(@filterrific).page(params[:page])
+   end
 end
     session[:filterrific_items] = @filterrific.to_hash
     respond_to do |format|
