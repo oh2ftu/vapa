@@ -5,7 +5,7 @@ load_and_authorize_resource
   # GET /units
   # GET /units.json
   def index
-    if current_user.roles.where(name: "superuser").size == 1
+    if current_user.superuser || current_user.paid
      @units = Unit.all
     else
      @units = Unit.where(department_id: current_user.department_id).all

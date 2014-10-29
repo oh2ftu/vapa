@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
-#load_and_authorize_resource
+load_and_authorize_resource
+#authorize! :assign_roles, @user if user_params[:assign_roles]
   def index
-    if current_user.roles.where(name: "superuser").size == 1
+    if current_user.superuser
      @users = User.all
     else
      @users = User.where(department_id: current_user.department_id).all
@@ -34,7 +35,8 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if @user.update_attributes(user_params)
-      sign_in(@user, :bypass => true) if @user == current_user
+     authorize! :assign_roles, @user if params[:user][:assign_roles]
+     sign_in(@user, :bypass => true) if @user == current_user
       redirect_to @user, :flash => { :success => 'User was successfully updated.' }
     else
       render :action => 'edit'

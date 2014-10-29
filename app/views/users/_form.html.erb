@@ -1,20 +1,26 @@
 <%= simple_form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
 <div class="row">
- <div class="col-xs-12 col-md-6 col-lg-4">
+ <div class="col-xs-12 col-md-4 col-lg-3">
   <%= f.input :email %>
   <%= error_span(@user[:email]) %>
   <%= f.input :firstname %>
   <%= error_span(@user[:firstname]) %>
   <%= f.input :lastname %>
   <%= error_span(@user[:lastname]) %>
-  <% if current_user.roles.where(name: "superuser").size > 0 %>
-  <%= f.association :department %>
+ </div>
+ <div class="col-xs-12 col-md-4 col-lg-3">
+  <% if current_user.superuser %>
+   <%= f.association :department %>
+   <%= f.input_field :superuser, as: :boolean, boolean_style: :inline %> Superuser<br>
+   <%= f.input_field :paid, as: :boolean, boolean_style: :inline %> LUP
   <% end %>
   <%= error_span(@user[:department]) %>
-  <%= f.association :roles, as: :check_boxes %>
-  <%= error_span(@user[:roles]) %>
+  <% if can? :assign_roles, @user %>
+   <%= f.association :roles, as: :check_boxes %>
+   <%= error_span(@user[:roles]) %>
+  <% end %>
  </div>
- <div class="col-xs-12 col-md-6 col-lg-4">
+ <div class="col-xs-12 col-md-4 col-lg-3">
  <h3>Equipment</h3>
   <%= f.association :items %>
   <%= error_span(@user[:roles]) %>

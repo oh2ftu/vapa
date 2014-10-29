@@ -89,7 +89,7 @@ if params[:tag]
 @items = Item.tagged_with(params[:tag]).arrange_as_array({:order => 'tagid'}).paginate(:per_page => 50, :page => params[:page])
 ##    @items = Item.all.paginate(:per_page => 10, :page => params[:page])
 else
-   if current_user.roles.where(name: "superuser").size == 1
+    if current_user.superuser || current_user.paid
     @items = Item.filterrific_find(@filterrific).page(params[:page])
    else
     @items = Item.where(department_id: current_user.department_id).filterrific_find(@filterrific).page(params[:page])

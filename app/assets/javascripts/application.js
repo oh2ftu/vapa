@@ -16,7 +16,6 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require_tree .
-//= require filterrific-jquery
 //= require chardinjs
 //= require bootstrap
 //= require bootstrap-datepicker
@@ -25,6 +24,7 @@
 //= require underscore
 //= require json2
 //= require select2
+//= require filterrific/filterrific-jquery
 var typewatch = (function () {
     var timer = 0;
     return function (ms, callback) {

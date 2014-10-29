@@ -45,7 +45,7 @@
         <td class="hidden-xs hidden-sm hidden-md"><%= item.parent ? link_to(item.parent.tagid, item_path(item.parent.id)) : '--' %></td>
         <td class="hidden-xs hidden-sm hidden-md"><%= item.children ? item.subtree.sum(:weight) : '' %> kg</td>
         <td class="hidden-xs hidden-sm"><%= item.owner_id.nil? ? 'NO OWNER' : item.owner.name %>
-	<% if can? :edit, item.department_id %>
+	<% if (can? :edit, item.department_id)||current_user.paid || current_user.superuser %>
 	 <br><%= item.department.try(:name) %>
 	<% end %>
 	</td>

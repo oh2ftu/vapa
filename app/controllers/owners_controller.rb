@@ -5,7 +5,7 @@ load_and_authorize_resource
   # GET /owners
   # GET /owners.json
   def index
-   if current_user.roles.where(name: "superuser").size == 1
+    if current_user.superuser || current_user.paid
     @owners = Owner.all
    else
     @owners = Owner.where(department_id: current_user.department_id).all

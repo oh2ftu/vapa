@@ -2,7 +2,11 @@ class IdentifiersController < ApplicationController
 load_and_authorize_resource
 
   def index
-    @identifier = Identifier.where(department_id: current_user.department_id).all
+    if current_user.superuser || current_user.paid
+     @identifier = Identifier.all
+    else
+     @identifier = Identifier.where(department_id: current_user.department_id).all
+    end
   end
 
   def show

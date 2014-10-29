@@ -98,7 +98,7 @@
   </div>
 
 </div><!-- /row -->
-<% if current_user.roles.where(name: "superuser").size > 0 %>
+<% if current_user.superuser ||current_user.paid %>
  <div class="row">
     <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
     Department<br>

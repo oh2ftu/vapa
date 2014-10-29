@@ -3,32 +3,40 @@ class Ability
 
   def initialize(user)
     user ||= User.new # guest user (not logged in)
-    if user.has_role? :superuser
-      can :manage, :all
-    elsif user.has_role? :LUP
-      can :read, :all
-    elsif user.has_role? :view
+    if user.has_role? :view
       can :view, [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
       cannot :manage, [Role, Department, UnitType]
+
     elsif user.has_role? :admin
-      can :manage, [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
-      cannot :manage, [Role, Department, UnitType]
+      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
       can [:create, :read, :update], [Category, SubCategory, Status]
-    elsif user.has_role? :manager
+      can :assign_roles, User, :department_id => user.department_id
       can [:read, :create, :update], [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
       cannot :manage, [Role, Department, UnitType]
+    elsif user.has_role? :manager
+      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
       can [:create, :read, :update], [Category, SubCategory, Status]
+      cannot :manage, [Role, Department, UnitType]
+      cannot :assign_roles, User
     elsif user.has_role? :service
       can [:read, :update], Item, :department_id => user.department_id
       can :manage, [Comment, Identifier], :department_id => user.department_id
       cannot :manage, [Role, Department, UnitType]
-    elsif user.has_role? :sms
-      can :manage, [Comment, Identifier], :department_id => user.department_id
-      cannot :manage, [Role, Department, UnitType]
+
+    elsif user.has_role? :superuser
+      can :manage, :all
 
     else
       can :read, Item
     end
+    if user.paid?
+     can :read, :all
+     can [:create, :update, :read], [Department, UnitType]
+    end
+    if user.superuser?
+     can :manage, :all
+    end
+#    can :assign_roles, User, if user.admin?
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

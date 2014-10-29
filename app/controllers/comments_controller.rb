@@ -2,8 +2,11 @@ class CommentsController < ApplicationController
 load_and_authorize_resource
 
   def index
-    @comment = Comment.where(department_id: current_user.department_id).all
-    @comment = Comment.all
+    if current_user.superuser || current_user.paid
+     @comment = Comment.where(department_id: current_user.department_id).all
+    else
+     @comment = Comment.all
+    end
   end
 
   def show

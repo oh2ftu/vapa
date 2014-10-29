@@ -43,20 +43,28 @@
  </div>
  <div class="col-xs-12 col-md-6 col-lg-4">
   <h3>Equipment</h3>
-  <dl class="dl-horizontal">
-   <dt><strong><%= model_class.human_attribute_name(:jacket) %>:</strong></dt>
-    <%= render partial: "equipment", locals: { items: @user.items.jackets } %>
-   <dt><strong><%= model_class.human_attribute_name(:trousers) %>:</strong></dt>
-    <%= render partial: "equipment", locals: { items: @user.items.trousers } %>
-   <dt><strong><%= model_class.human_attribute_name(:helmet) %>:</strong></dt>
-    <%= render partial: "equipment", locals: { items: @user.items.helmets } %>
-   <dt><strong><%= model_class.human_attribute_name(:headset) %>:</strong></dt>
-    <%= render partial: "equipment", locals: { items: @user.items.headsets } %>
-   <dt><strong><%= model_class.human_attribute_name(:boots) %>:</strong></dt>
-    <%= render partial: "equipment", locals: { items: @user.items.boots } %>
-   <dt><strong><%= model_class.human_attribute_name(:pager) %>:</strong></dt>
-    <%= render partial: "equipment", locals: { items: @user.items.pagers } %>
-  </dl>
+  <div class="panel panel-default">
+   <div class="panel-heading">Equipment</div>
+    <table class="table table-striped">
+     <thead>
+      <th></th>
+      <th>tagid</th>
+      <th>Serial</th>
+      <th>Make</th>
+      <th>model</th>
+      <th>Issued</th>
+     </thead>
+     <tbody>
+       <%= render partial: "equipment", locals: { items: @user.items.jackets } %>
+       <%= render partial: "equipment", locals: { items: @user.items.trousers } %>
+       <%= render partial: "equipment", locals: { items: @user.items.helmets } %>
+       <%= render partial: "equipment", locals: { items: @user.items.headsets } %>
+       <%= render partial: "equipment", locals: { items: @user.items.boots } %>
+       <%= render partial: "equipment", locals: { items: @user.items.pagers } %>
+     </tbody>
+    </table>
+   </div>
+  </didv>
  </div>
 </div>
 <div class="row">
