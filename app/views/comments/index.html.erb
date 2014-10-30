@@ -19,7 +19,7 @@
   <tbody>
     <% @comments.reverse.each do |comment| %>
       <tr>
-        <td><%= comment.commenter %></td>
+        <td><%= comment.user.try(:to_label_sms) %></td>
         <td class="hidden-xs"><%= comment.body %></td>
         <td class="visible-lg"><%= comment.department.try(:name) %></td>
 	<% if comment.item_id.nil? ||comment.item_id.blank? ||comment.item_id == 0 %>

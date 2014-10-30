@@ -3,31 +3,43 @@ class Ability
 
   def initialize(user)
     user ||= User.new # guest user (not logged in)
-    if user.has_role? :view
-      can :view, [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
-      cannot :manage, [Role, Department, UnitType]
-
-    elsif user.has_role? :admin
-      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
+    if user.has_role? :admin
+      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier, Group], :department_id => user.department_id
       can [:create, :read, :update], [Category, SubCategory, Status]
       can :assign_roles, User, :department_id => user.department_id
       can [:read, :create, :update], [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
       cannot :manage, [Role, Department, UnitType]
-    elsif user.has_role? :manager
-      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
+    end
+
+    if user.has_role? :manager
+      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier, Group], :department_id => user.department_id
       can [:create, :read, :update], [Category, SubCategory, Status]
       cannot :manage, [Role, Department, UnitType]
       cannot :assign_roles, User
-    elsif user.has_role? :service
+    end
+
+    if user.has_role? :service
       can [:read, :update], Item, :department_id => user.department_id
       can :manage, [Comment, Identifier], :department_id => user.department_id
-      cannot :manage, [Role, Department, UnitType]
+#      cannot :manage, [Role, Department, UnitType, Group, User]
+    end
 
-    elsif user.has_role? :superuser
+    if user.has_role? :superuser
       can :manage, :all
+    end
 
+    if user.has_role? :sms
+#      can :manage, Sms
+      can :read, [User, Group]
+      can :update, Group, :department_id => user.department_id
+    end
+
+    if user.has_role? :view
+      can :read, [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
+#      can :read, [Item, Unit, Vendor, Owner, Comment, Identifier]
+#      cannot :manage, [Role, Department, UnitType, Group, User]
     else
-      can :read, Item
+#      cannot :manage, :all
     end
     if user.paid?
      can :read, :all

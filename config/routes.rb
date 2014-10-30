@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :groups
+
   resources :unit_types
 
   resources :departments

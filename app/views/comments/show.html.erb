@@ -6,8 +6,8 @@
 <div class="row">
  <div class="col-xs-12 col-md-6">
   <dl class="dl-horizontal">
-    <dt><strong><%= model_class.human_attribute_name(:commenter) %>:</strong></dt>
-    <dd><%= @comment.commenter %></dd>
+    <dt><strong><%= model_class.human_attribute_name(:user) %>:</strong></dt>
+    <dd><%= @comment.user.to_label_sms %></dd>
     <dt><strong><%= model_class.human_attribute_name(:body) %>:</strong></dt>
     <dd><%= @comment.body %></dd>
     <dt><strong><%= model_class.human_attribute_name(:price) %>:</strong></dt>

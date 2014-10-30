@@ -1,0 +1,15 @@
+<div class="row">
+<div class="col-xs-12 col-sm-8 col-md-6 col-lg-3">
+<%= simple_form_for @group, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name %>
+  <%= error_span(@group[:name]) %>
+
+  <%= f.association :users, collection: User.where(department_id: current_user.department_id), value_method: :id, label_method: :to_label_sms, :autofocus => true, input_html: { id: 'user-select1'} %>
+
+  <%= error_span(@group[:users]) %>
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                groups_path, :class => 'btn btn-default' %>
+<% end %>
+</div>
+</div>

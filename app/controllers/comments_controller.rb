@@ -51,6 +51,6 @@ load_and_authorize_resource
  
   private
     def comment_params
-      params.require(:comment).permit(:commenter, :body, :price, :place, :service, :inspection, :vendor_id, :item_ids,  {:item_ids => []})
+      params.require(:comment).permit(:commenter, :body, :price, :place, :service, :inspection, :vendor_id, :item_ids,  {:item_ids => []}, :user_id)
     end
 end

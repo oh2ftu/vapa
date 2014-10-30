@@ -26,7 +26,7 @@ scope :filtered, -> { where(department_id: current_user.department_id) }
 include Tree
 has_ancestry :orphan_strategy => :rootify
 
-self.per_page = 50
+self.per_page = 25
 
 def pur_date(id)
  id = Item.find(id)
@@ -132,7 +132,7 @@ end
 
 
 filterrific(
-  default_settings: { sorted_by: 'description_desc' },
+  default_settings: { sorted_by: 'tagid_asc' },
   filter_names: [
     :search_query,
     :sorted_by,
@@ -178,6 +178,8 @@ scope :sorted_by, lambda { |sort_option|
   case sort_option.to_s
   when /^name_/
     order("items.description #{ direction }")
+  when /^tagid_/
+    order("items.tagid #{ direction }")
   when /^created_at_/
     # Simple sort on the created_at column.
     # Make sure to include the table name to avoid ambiguous column names.

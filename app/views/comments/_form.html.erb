@@ -10,10 +10,6 @@
 
  </div>
  <div class="col-xs-12 col-md-4">
-  <%= f.input :commenter %>
-  <%= error_span(@comment[:commenter]) %>
-  <%= f.input :body %>
-  <%= error_span(@comment[:body]) %>
   <%= f.input :price %>
   <%= error_span(@comment[:price]) %>
   <%= f.association :vendor, input_html: {id: 'item-select5'} %>
@@ -28,6 +24,12 @@
       <%= f.input_field :inspection, as: :boolean, boolean_style: :inline %>
     <%= error_span(@comment[:inspection]) %>
   </div>
+  <%= f.input :body %>
+  <%= error_span(@comment[:body]) %>
+  <%= f.association :user, collection: User.where(department_id: current_user.department_id), value_method: :id, label_method: :to_label_sms, :autofocus => true, input_html: { id: 'user-select1'} %>
+  <%#= f.association :user, collection: User.where(department_id: current_user.department_id), value_method: :id, label_method: :to_label_sms, :autofocus => true, input_html: { id: 'user-select1'}, :selected => current_user.id %>
+  <%= error_span(@comment[:user]) %>
+
  </div>
 </div>
   <%= f.button :submit, :class => 'btn-primary' %>

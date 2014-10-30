@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141029103415) do
+ActiveRecord::Schema.define(version: 20141030205529) do
 
   create_table "addresses", force: true do |t|
     t.string   "line1"
@@ -44,9 +44,11 @@ ActiveRecord::Schema.define(version: 20141029103415) do
     t.integer  "vendor_id"
     t.integer  "item_id"
     t.integer  "department_id"
+    t.integer  "user_id"
   end
 
   add_index "comments", ["department_id"], name: "index_comments_on_department_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
   add_index "comments", ["vendor_id"], name: "index_comments_on_vendor_id", using: :btree
 
   create_table "comments_items", id: false, force: true do |t|
@@ -59,6 +61,20 @@ ActiveRecord::Schema.define(version: 20141029103415) do
     t.string   "station"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "groups", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "department_id"
+  end
+
+  add_index "groups", ["department_id"], name: "index_groups_on_department_id", using: :btree
+
+  create_table "groups_users", id: false, force: true do |t|
+    t.integer "group_id", null: false
+    t.integer "user_id",  null: false
   end
 
   create_table "identifiers", force: true do |t|

@@ -2,7 +2,14 @@
 Hei, tämä on palokunnille tarjottua kalustonhallinta palvelua, lähinnä LUP:n alueella.<br>
 Homma on vielä monilta osin kesken, mutta työtä tehdään jatkuvasti ja päivityksiäkin tulee pikkuhiljaa.<br>
 Vielä ei ole mitään versionumerointia, mutta tässä alettaneen näyttää viimeisimpiä muutoksia<br>
+<div class="row">
+ <div class="col-xs-12 col-sm-12 col-md-6 col-lg 6">
 <h2>Changelog</h2>
+<h3>2015-10-30</h3
+- Lisätty groups<br>
+- Lisätty ennakoivasti valikoita, ei vielä kaikkia toimintoja<br>
+- Tarkennettu roolien toimintaa<br>
+- Muutettu ulkoasua<br>
 <h3>2014-10-29</h3>
 - Muutettu superuser & paid -> user attributeksi (boolean, default false)<br>
 - Poistettu roolit superuser & paid<br>
@@ -23,3 +30,23 @@ Tämä on tehty Ruby on Railsilla, ruby 2.x ja rails 4.1.x.<br>
 Tyyleihin on käytetty bootstrapia, formeihin simple_formia. Hakutyökalu on filterrific.<br>
 Koko projekti löytyy <a href="http://github.com/oh2ftu/vapa">githubista</a>.<br>
 Lisää tekijöitä tarvitaan, tässä on vielä paljon työsarkaa edessä.<br><br>
+ </div>
+ <div class="col-xs-12 col-sm-12 col-md-6 col-lg 6">
+  <h3>Todo:</h3>
+- Scopet hakuja varten:<br>
+-- service/inspection overdue<br>
+-- Superuserin haku by UnitType (matala prioriteetti)<br>
+- Tarttis vähän nopeuttaa ja järkeistää tietokantahakuja<br>
+- Ajaa tämä versio tuotantoon<br>
+- Perehtyä tekstiviestin lähettämisen hallintaan<br>
+  <h3>Poistettavia attribuutteja</h3>
+- Comments: :commenter<br>
+- Identifiers: :type<br>
+- Items:<br>
+-- :sku<br>
+-- :service<br>
+-- :inspection<br>
+- Users: role_id<br>
+ 
+ </div>
+</div>
