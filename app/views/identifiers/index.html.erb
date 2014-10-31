@@ -17,14 +17,14 @@
       <tr <%= "class=info" if identifier.items.size > 0%>>
         <td><%= identifier.name %></td>
         <td><%= identifier.barcode %></td>
-	<% if identifier.item_id.nil? ||identifier.item_id.blank? ||identifier.item_id == 0 %>
+	<% if identifier.items.size > 1 %>
          <td data-toggle="collapse" data-target="#<%= identifier.id %>" class="accordion-toggle">Click to show items (<%= identifier.items.size %>)</td>
 	<% elsif identifier.items.size == 1 %>
 	 <% identifier.items.each do |i| %>
 	  <td><%= link_to i.tagid, item_path(i) %></td>
-	  <% end %>
+         <% end %>
 	<% else %>
-	 <td><%= identifier.item_id %></td>
+	 <td>No items</td>
 	<% end %>
         <td class="hidden-xs hidden-sm"><%=l identifier.created_at %></td>
         <td>

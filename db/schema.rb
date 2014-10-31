@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141030205529) do
+ActiveRecord::Schema.define(version: 20141031184825) do
 
   create_table "addresses", force: true do |t|
     t.string   "line1"
@@ -42,7 +42,6 @@ ActiveRecord::Schema.define(version: 20141030205529) do
     t.boolean  "service",       default: false, null: false
     t.boolean  "inspection",    default: false, null: false
     t.integer  "vendor_id"
-    t.integer  "item_id"
     t.integer  "department_id"
     t.integer  "user_id"
   end
@@ -54,6 +53,11 @@ ActiveRecord::Schema.define(version: 20141030205529) do
   create_table "comments_items", id: false, force: true do |t|
     t.integer "comment_id", null: false
     t.integer "item_id",    null: false
+  end
+
+  create_table "comments_service_events", id: false, force: true do |t|
+    t.integer "comment_id",       null: false
+    t.integer "service_event_id", null: false
   end
 
   create_table "departments", force: true do |t|
@@ -78,9 +82,7 @@ ActiveRecord::Schema.define(version: 20141030205529) do
   end
 
   create_table "identifiers", force: true do |t|
-    t.string   "type"
     t.string   "barcode"
-    t.integer  "item_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
@@ -88,7 +90,6 @@ ActiveRecord::Schema.define(version: 20141030205529) do
   end
 
   add_index "identifiers", ["department_id"], name: "index_identifiers_on_department_id", using: :btree
-  add_index "identifiers", ["item_id"], name: "index_identifiers_on_item_id", using: :btree
 
   create_table "identifiers_items", id: false, force: true do |t|
     t.integer "identifier_id", null: false
@@ -102,7 +103,6 @@ ActiveRecord::Schema.define(version: 20141030205529) do
     t.string   "description"
     t.date     "purchased_at_date"
     t.string   "serial"
-    t.string   "sku"
     t.integer  "price",                                        default: 0,            null: false
     t.date     "last_seen",                                    default: '2014-10-18', null: false
     t.integer  "service_interval",                             default: 0,            null: false
@@ -123,8 +123,6 @@ ActiveRecord::Schema.define(version: 20141030205529) do
     t.integer  "warranty_time",                                default: 0,            null: false
     t.integer  "unit_id"
     t.integer  "inspection_interval",                          default: 0,            null: false
-    t.boolean  "service"
-    t.boolean  "inspection"
     t.integer  "owner_id"
     t.date     "into_use"
     t.boolean  "lup_inc",                                      default: false,        null: false
@@ -160,6 +158,12 @@ ActiveRecord::Schema.define(version: 20141030205529) do
   create_table "roles_users", id: false, force: true do |t|
     t.integer "role_id"
     t.integer "user_id"
+  end
+
+  create_table "service_events", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
   end
 
   create_table "statuses", force: true do |t|
@@ -235,7 +239,6 @@ ActiveRecord::Schema.define(version: 20141030205529) do
     t.datetime "updated_at"
     t.string   "firstname"
     t.string   "lastname"
-    t.integer  "role_id"
     t.integer  "department_id"
     t.boolean  "paid",                   default: false
     t.boolean  "superuser",              default: false
@@ -245,7 +248,6 @@ ActiveRecord::Schema.define(version: 20141030205529) do
   add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["role_id"], name: "index_users_on_role_id", using: :btree
 
   create_table "users_roles", id: false, force: true do |t|
     t.integer "user_id"

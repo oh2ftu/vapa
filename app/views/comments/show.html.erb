@@ -10,10 +10,14 @@
     <dd><%= @comment.user.to_label_sms %></dd>
     <dt><strong><%= model_class.human_attribute_name(:body) %>:</strong></dt>
     <dd><%= @comment.body %></dd>
+    <dt><strong><%= model_class.human_attribute_name(:preselects) %>:</strong></dt>
+    <dd>
+     <% @comment.service_events.each do |event| %>
+      <%= event.name %><br>
+     <% end %>
+    </dd>
     <dt><strong><%= model_class.human_attribute_name(:price) %>:</strong></dt>
     <dd><%= @comment.price %></dd>
-    <dt><strong><%= model_class.human_attribute_name(:item_id) %>:</strong></dt>
-    <dd><%= @comment.item_id %></dd>
     <dt><strong><%= model_class.human_attribute_name(:service) %>:</strong></dt>
     <dd><%= @comment.service %></dd>
     <dt><strong><%= model_class.human_attribute_name(:inspection) %>:</strong></dt>

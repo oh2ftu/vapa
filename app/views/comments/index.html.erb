@@ -22,11 +22,15 @@
         <td><%= comment.user.try(:to_label_sms) %></td>
         <td class="hidden-xs"><%= comment.body %></td>
         <td class="visible-lg"><%= comment.department.try(:name) %></td>
-	<% if comment.item_id.nil? ||comment.item_id.blank? ||comment.item_id == 0 %>
-         <td  class="hidden-xs" data-toggle="collapse" data-target="#<%= comment.id %>" class="accordion-toggle">Click to show items (<%= comment.items.size %>)</td>
-	<% else %>
-	 <td class="hidden-xs"><%= comment.item_id %></td>
-	<% end %>
+        <% if comment.items.size > 1 %>
+         <td data-toggle="collapse" data-target="#<%= comment.id %>" class="accordion-toggle">Click to show items (<%= comment.items.size %>)</td>
+        <% elsif comment.items.size == 1 %>
+         <% comment.items.each do |i| %>
+          <td><%= link_to i.tagid, item_path(i) %></td>
+         <% end %>
+        <% else %>
+         <td>No items</td>
+        <% end %>
         <td><%= comment.service %></td>
         <td><%= comment.inspection %></td>
         <td class="visible-lg"><%= comment.vendor.try(:name) %></td>

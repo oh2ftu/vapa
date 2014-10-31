@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :service_events
+
+  resources :comment_selects
+
   resources :groups
 
   resources :unit_types

@@ -10,12 +10,12 @@ jQuery ->$('#item-select3').select2();
 jQuery ->$('#item-select4').select2(
  {
         placeholder: "Select items",
-        width: "element",
+        width: "100%",
         });
 jQuery ->$('#item-select5').select2(
  {
         placeholder: "Select vendor",
-	width: "element",
+	width: "100%",
  	});
 jQuery ->$('#item-select6').select2();
 
