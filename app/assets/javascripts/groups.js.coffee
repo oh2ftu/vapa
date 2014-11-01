@@ -5,5 +5,6 @@ jQuery ->$('#user-select1').select2(
  {
         placeholder: "Select user",
         width: "100%",
+        allowClear: true
         });
 

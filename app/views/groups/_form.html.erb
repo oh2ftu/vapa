@@ -4,7 +4,8 @@
   <%= f.input :name %>
   <%= error_span(@group[:name]) %>
 
-  <%= f.association :users, collection: User.where(department_id: current_user.department_id), value_method: :id, label_method: :to_label_sms, :autofocus => true, input_html: { id: 'user-select1'} %>
+  <%= f.association :users, collection: User.where(department_id: current_user.department_id), value_method: :id, 
+  label_method: :to_label_sms, :autofocus => true, input_html: { id: 'user-select1'} %>
 
   <%= error_span(@group[:users]) %>
   <%= f.button :submit, :class => 'btn-primary' %>

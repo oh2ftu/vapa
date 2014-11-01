@@ -49,7 +49,7 @@
      <thead>
       <th></th>
       <th>tagid</th>
-      <th>Serial</th>
+      <th class="visible-lg">Serial</th>
       <th>Make</th>
       <th>model</th>
       <th>Issued</th>
@@ -61,6 +61,7 @@
        <%= render partial: "equipment", locals: { items: @user.items.headsets } %>
        <%= render partial: "equipment", locals: { items: @user.items.boots } %>
        <%= render partial: "equipment", locals: { items: @user.items.pagers } %>
+       <%= render partial: "equipment", locals: { items: @user.items.helmet_lights } %>
      </tbody>
     </table>
    </div>

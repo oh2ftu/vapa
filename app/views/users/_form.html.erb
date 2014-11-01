@@ -1,6 +1,7 @@
 <%= simple_form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
 <div class="row">
  <div class="col-xs-12 col-md-4 col-lg-3">
+  <h3>Basic info</h3>
   <%= f.input :email %>
   <%= error_span(@user[:email]) %>
   <%= f.input :firstname %>
@@ -9,6 +10,7 @@
   <%= error_span(@user[:lastname]) %>
  </div>
  <div class="col-xs-12 col-md-4 col-lg-3">
+  <h3>Roles</h3>
   <% if current_user.superuser %>
    <%= f.association :department %>
    <%= f.input_field :superuser, as: :boolean, boolean_style: :inline %> Superuser<br>
@@ -22,8 +24,41 @@
  </div>
  <div class="col-xs-12 col-md-4 col-lg-3">
  <h3>Equipment</h3>
-  <%= f.association :items %>
-  <%= error_span(@user[:roles]) %>
+  <div class="control-group">
+   <%= f.label :jackets, :class => 'control-label' %>
+   <%= f.association :items, collection: Item.jackets.where("user_id IS ?", nil), value_method: :id,
+   label_method: :to_label_user, input_html: { id: 'user_item-select1'}, label: false %>
+  </div>
+  <div class="control-group">
+   <%= f.label :trousers, :class => 'control-label' %>
+   <%= f.association :items, collection: Item.trousers.where("user_id IS ?", nil), value_method: :id,
+   label_method: :to_label_user, input_html: { id: 'user_item-select2'}, label: false %>
+  </div>
+  <div class="control-group">
+   <%= f.label :boots, :class => 'control-label' %>
+   <%= f.association :items, collection: Item.boots.where("user_id IS ?", nil), value_method: :id,
+   label_method: :to_label_user, input_html: { id: 'user_item-select3'}, label: false %>
+  </div>
+  <div class="control-group">
+   <%= f.label :helmets, :class => 'control-label' %>
+   <%= f.association :items, collection: Item.helmets.where("user_id IS ?", nil), value_method: :id,
+   label_method: :to_label_user, input_html: { id: 'user_item-select4'}, label: false %>
+  </div>
+  <div class="control-group">
+   <%= f.label :headsets, :class => 'control-label' %>
+   <%= f.association :items, collection: Item.headsets.where("user_id IS ?", nil), value_method: :id,
+   label_method: :to_label_user, input_html: { id: 'user_item-select5'}, label: false %>
+  </div>
+  <div class="control-group">
+   <%= f.label :helmet_light, :class => 'control-label' %>
+   <%= f.association :items, collection: Item.helmet_lights.where("user_id IS ?", nil), value_method: :id,
+   label_method: :to_label_user, input_html: { id: 'user_item-select7'}, label: false %>
+  </div>
+  <div class="control-group">
+   <%= f.label :pagers, :class => 'control-label' %>
+   <%= f.association :items, collection: Item.pagers.where("user_id IS ?", nil), value_method: :id,
+   label_method: :to_label_user, input_html: { id: 'user_item-select6'}, label: false %>
+  </div>
 
  </div>
 </div>

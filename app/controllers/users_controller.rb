@@ -49,7 +49,7 @@ load_and_authorize_resource
     redirect_to users_path, :flash => { :success => 'User was successfully deleted.' }
   end
     def user_params
-      params.require(:user).permit(:email, :password, :firstname, :lastname, {:role_ids => []}, :role_ids, :department_id)
+      params.require(:user).permit(:email, :password, :firstname, :lastname, {:role_ids => []}, :role_ids, :department_id, :item_ids, {:item_ids => [] })
     end
 
 end

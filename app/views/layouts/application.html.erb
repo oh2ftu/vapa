@@ -45,7 +45,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">VAPA /<%= current_user.department.try(:name) if user_signed_in? %></a>
+        <a class="navbar-brand" href="#">VAPA <div class="visible-lg">/<%= current_user.department.try(:name) if user_signed_in? %></a></div> 	
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
 	   <% if user_signed_in? %>
@@ -128,12 +128,12 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12">
+        <div class="row">
+	 <div class="col-xs-12">
           <%= bootstrap_flash %>
           <%= yield %>
+	</div>
         </div>
-      </div><!--/row-->
 
       <footer>
         <p>&copy; Martin Koskinen 2014</p>

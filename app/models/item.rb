@@ -21,7 +21,12 @@ scope :helmets, -> { where(sub_category_id: "18") }
 scope :boots, -> { where(sub_category_id: "14") }
 scope :pagers, -> { where(sub_category_id: "268") }
 scope :headsets, -> { where(sub_category_id: "105") }
+scope :helmet_lights, -> { where(sub_category_id: "33") }
+
 scope :filtered, -> { where(department_id: current_user.department_id) }
+def to_label_user
+  "#{tagid} #{make} #{description}"
+end
 #acts_as_taggable_on :category, :sub_category, :owner
 include Tree
 has_ancestry :orphan_strategy => :rootify

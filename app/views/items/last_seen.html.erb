@@ -6,12 +6,14 @@
   <% end %> 
 
 <% @item.each do |it| %>
-<h3 class="bg-success"><br>Updated 
-<%= it.tagid %>
+<br>
+<div class="alert alert-success alert-dismissable" role="alert">
+Updated 
+<strong><%= it.tagid %></strong>
 <%= it.make %>
 <%= it.model %>
 with weight
 <%= it.weight %>
 and last_seen:
 <%= it.last_seen %>
-<% end %><br></h3>
+<% end %><br></div>
