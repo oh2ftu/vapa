@@ -2,6 +2,10 @@ class SubCategory < ActiveRecord::Base
   has_paper_trail
   has_many :items, :dependent => :restrict_with_error
   belongs_to :category
+def to_label_item
+  "#{acronym} #{name}"
+end
+
 def self.options_for_select
   order('LOWER(name)').map { |e| [e.name, e.id] }
 end

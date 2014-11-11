@@ -1,0 +1,16 @@
+<%= simple_form_for @cloth, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.association :user, :label_method => :to_label_sms%>
+  <%= error_span(@cloth[:user_id]) %>
+  <%= f.input :name %>
+  <%= error_span(@cloth[:name]) %>
+  <%= f.input :size %>
+  <%= error_span(@cloth[:size]) %>
+  <%= f.input :amount %>
+  <%= error_span(@cloth[:amount]) %>
+  <%= f.input :issued %>
+  <%= error_span(@cloth[:issued]) %>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                cloths_path, :class => 'btn btn-default' %>
+<% end %>

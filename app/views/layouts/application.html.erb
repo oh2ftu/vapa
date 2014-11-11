@@ -50,6 +50,16 @@
           <ul class="nav navbar-nav">
 	   <% if user_signed_in? %>
 	    <li><%= link_to "Items", items_path %></li>
+          </ul>
+          <div class="visible-lg visible-md">
+           <%= form_tag({ :controller => 'items', :action => 'last_seen', :role => 'search', method: "get" }, {class: "navbar-form navbar-left" }) do %>
+            <div class="form-group">
+            <%= text_field_tag :search, params[:search], :value => "", :class => "form-control", :autofocus => "true" %></li>
+            </div>
+            <%= submit_tag "Search", :class => 'btn btn-default', :name => nil %>
+           <% end %>
+          </div>
+          <ul class="nav navbar-nav">
             <li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Global <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -63,26 +73,19 @@
             </li>
             <li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Department-specific <span class="caret"></span></a>
-              <ol class="dropdown-menu" role="menu">
+              <ul class="dropdown-menu" role="menu">
                <li><%= link_to "Units", units_path %></li>
                <li><%= link_to "Users", users_path %></li>
                <li><%= link_to "Vendors", vendors_path %></li>
                <li><%= link_to "Owners", owners_path %></li>
                <li><%= link_to "Service events", comments_path %></li>
                <li><%= link_to "Identifiers", identifiers_path %></li>
+               <li><%= link_to "Checkouts", checkouts_path %></li>
+	       <li><%= link_to "Clothes", cloths_path %></li>
 	       <% if can? :update, Group %>
 	       <li><%= link_to "Groups", groups_path %></li>
 	       <% end %>
-	      </ol>
-	    </li>
-            <li class="dropdown">
-             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Department-specific 2<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-               <li><a href="#">Calls</a></li>
-               <li><a href="#">SMS-engine</a></li>
-               <li><a href="#">MRBS</a></li>
-               <li><a href="#">Map</a></li>
-              </ul>
+             </ul>
             </li>
             <% if (can? :manage, :Departments) %>
              <li class="dropdown">
@@ -100,6 +103,7 @@
               <ul class="dropdown-menu" role="menu">
                <li><%= link_to "Inventory", last_seen_items_path %></li>
                <li><%= link_to "New service event", new_comment_path %></li>
+	       <li><%= link_to "Borrow item(s)", new_checkout_path %></li>
 	       <li><a href="#">New SMS</a></li>
               </ul>
             </li>
@@ -107,7 +111,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
              <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.email %> <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.firstname %> <span class="caret"></span></a>
                <ul class="dropdown-menu" role="menu">
                 <li><%= link_to 'Edit profile', edit_user_registration_path %></li>
                 <li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
@@ -133,14 +137,14 @@
           <%= bootstrap_flash %>
           <%= yield %>
 	</div>
-        </div>
+       </div>
 
       <footer>
         <p>&copy; Martin Koskinen 2014</p>
-      </footer>
         <%= link_to 'home', home_path %> |
         <%= link_to 'about', about_path %> |
         <%= link_to 'contact', contact_path %>
+      </footer>
 
     </div> <!-- /container -->
 

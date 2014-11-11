@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141031184825) do
+ActiveRecord::Schema.define(version: 20141109121856) do
 
   create_table "addresses", force: true do |t|
     t.string   "line1"
@@ -32,6 +32,43 @@ ActiveRecord::Schema.define(version: 20141031184825) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "checkout_items", force: true do |t|
+    t.integer  "item_id"
+    t.integer  "checkout_id"
+    t.boolean  "returned",    default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "checkout_items", ["checkout_id"], name: "index_checkout_items_on_checkout_id", using: :btree
+  add_index "checkout_items", ["item_id"], name: "index_checkout_items_on_item_id", using: :btree
+
+  create_table "checkouts", force: true do |t|
+    t.integer  "user_id"
+    t.datetime "checkout"
+    t.datetime "return"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "department_id"
+  end
+
+  add_index "checkouts", ["department_id"], name: "index_checkouts_on_department_id", using: :btree
+  add_index "checkouts", ["user_id"], name: "index_checkouts_on_user_id", using: :btree
+
+  create_table "cloths", force: true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "size"
+    t.integer  "amount"
+    t.date     "issued"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "department_id"
+  end
+
+  add_index "cloths", ["department_id"], name: "index_cloths_on_department_id", using: :btree
+  add_index "cloths", ["user_id"], name: "index_cloths_on_user_id", using: :btree
 
   create_table "comments", force: true do |t|
     t.string   "commenter"
@@ -164,6 +201,7 @@ ActiveRecord::Schema.define(version: 20141031184825) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.boolean  "show",       default: false, null: false
   end
 
   create_table "statuses", force: true do |t|
@@ -242,6 +280,11 @@ ActiveRecord::Schema.define(version: 20141031184825) do
     t.integer  "department_id"
     t.boolean  "paid",                   default: false
     t.boolean  "superuser",              default: false
+    t.string   "phone"
+    t.string   "jacket_size"
+    t.string   "trouser_size"
+    t.string   "boot_size"
+    t.string   "vacancy"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

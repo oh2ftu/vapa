@@ -1,19 +1,44 @@
-  <%= form_tag :controller => 'items', :action => 'last_seen', method:  "get" do %>
-	Weight:<%= text_field_tag :weight, params[:weight], :autofocus => true, :value => "" %><br>
-	Tagid:<%= text_field_tag :search, params[:search], :value => "" %><br>
-      <%= submit_tag "Search", :name => nil %> 
+<div class="form-horizontal">
+<%= form_tag :controller => 'items', :action => 'last_seen', :role => 'form', :class => "form-horizontal", method:  "get" do %>
 
-  <% end %> 
+<div class="form-group">
+ <label class="col-xs-2 col-md-1 control-label">Weight:</label>
+  <div class="col-xs-10 col-md-6">
+  <%= text_field_tag :weight, params[:weight], :autofocus => true, :value => "", :class => "form-control input-lg" %>
+  </div>
+</div>
+
+
+<div class="form-group">
+ <label class="col-xs-2 col-md-1 control-label">Tagid:</label>
+  <div class="col-xs-10 col-md-6">
+   <%= text_field_tag :search, params[:search], :value => "", :class => "form-control input-lg" %></td>
+  </div>
+</div>
+<div class="form-group">
+  <div class="col-xs-offset-2 col-md-offset-1 col-md-11">
+   <%= submit_tag "Search", :class => 'btn btn-default btn-lg', :name => nil %>
+  </div>
+</div>
+<% end %> 
+</div>
 
 <% @item.each do |it| %>
 <br>
+<%= link_to it.to_label_user, item_path(it), class: "btn btn-default btn-lg btn-info" %><br><br>
+<div class="btn-group">
+ <%= link_to "New service event", new_comment_path(:presel => it.id), class: "btn btn-success btn-lg" %>
+ <%= link_to "Borrow item", new_checkout_path(:presel => it.id), class: "btn btn-primary btn-lg" %>
+</div>
+<br><br>
 <div class="alert alert-success alert-dismissable" role="alert">
 Updated 
-<strong><%= it.tagid %></strong>
-<%= it.make %>
-<%= it.model %>
-with weight
-<%= it.weight %>
-and last_seen:
-<%= it.last_seen %>
-<% end %><br></div>
+ <strong><%= it.tagid %></strong>
+ <%= it.make %>
+ <%= it.model %>
+ with weight
+ <%= it.weight %>
+ and last_seen:
+ <%= it.last_seen %>
+ <% end %><br>
+</div>

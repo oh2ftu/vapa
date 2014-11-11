@@ -1,7 +1,9 @@
 <%= simple_form_for @service_event, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :name %>
   <%= error_span(@service_event[:name]) %>
-
+  <%= f.input :show, :as => :select, :include_blank => false %>
+  <%= error_span(@service_event[:show]) %>
+  <br>
   <%= f.button :submit, :class => 'btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 service_events_path, :class => 'btn btn-default' %>

@@ -36,4 +36,9 @@ jQuery ->$('#user_item-select7').select2(
         placeholder: "Select helmet light",
         width: "100%",
         });
+jQuery ->$('#user_item-select8').select2(
+ {
+        placeholder: "Select other cloths",
+        width: "100%",
+        });
 

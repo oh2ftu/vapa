@@ -4,9 +4,13 @@
 </div>
 
 <div class="row">
-<div class="col-xs-12 col-sm-12 col-md-8 col-lg-6">
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 <h2>Item info</h2>
 <dl class="dl-horizontal">
+ <% if @item.user_id? %>
+   <dt><strong>Issued</strong>:</dt>
+  <dd><%= link_to @item.user.try(:to_label_sms), user_path(@item.user) %></dd>
+<% end %>
   <dt><strong><%= model_class.human_attribute_name(:tagid) %>:</strong></dt>
   <dd><%= @item.tagid %></dd>
   <dt><strong><%= model_class.human_attribute_name(:rfid) %>:</strong></dt>

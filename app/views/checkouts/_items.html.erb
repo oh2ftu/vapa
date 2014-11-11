@@ -1,0 +1,23 @@
+<table class="table table-striped table-hover">
+ <thead>
+  <tr>
+   <th>Item</th>
+   <th>Checkout</th>
+   <th>Returned</th>
+  </tr>
+ </thead>
+ <tbody>
+  <% items.each do |item| %>
+   <% checked_item = item.checkout_items.first %>
+   <tr class="<%= raw checked_item.returned? ? 'success' : 'warning' %>">
+    <td>
+     <strong><%= link_to item.tagid, item_path(item) %></strong>:
+     <%= [item.make, item.model, item.description].join " " %>
+    </td>
+    <td><%= checked_item.try(:created_at) %></td>
+    <td><%= checked_item.returned? ? checked_item.try(:updated_at) : 'still out' %> </td>
+   </tr>
+   <% end %>
+ </tbody>
+</table>
+

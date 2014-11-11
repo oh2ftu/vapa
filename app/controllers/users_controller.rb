@@ -11,6 +11,15 @@ load_and_authorize_resource
 
   def show
     @user = User.find(params[:id])
+    respond_to do |format|
+     format.html
+     format.pdf do
+      pdf = UserPdf.new(@user)
+      send_data pdf.render, filename: "varustekortti_#{@user.firstname}_#{@user.lastname}_#{Date.today}.pdf",
+		type: "application/pdf",
+		disposition: "inline"
+     end
+    end
   end
 
   def new
@@ -49,7 +58,7 @@ load_and_authorize_resource
     redirect_to users_path, :flash => { :success => 'User was successfully deleted.' }
   end
     def user_params
-      params.require(:user).permit(:email, :password, :firstname, :lastname, {:role_ids => []}, :role_ids, :department_id, :item_ids, {:item_ids => [] })
+      params.require(:user).permit(:email, :password, :firstname, :lastname, {:role_ids => []}, :role_ids, :department_id, :item_ids, {:item_ids => [] }, :phone, :jacket_size, :trouser_size, :boot_size, :vacancy)
     end
 
 end

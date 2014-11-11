@@ -6,6 +6,8 @@
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @service_event.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:show) %>:</strong></dt>
+  <dd><%= @service_event.show %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

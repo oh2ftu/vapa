@@ -10,6 +10,8 @@ belongs_to :vendor
 belongs_to :unit
 belongs_to :owner
 belongs_to :user, inverse_of: :items
+has_many :checkout_items
+has_many :checkouts, :through => :checkout_items
 has_and_belongs_to_many :identifiers, dependent: :destroy
 has_and_belongs_to_many :comments, dependent: :destroy, inverse_of: :items
 acts_as_taggable
@@ -24,6 +26,7 @@ scope :headsets, -> { where(sub_category_id: "105") }
 scope :helmet_lights, -> { where(sub_category_id: "33") }
 
 scope :filtered, -> { where(department_id: current_user.department_id) }
+scope :foruser, -> { where(user_id: [nil, @user.id]) }
 def to_label_user
   "#{tagid} #{make} #{description}"
 end
@@ -47,6 +50,7 @@ def self.last_seen
   item = Item.where("tagid = ?", params[:search])
   if item.size = 1
   item.update(last_seen: Date.today)
+  CheckoutItem.where("item_id = ?", item.id).update(returned: true)
   end
 end
 
@@ -160,6 +164,8 @@ filterrific(
     :with_last_seen_overdue,
     :with_department_id,
     :with_unit_type_id,
+    :with_assigned_only,
+    :with_unassigned_only,
     :with_tagged_only
   ]
 )
@@ -255,6 +261,14 @@ Item.joins("LEFT JOIN comments ON comments.item_id=items.id AND comments.inspect
 scope :with_last_seen_overdue, lambda {|flag|
   return nil  if 0 == flag
   where("last_seen < ?", 1.year.ago)
+}
+scope :with_assigned_only, lambda {|flag|
+  return nil  if 0 == flag
+  where.not(user_id: [nil, false])
+}
+scope :with_unassigned_only, lambda {|flag|
+  return nil  if 0 == flag
+  where(user_id: [nil, false])
 }
 
 scope :with_tagged_only, lambda {|flag|

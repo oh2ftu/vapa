@@ -2,6 +2,10 @@ class Category < ActiveRecord::Base
 has_paper_trail
 has_many :items, :dependent => :restrict_with_error
 has_many :sub_categories, :dependent => :restrict_with_error
+def to_label_item
+  "#{acronym} #{name}"
+end
+
 def self.import(file)
   spreadsheet = open_spreadsheet(file)
   header = spreadsheet.row(1)

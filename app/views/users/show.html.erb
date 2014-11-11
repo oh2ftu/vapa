@@ -4,7 +4,7 @@
 </div>
 
 <div class="row">
- <div class="col-xs-12 col-md-6 col-lg-4">
+ <div class="col-xs-12 col-md-6 col-lg-3">
   <h3>Basic information</h3>
   <dl class="dl-horizontal">
    <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
@@ -13,6 +13,10 @@
    <dd><%= @user.firstname %></dd>
    <dt><strong><%= model_class.human_attribute_name(:lastname) %>:</strong></dt>
    <dd><%= @user.lastname %></dd>
+   <dt><strong><%= model_class.human_attribute_name(:vacancy) %>:</strong></dt>
+   <dd><%= @user.vacancy %></dd>
+   <dt><strong><%= model_class.human_attribute_name(:phone) %>:</strong></dt>
+   <dd><%= @user.phone %></dd>
    <dt><strong><%= model_class.human_attribute_name(:roles) %>:</strong></dt>
    <dd>
     <% @user.roles.each do |role| %>
@@ -21,6 +25,16 @@
    </dd>
    <dt><strong><%= model_class.human_attribute_name(:department) %>:</strong></dt>
    <dd><%= @user.department.try(:name) %></dd>
+
+   <dt><strong><%= model_class.human_attribute_name(:jacket_size) %>:</strong></dt>
+   <dd><%= @user.jacket_size %></dd>
+   <dt><strong><%= model_class.human_attribute_name(:trouser_size) %>:</strong></dt>
+   <dd><%= @user.trouser_size %></dd>
+   <dt><strong><%= model_class.human_attribute_name(:boot_size) %>:</strong></dt>
+   <dd><%= @user.boot_size %></dd>
+  </div>
+  <div class="col-xs-12 col-md-6 col-lg-3">
+
    <dt><strong><%= model_class.human_attribute_name(:reset_password_sent_at) %>:</strong></dt>
    <dd><%= @user.reset_password_sent_at %></dd>
    <dt><strong><%= model_class.human_attribute_name(:remember_created_at) %>:</strong></dt>
@@ -41,7 +55,7 @@
    <dd><%= @user.unconfirmed_email %></dd>
   </dl>
  </div>
- <div class="col-xs-12 col-md-6 col-lg-4">
+ <div class="col-xs-12 col-md-6 col-lg-6">
   <h3>Equipment</h3>
   <div class="panel panel-default">
    <div class="panel-heading">Equipment</div>
@@ -52,6 +66,7 @@
       <th class="visible-lg">Serial</th>
       <th>Make</th>
       <th>model</th>
+      <th>size</th>
       <th>Issued</th>
      </thead>
      <tbody>
@@ -62,34 +77,60 @@
        <%= render partial: "equipment", locals: { items: @user.items.boots } %>
        <%= render partial: "equipment", locals: { items: @user.items.pagers } %>
        <%= render partial: "equipment", locals: { items: @user.items.helmet_lights } %>
+      </tbody>
+      <thead>
+       <tr>
+       <td colspan="4"><strong><%= @user.department.name %> issued:</strong></td>
+       <td><strong>Amount</strong></td>
+       <td></td>
+       <td></td>
+      </tr>
+      </thead>
+      <tbody>
+      <% @user.cloths.each do |cloth| %>
+       <tr>
+        <td></td>
+        <td colspan="3"><%= link_to cloth.name, cloth_path(cloth) %></td>
+        <td><%= cloth.amount %></td>
+        <td><%= cloth.size %></td>
+        <td><%= cloth.issued %></td>
+       </tr>
+      <% end %>
      </tbody>
     </table>
+    <%= link_to "New cloth", new_cloth_path, :class => 'btn btn-primary btn-xs' %>
    </div>
   </didv>
  </div>
 </div>
+<% if current_user.superuser? %>
 <div class="row">
   <h3>Access</h3>
  <div class="hidden-xs col-sm-12 col-md-6 col-lg-4">
   <%= render partial: "permissions", locals: { model: User } %>
   <%= render partial: "permissions", locals: { model: Item } %>
+  <%= render partial: "permissions", locals: { model: Unit } %>
+  <%= render partial: "permissions", locals: { model: Comment } %>
+  <%= render partial: "permissions", locals: { model: Checkout } %>
+
+ </div>
+ <div class="hidden-xs col-sm-12 col-md-6 col-lg-4">
   <%= render partial: "permissions", locals: { model: Category } %>
   <%= render partial: "permissions", locals: { model: SubCategory } %>
- </div>
- <div class="hidden-xs col-sm-12 col-md-6 col-lg-4">
-  <%= render partial: "permissions", locals: { model: Unit } %>
-  <%= render partial: "permissions", locals: { model: UnitType } %>
-  <%= render partial: "permissions", locals: { model: Vendor } %>
-  <%= render partial: "permissions", locals: { model: Comment } %>
- </div>
- <div class="hidden-xs col-sm-12 col-md-6 col-lg-4">
   <%= render partial: "permissions", locals: { model: Identifier } %>
+  <%= render partial: "permissions", locals: { model: Vendor } %>
   <%= render partial: "permissions", locals: { model: Owner } %>
-  <%= render partial: "permissions", locals: { model: Role } %>
-  <%= render partial: "permissions", locals: { model: Department } %>
   <%= render partial: "permissions", locals: { model: Group } %>
  </div>
+
+ <div class="hidden-xs col-sm-12 col-md-6 col-lg-4">
+  <%= render partial: "permissions", locals: { model: Department } %>
+  <%= render partial: "permissions", locals: { model: Role } %>
+  <%= render partial: "permissions", locals: { model: UnitType } %>
+ </div>
+
 </div>
+<% end %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               users_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -99,3 +140,4 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+<p><%= link_to "Print PDF", user_path(@user, format: "pdf") %> </p>

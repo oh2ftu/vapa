@@ -5,8 +5,8 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:show) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -14,8 +14,8 @@
   <tbody>
     <% @service_events.each do |service_event| %>
       <tr>
-        <td><%= link_to service_event.id, service_event_path(service_event) %></td>
-        <td><%= service_event.name %></td>
+        <td><%= link_to service_event.name, service_event_path(service_event) %><br>Show: <%= service_event.show %></td>
+        <td><%= service_event.get_barcode(service_event.name.gsub(/[ÄÅäå]/, "a").gsub(/[Öö]/, "o").strip).html_safe %></td>
         <td><%=l service_event.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

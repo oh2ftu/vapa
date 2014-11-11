@@ -51,7 +51,10 @@
 	</td>
         <td class="hidden-xs hidden-sm hidden-sm"><%= item.last_seen.year %></td>
         <td class="hidden-xs hidden-sm"><%= item.lup ? '[x]' : '[  ]' %><%= item.lup_inc ? '[x]' : '[  ]' %></td>
-	<td class="hidden-xs"><%= item.unit.name %></td>
+	<td class="hidden-xs">
+         <%= (link_to (raw item.user.try(:to_label_sms) + "<br>"), user_path(item.user)) if !item.user.nil? %>
+         <%= item.unit.name %>
+        </td>
         <td>
 	 <% if can? :update, Item %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -73,6 +76,8 @@
  	  <div class="row">
   	   <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
             <h3><%= item.description %></h3>
+            <dt><strong>Issued</strong>:</dt>
+            <dd><%= item.user.try(:to_label_sms) %></dd>
             <dt><strong>Make</strong>:</dt>
             <dd><%= item.try(:make) %></dd>
             <dt><strong>Model</strong>:</dt>

@@ -3,6 +3,7 @@ class SubCategoriesController < ApplicationController
 load_and_authorize_resource
   # GET /sub_categories
   # GET /sub_categories.json
+
   def index
     @sub_categories = SubCategory.all
   end
@@ -75,6 +76,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sub_category_params
-      params.require(:sub_category).permit(:acronym, :name)
+      params.require(:sub_category).permit(:acronym, :name, :category_id)
     end
 end

@@ -9,9 +9,11 @@ class User < ActiveRecord::Base
   has_many :comments
   belongs_to :department
   has_paper_trail :ignore => [:updated_at]
+  has_many :checkouts
+  has_many :cloths
 validates :department, presence: true
 def to_label_sms
-  "#{firstname} #{lastname}"
+  "#{firstname.capitalize} #{lastname.capitalize}"
 end
 def has_role?(role_sym)
   roles.any? { |r| r.name.underscore.to_sym == role_sym }

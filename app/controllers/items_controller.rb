@@ -35,18 +35,49 @@ end
  end
 
  def last_seen
-	@item = Item.where("tagid = ?", params[:search])
-        if @item.size == 1
-         @item.update_all(last_seen: Date.today)
-	 @item.update_all(tagged: true)
+	item_tag = Item.where("tagid = ?", params[:search])
+        item_ser = Item.where("serial = ?", params[:search])
+        item_ident = Identifier.where("barcode = ?", params[:search]).all
+        if item_tag.size == 1
+         @item = item_tag
+         found_by = "tagid"
+         found = true
+        elsif item_ser.size == 1
+         @item = item_ser
+         found_by = "serial"
+         found = true
+        elsif (item_ident.size == 1) && (item_ident.first.items.size == 1)
+         @item = Item.where(id: item_ident.first.items.first.id)
+         found_by = "identifier"
+         found = true
+        else
+         found = false
+         @item = item_tag
+        end
+        if found == true
+         item = @item.first
+         item.update(last_seen: Date.today)
+	 item.update(tagged: true)
+         CheckoutItem.where("item_id = ?", item.id).where(returned: false).each do |t|
+          t.update(returned: true)
+         end
+         if item.save
+	  flash.now[:notice] = "Item #{item.to_label_user} updated, found by #{found_by}"
+         end
 	 if !params[:weight].blank?
-	 @item.update_all(weight: params[:weight])
+	 item.update(weight: params[:weight])
 	 end
+
+        elsif (found == false) && (!params[:search].nil?)
+         flash.now[:error] = "Not found"
         end
  end
  def copy
         @source = Item.find(params[:id])
         @item = @source.dup
+	if @item.serial?
+	 @item.serial = nil
+        end
         render 'new'
       end
   def reset_filterrific

@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :cloths
+
+  resources :checkout_items
+
+  resources :checkouts
+
   resources :service_events
 
   resources :comment_selects
@@ -15,7 +21,9 @@ Rails.application.routes.draw do
 
   devise_for :users
 mount Judge::Engine => '/judge'
-  resources :users
+  resources :users do
+   resources :cloths
+  end
   resources :owners do
    resources :users
   end
@@ -28,7 +36,8 @@ end
 
   resources :statuses
   resources :comments
-resources :sub_categories do
+
+  resources :sub_categories do
   resources :items
         collection { post :import }
 
@@ -42,7 +51,6 @@ resources :categories do
  get 'get_sub_categories', to: "categories#get_sub_categories"
  end
 end
-
 get 'tags/:tag', to: 'items#index', as: :tag
   resources :items do
 	resources :identifiers
@@ -56,7 +64,6 @@ get 'tags/:tag', to: 'items#index', as: :tag
 	 get 'last_seen'
 	 post 'last_seen'
 	end
-#	get :last_seen, :on => :collection
 	collection do
 	 get :edit_multiple
 	 put :update_multiple
@@ -78,6 +85,7 @@ root :to => redirect('/home')
 get '/home' => 'pages#home'
 get '/about' => 'pages#about'
 get '/contact' => 'pages#contact'
+get '/newts' => 'comments#new_ts'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

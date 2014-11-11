@@ -1,11 +1,13 @@
 class CommentsController < ApplicationController
 load_and_authorize_resource
-
+require 'barby'
+require 'barby/barcode/code_128'
+require 'barby/outputter/png_outputter'
   def index
     if current_user.superuser || current_user.paid
-     @comment = Comment.where(department_id: current_user.department_id).all
-    else
      @comment = Comment.all
+    else
+     @comment = Comment.where(department_id: current_user.department_id).all
     end
   end
 
@@ -15,6 +17,16 @@ load_and_authorize_resource
 
   def new
     @comment = Comment.new
+    @barcode = Barby::Code128.new('12345')
+
+#    if !params[:item].nil?
+#     @comment.item = params[:item]
+#    end
+  end
+
+  def new_ts
+    @comment = Comment.new
+    render layout: false
   end
 
   def edit
@@ -51,6 +63,6 @@ load_and_authorize_resource
  
   private
     def comment_params
-      params.require(:comment).permit(:commenter, :body, :price, :place, :service, :inspection, :vendor_id, :item_ids,  {:item_ids => []}, :user_id, :service_event_ids, {:service_event_ids => []})
+      params.require(:comment).permit(:commenter, :body, :price, :place, :service, :inspection, :vendor_id, :item_ids,  {:item_ids => []}, :user_id, :service_event_ids, {:service_event_ids => []}, :presel)
     end
 end

@@ -43,9 +43,10 @@
     </div>
     <%= error_span(@item[:serial]) %>
   </div>
+<%= f.association :category, value_method: :id, label_method: :to_label_item, input_html: { id: 'item-select2' } %>
+<%= f.input :sub_category_id, collection: @categories, as: :grouped_select, group_method: :sub_categories, label_method: :to_label_item, input_html: { id: 'item-select3' } %>
+
 <!-- Test starts -->
-<%= f.association :category, value_method: :id, input_html: { id: 'item-select2' } %>
-<%= f.input :sub_category_id, collection: @categories, as: :grouped_select, group_method: :sub_categories, input_html: { id: 'item-select3' } %>
 <!-- Test ends -->
 
   <div class="control-group">
@@ -78,14 +79,12 @@
   <div class="control-group">
     <%= f.label :purchased_at_date, :class => 'control-label' %>
     <div class="controls">
-      <%= f.date_field :purchased_at_date, :class => 'watched' %>
+      <%= f.date_field :purchased_at_date %>
     </div>
     <%= error_span(@item[:purchased_at_date]) %>
   </div>
   <div class="control-group">
-    <div class="controls">
       <%= f.input :into_use %>
-    </div>
     <%= error_span(@item[:purchased_at_date]) %>
   </div>
 

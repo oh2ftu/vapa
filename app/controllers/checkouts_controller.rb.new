@@ -1,0 +1,61 @@
+class CheckoutsController < ApplicationController
+#load_and_authorize_resource
+
+  def index
+    if current_user.superuser || current_user.paid
+     @checkout = Checkout.all
+    else
+     @checkout = Checkout.where(department_id: current_user.department_id).all
+    end
+  end
+
+  def show
+    @checkout = Checkout.find(params[:id])
+  end
+
+  def new
+    @checkout = Checkout.new
+  end
+
+  def new_ts
+    @checkout = Checkout.new
+    render layout: false
+  end
+
+  def edit
+    @checkout = Checkout.find(params[:id])
+  end
+
+ def create
+    @checkout = Checkout.new(checkout_params)
+    @checkout.department_id = current_user.department_id
+    if @checkout.save
+      redirect_to @checkout, :flash => { :success => 'Checkout was successfully created.' }
+    else
+      render :action => 'new'
+    end
+  end
+
+
+  def update
+    @checkouts = Checkout.find(params[:id])
+
+    if @checkout.update_attributes(checkout_params)
+      redirect_to @checkout, :flash => { :success => 'Checkout was successfully updated.' }
+    else
+      render :action => 'edit'
+    end
+  end
+
+ 
+  def destroy
+    @checkout = Checkout.find(params[:id])
+    @checkout.destroy
+    redirect_to checkouts_path, :flash => { :success => 'Checkout was successfully deleted.' }
+  end
+ 
+  private
+    def checkout_params
+      params.require(:checkout).permit(:user_id, :checkout, :return, :item_ids,  {:item_ids => []}, :returned, :department_id)
+    end
+end

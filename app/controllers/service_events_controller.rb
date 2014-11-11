@@ -3,6 +3,15 @@ load_and_authorize_resource
 
   def index
      @service_event = ServiceEvent.all
+     respond_to do |format|
+      format.html
+#      format.pdf do
+#       pdf = ServiceEventPdf.new(@service_event)
+#       send_data pdf.render, filename: "ServiceEvents_#{Date.today}.pdf",
+#                 type: "application/pdf",
+#                 disposition: "inline"
+#      end
+     end
   end
 
   def show
@@ -46,6 +55,6 @@ load_and_authorize_resource
  
   private
     def service_event_params
-      params.require(:service_event).permit(:name,  {:item_ids => []}, :user_id, :service_event_ids, {:service_event_ids => []})
+      params.require(:service_event).permit(:name,  {:item_ids => []}, :user_id, :service_event_ids, {:service_event_ids => []}, :show)
     end
 end

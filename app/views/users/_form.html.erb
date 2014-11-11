@@ -8,6 +8,20 @@
   <%= error_span(@user[:firstname]) %>
   <%= f.input :lastname %>
   <%= error_span(@user[:lastname]) %>
+
+  <%= f.input :phone %>
+  <%= error_span(@user[:phone]) %>
+  <%= f.input :vacancy %>
+  <%= error_span(@user[:vacancy]) %>
+  <br>
+  <%= f.input :jacket_size %>
+  <%= error_span(@user[:jacket_size]) %>
+  <%= f.input :trouser_size %>
+  <%= error_span(@user[:trouser_size]) %>
+  <%= f.input :boot_size %>
+  <%= error_span(@user[:boot_size]) %>
+
+
  </div>
  <div class="col-xs-12 col-md-4 col-lg-3">
   <h3>Roles</h3>
@@ -26,38 +40,43 @@
  <h3>Equipment</h3>
   <div class="control-group">
    <%= f.label :jackets, :class => 'control-label' %>
-   <%= f.association :items, collection: Item.jackets.where("user_id IS ?", nil), value_method: :id,
+   <%= f.association :items, collection: Item.jackets.where(user_id: [nil, @user.id]), value_method: :id,
    label_method: :to_label_user, input_html: { id: 'user_item-select1'}, label: false %>
   </div>
   <div class="control-group">
    <%= f.label :trousers, :class => 'control-label' %>
-   <%= f.association :items, collection: Item.trousers.where("user_id IS ?", nil), value_method: :id,
+   <%= f.association :items, collection: Item.trousers.where(user_id: [nil, @user.id]), value_method: :id,
    label_method: :to_label_user, input_html: { id: 'user_item-select2'}, label: false %>
   </div>
   <div class="control-group">
    <%= f.label :boots, :class => 'control-label' %>
-   <%= f.association :items, collection: Item.boots.where("user_id IS ?", nil), value_method: :id,
+   <%= f.association :items, collection: Item.boots.where(user_id: [nil, @user.id]), value_method: :id,
    label_method: :to_label_user, input_html: { id: 'user_item-select3'}, label: false %>
   </div>
   <div class="control-group">
    <%= f.label :helmets, :class => 'control-label' %>
-   <%= f.association :items, collection: Item.helmets.where("user_id IS ?", nil), value_method: :id,
+   <%= f.association :items, collection: Item.helmets.where(user_id: [nil, @user.id]), value_method: :id,
    label_method: :to_label_user, input_html: { id: 'user_item-select4'}, label: false %>
   </div>
   <div class="control-group">
    <%= f.label :headsets, :class => 'control-label' %>
-   <%= f.association :items, collection: Item.headsets.where("user_id IS ?", nil), value_method: :id,
+   <%= f.association :items, collection: Item.headsets.where(user_id: [nil, @user.id]), value_method: :id,
    label_method: :to_label_user, input_html: { id: 'user_item-select5'}, label: false %>
   </div>
   <div class="control-group">
    <%= f.label :helmet_light, :class => 'control-label' %>
-   <%= f.association :items, collection: Item.helmet_lights.where("user_id IS ?", nil), value_method: :id,
+   <%= f.association :items, collection: Item.helmet_lights.where(user_id: [nil, @user.id]), value_method: :id,
    label_method: :to_label_user, input_html: { id: 'user_item-select7'}, label: false %>
   </div>
   <div class="control-group">
    <%= f.label :pagers, :class => 'control-label' %>
-   <%= f.association :items, collection: Item.pagers.where("user_id IS ?", nil), value_method: :id,
+   <%= f.association :items, collection: Item.pagers.where(user_id: [nil, @user.id]), value_method: :id,
    label_method: :to_label_user, input_html: { id: 'user_item-select6'}, label: false %>
+  </div>
+  <div class="control-group">
+   <%= f.label :cloths, :class => 'control-label' %>
+   <%= f.association :cloths, collection: Cloth.where(user_id: [nil, @user.id]), value_method: :id,
+   label_method: :name, input_html: { id: 'user_item-select8'}, label: false %>
   </div>
 
  </div>
