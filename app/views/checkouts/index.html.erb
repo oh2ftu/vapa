@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:user) %></th>
+      <th><%= model_class.human_attribute_name(:body) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -14,6 +15,7 @@
     <% @checkouts.reverse.each do |checkout| %>
       <tr class="<%= checkout.checkout_items.all_returned.any? ? 'danger' : 'success' %>">
         <td><%= checkout.user.to_label_sms %></td>
+        <td><%= checkout.body %></td>
         <td><%=l checkout.created_at %></td>
         <td>
          <%= link_to t('.show', :default => t("helpers.links.show")),

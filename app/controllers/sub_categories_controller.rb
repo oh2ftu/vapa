@@ -76,6 +76,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sub_category_params
-      params.require(:sub_category).permit(:acronym, :name, :category_id)
+      params.require(:sub_category).permit(:acronym, :name, :category_id, {:service_event_ids => []})
     end
 end

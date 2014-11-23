@@ -1,0 +1,40 @@
+<h2>Service events and comments</h2>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_comment_path(:presel => item.id),
+            :class => 'btn btn-primary btn-xs' %>
+
+<table class="table table-striped">
+<tr>
+<th class="hidden-xs">Who?</th>
+<th class="hidden-xs">Comment</th>
+<th class="hidden-xs">Jobs</th>
+<th class="hidden-xs hidden-sm">Place</th>
+<th class="hidden-xs hidden-sm">Price</th>
+<th>Serv.?</th>
+<th>Insp.?</th>
+<th>Date</th>
+<th></th>
+</tr>
+<% item.comments.reverse.each do |comment| %>
+<tr>
+<td class="hidden-xs"><%= comment.user.try(:to_label_sms) %></td>
+<td class="hidden-xs"><%= comment.body %></td>
+<td class="hidden-xs">
+ <% comment.service_events.each do |event| %>
+  <%= event.name %>,<br>
+ <% end %>
+</td>
+<td class="hidden-xs hidden-sm"><%= comment.vendor_id.nil? ? '--' : comment.vendor.name %></td>
+<td class="hidden-xs hidden-sm">EUR <%= comment.price %></td>
+<td><%= comment.service ? '[x]' : '[ ]' %></td>
+<td><%= comment.inspection ? '[x]' : '[ ]' %></td>
+<td><%= comment.created_at %></td>
+<td>
+           <%= link_to t('.show', :default => t("helpers.links.show")),
+                      comment_path(comment), :class => 'btn btn-default btn-xs' %>
+
+</td>
+</tr>
+<% end %>
+</table>
+

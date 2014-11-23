@@ -1,0 +1,21 @@
+  <h2>Identifiers</h2>
+  <table class="table table-striped">
+  <tr>
+  <th>Type</th>
+  <th>Barcode</th>
+  <th></th>
+  </tr>
+  <% item.identifiers.each do |identifier| %>
+  <tr>
+  <td><%= identifier.name %></td>
+  <td><%= identifier.barcode %></td>
+  <td>
+           <%= link_to t('.show', :default => t("helpers.links.show")),
+                      identifier_path(identifier), :class => 'btn btn-default btn-xs' %>
+  </tr>
+  <% end %>
+  </table>
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+            new_identifier_path(:presel => item.id),
+            :class => 'btn btn-primary btn-xs' %>
+

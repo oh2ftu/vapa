@@ -1,4 +1,4 @@
-<%= simple_form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
+<%= simple_form_for @user, :html => { :class => 'form-horizontal' }, defaults: { input_html: {class: 'form-control has-feedback' } } do |f| %>
 <div class="row">
  <div class="col-xs-12 col-md-4 col-lg-3">
   <h3>Basic info</h3>
@@ -27,12 +27,12 @@
   <h3>Roles</h3>
   <% if current_user.superuser %>
    <%= f.association :department %>
-   <%= f.input_field :superuser, as: :boolean, boolean_style: :inline %> Superuser<br>
-   <%= f.input_field :paid, as: :boolean, boolean_style: :inline %> LUP
+   <%= f.input_field :superuser, as: :boolean, boolean_style: :inline, :class => "boolean has-feedback" %> Superuser<br>
+   <%= f.input_field :paid, as: :boolean, boolean_style: :inline, :class => "boolean has-feedback" %> LUP
   <% end %>
   <%= error_span(@user[:department]) %>
   <% if can? :assign_roles, @user %>
-   <%= f.association :roles, as: :check_boxes %>
+   <%= f.association :roles, as: :check_boxes, :input_html => { :class =>  "boolean has-feedback" } %>
    <%= error_span(@user[:roles]) %>
   <% end %>
  </div>

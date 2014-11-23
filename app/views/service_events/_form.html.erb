@@ -1,10 +1,14 @@
-<%= simple_form_for @service_event, :html => { :class => 'form-horizontal' } do |f| %>
+<div class="col-xs-12 col-md-4">
+<%= simple_form_for @service_event, :html => { :class => 'form-horizontal' }, defaults: { input_html: {class: 'form-control has-feedback' } } do |f| %>
   <%= f.input :name %>
   <%= error_span(@service_event[:name]) %>
   <%= f.input :show, :as => :select, :include_blank => false %>
   <%= error_span(@service_event[:show]) %>
+  <%= f.association :sub_categories, input_html: { id: 'item-select3' }  %>
+  <%= error_span(@service_event[:sub_categories]) %>
   <br>
   <%= f.button :submit, :class => 'btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 service_events_path, :class => 'btn btn-default' %>
 <% end %>
+</div>

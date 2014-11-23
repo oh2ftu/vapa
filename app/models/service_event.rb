@@ -1,6 +1,7 @@
 class ServiceEvent < ActiveRecord::Base
- has_and_belongs_to_many :comments
-
+ has_and_belongs_to_many :comments, :dependent => :restrict_with_error
+ has_and_belongs_to_many :sub_categories, :dependent => :restrict_with_error
+ has_paper_trail :ignore => [:updated_at]
 def get_barcode(number)
 require 'barby'
 require 'barby/barcode/code_128'

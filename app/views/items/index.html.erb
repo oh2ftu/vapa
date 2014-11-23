@@ -6,15 +6,15 @@
 <%= form_for @filterrific do |f| %>
 <div class="row">
   <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-    Search (* = wildcard)<br>
+    <strong>Search (* = wildcard)</strong><br>
     <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
     <%= f.text_field(
       :search_query,
-      class: 'filterrific-periodically-observed',
+      class: 'filterrific-periodically-observed form-control',
       :autofocus => true
     ) %>
-    <br>Sorted by<br>
-    <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
+    <strong>Sorted by</strong><br>
+    <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by], {}, { :class => "form-control" }) %>
     <%# See below for the Item.options_for_sorted_by presenter method %>
   </div>
   <div class="hidden-xs hidden-sm col-md-3 col-lg-2">
@@ -31,65 +31,66 @@
   <%= f.check_box :with_lup_inc_not %>LUP not Required?<br>
   </div>
   <div class="hidden-xs hidden-sm col-md-3 col-lg-2">
-  <%= f.check_box :with_service_overdue %>Service overdue?<br>
-  <%= f.check_box :with_inspection_overdue %>Inspection overdue?<br>
-  <%= f.check_box :with_last_seen_overdue %>Last seen overdue?
+  <%= f.check_box :with_service_overdue, :class => "disabled" %>Service overdue?<br>
+  <%= f.check_box :with_inspection_overdue, :class => "disabled" %>Inspection overdue?<br>
+  <%= f.check_box :with_last_seen_overdue %>Last seen overdue?<br>
+  <%= f.check_box :with_discarded_only %>Discard?
   </div>
 
     <div class="hidden-xs col-sm-4 col-md-3 col-lg-2">
-    Category<br>
+    <strong>Category</strong><br>
     <%= f.select(
       :with_category_id,
       @filterrific.select_options[:with_category_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
     </div><!-- /span -->
     <div class="hidden-xs col-sm-4 col-md-3 col-lg-2">
-    SubCategory<br>
+    <strong>SubCategory</strong><br>
     <%= f.select(
       :with_sub_category_id,
       @filterrific.select_options[:with_sub_category_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
     </div><!-- /col -->
 
   <div class="hidden-xs hidden-sm col-md-3 col-lg-2">
-    Vendor<br>
+   <strong> Vendor</strong><br>
     <%= f.select(
       :with_vendor_id,
       @filterrific.select_options[:with_vendor_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
   </div>
 
   <div class="hidden-xs hidden-sm col-md-2 col-lg-2">
-    Owner<br>
+    <strong>Owner</strong><br>
     <%= f.select(
       :with_owner_id,
       @filterrific.select_options[:with_owner_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
   </div>
   <div class="hidden-xs col-sm-4 col-md-2 col-lg-2">
-    Status<br>
+    <strong>Status</strong><br>
     <%= f.select(
       :with_status_id,
       @filterrific.select_options[:with_status_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
   </div>
   <div class="hidden-xs col-sm-4 col-md-2 col-lg-2">
-    Unit<br>
+    <strong>Unit</strong><br>
     <%= f.select(
       :with_unit_id,
       @filterrific.select_options[:with_unit_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
   </div>
 
@@ -97,31 +98,34 @@
 <% if current_user.superuser ||current_user.paid %>
  <div class="row">
     <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
-    Department<br>
+    <strong>Department</strong><br>
     <%= f.select(
       :with_department_id,
       @filterrific.select_options[:with_department_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
     </div><!-- /span -->
     <div class="hidden-xs col-sm-6 col-md-4 col-lg-2">
-    Unit Type<br>
+    <strong>Unit Type</strong><br>
     <%= f.select(
       :with_unit_type_id,
       @filterrific.select_options[:with_unit_type_id],
       { include_blank: '- Any -' },
-      { :multiple => true, :size => 5 }
+      { :multiple => true, :size => 5, :class => "form-control" }
     ) %>
     </div><!-- /span -->
 
  </div>
 <% end %>
 <div class="row">
+<div class="col-xs-2">
     <%= link_to(
       'Reset filters',
       reset_filterrific_items_path,
+      class: "btn btn-xs btn-info",
     ) %>
+</div>
 </div>
   <%# add an automated spinner to your form when the list is refreshed %>
   <%= render_filterrific_spinner %>
@@ -131,6 +135,7 @@
   partial: 'items/list',
   locals: { items: @items }
 ) %>
+
 <br>
 <% if can? :create, Item %>
  <%= link_to t('.new', :default => t("helpers.links.new")),

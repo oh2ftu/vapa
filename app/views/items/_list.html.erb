@@ -4,6 +4,7 @@
     <%= page_entries_info items %>
   </div>
 <%= form_tag edit_multiple_items_path, method: :get do %>
+
 <div class="table-responsive">
 <table class="table table-striped table-hover table-condensed">
   <thead>
@@ -34,10 +35,10 @@
         <td class="hidden-xs hidden-sm"><%= check_box_tag "item_ids[]", item.id %></td>
         <td>
 	 <%= item.tagged ? '[x]' : '[ ]' %> <%= link_to item.tagid, item_path(item) %><br>
-        <%= raw "[x] Inspect!!<br>" if item.insp_overdue(item.id) %>
-        <%= raw "[x] Service!!<br>" if item.serv_overdue(item.id) %>
-        <%= raw "[x] DISCARD!!<br>" if item.pur_date(item.id) < item.life_time.year.ago && item.terminate_at_eol %>
-	</td>
+         <%= raw "[x] Inspect!!<br>" if item.insp_overdue(item.id) %>
+         <%= raw "[x] Service!!<br>" if item.serv_overdue(item.id) %>
+         <%= raw "[x] DISCARD!!<br>" if item.pur_date(item.id) < item.life_time.year.ago && item.terminate_at_eol %>
+ 	</td>
         <td data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.make %></td>
         <td class="hidden-xs hidden-sm" data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.model.nil? ? '--' : item.model.truncate(15) %></td>
         <td class="hidden-xs hidden-sm hidden-md" data-toggle="collapse" data-target="#<%= item.id %>" class="accordion-toggle"><%= item.weight %> kg</td>
@@ -49,24 +50,14 @@
 	 <br><%= item.department.try(:name) %>
 	<% end %>
 	</td>
-        <td class="hidden-xs hidden-sm hidden-sm"><%= item.last_seen.year %></td>
+        <td class="hidden-xs hidden-sm hidden-sm"><%= distance_of_time_in_words_to_now(item.last_seen) %> ago</td>
         <td class="hidden-xs hidden-sm"><%= item.lup ? '[x]' : '[  ]' %><%= item.lup_inc ? '[x]' : '[  ]' %></td>
 	<td class="hidden-xs">
          <%= (link_to (raw item.user.try(:to_label_sms) + "<br>"), user_path(item.user)) if !item.user.nil? %>
          <%= item.unit.name %>
         </td>
         <td>
-	 <% if can? :update, Item %>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_item_path(item), :class => 'btn btn-default btn-xs' %>
-	 <% end %>
-         <% if can? :destroy, Item %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      item_path(item),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-	<% end %>
+         <%= render partial: "actions", locals: { item: item } %>
         </td>
       </tr>
       <tr>
@@ -141,10 +132,6 @@
 	      <% end %>
 	     <% end %>
 	   </div>
-	   <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-           <%= link_to t('.show', :default => t("helpers.links.show")),
-                      item_path(item), :class => 'btn btn-default btn-xs' %>
-	   </div>
           </div>
          </div>
         </td>
@@ -156,5 +143,5 @@
 </div>
 <%= submit_tag "Edit checked" %> 
 <% end %>
-<%= will_paginate items %>
+<%= will_paginate items, renderer: BootstrapPagination::Rails %>
 </div>

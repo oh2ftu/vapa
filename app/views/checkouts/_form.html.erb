@@ -10,6 +10,10 @@
 
 
   <%= error_span(@checkout[:items]) %>
+  <%= f.input :body, input_html: { :class => 'form-control' } %>
+  <%= error_span(@checkout[:body]) %>
+
+
   <%= f.association :user, collection: User.where(department_id: current_user.department_id), value_method: :id, label_method: :to_label_sms, :autofocus => true, input_html: { id: 'user-select1'} %>
   <%= error_span(@checkout[:user]) %>
 

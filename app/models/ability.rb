@@ -6,7 +6,7 @@ class Ability
     if user.has_role? :admin
       can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier, Group, Checkout, Cloth], :department_id => user.department_id
 #      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier, Group, Checkout, CheckoutItems], :department_id => user.department_id
-      can [:create, :read, :update], [Category, SubCategory, Status]
+      can [:create, :read, :update], [Category, SubCategory, Status, ServiceEvent]
       can :assign_roles, User, :department_id => user.department_id
       can [:read, :create, :update], [Item, Unit, Vendor, Owner, Comment, Identifier], :department_id => user.department_id
       can :last_seen, Item
@@ -16,7 +16,7 @@ class Ability
     if user.has_role? :manager
 #      can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier, Group, Checkout, CheckoutItems], :department_id => user.department_id
       can :manage, [User, Item, Unit, Vendor, Owner, Comment, Identifier, Group, Checkout, Cloth], :department_id => user.department_id
-      can [:create, :read, :update], [Category, SubCategory, Status]
+      can [:create, :read, :update], [Category, SubCategory, Status, ServiceEvent]
       can :last_seen, Item
       cannot :manage, [Role, Department, UnitType]
       cannot :assign_roles, User
@@ -51,6 +51,7 @@ class Ability
     else
 #      cannot :manage, :all
     end
+     can :reset_filterrific, Item
     if user.paid?
      can :read, :all
      can [:create, :update, :read], [Department, UnitType]

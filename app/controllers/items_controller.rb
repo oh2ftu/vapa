@@ -35,51 +35,62 @@ end
  end
 
  def last_seen
-	item_tag = Item.where("tagid = ?", params[:search])
-        item_ser = Item.where("serial = ?", params[:search])
-        item_ident = Identifier.where("barcode = ?", params[:search]).all
-        if item_tag.size == 1
-         @item = item_tag
-         found_by = "tagid"
-         found = true
-        elsif item_ser.size == 1
-         @item = item_ser
-         found_by = "serial"
-         found = true
-        elsif (item_ident.size == 1) && (item_ident.first.items.size == 1)
-         @item = Item.where(id: item_ident.first.items.first.id)
-         found_by = "identifier"
-         found = true
-        else
+        if params[:search].nil?
          found = false
-         @item = item_tag
+        else
+ 	 item_tag = Item.where("tagid = ?", params[:search])
+         item_ser = Item.where("serial = ?", params[:search])
+         item_ident = Identifier.where("barcode = ?", params[:search]).all
+         if item_tag.size == 1
+          @item = item_tag
+          found_by = "tagid"
+          found_tag = true
+          found = true
+         elsif item_tag.size == 0 && item_ser.size == 1
+          @item = item_ser
+          found_by = "serial"
+          found = true
+         elsif (item_ident.size == 1) && (item_ident.first.items.size == 1)
+          @item = Item.where(id: item_ident.first.items.first.id)
+          found_by = "identifier"
+          found = true
+         else
+          found = false
+          @item = item_tag
+         end
         end
-        if found == true
-         item = @item.first
-         item.update(last_seen: Date.today)
-	 item.update(tagged: true)
-         CheckoutItem.where("item_id = ?", item.id).where(returned: false).each do |t|
-          t.update(returned: true)
-         end
-         if item.save
-	  flash.now[:notice] = "Item #{item.to_label_user} updated, found by #{found_by}"
-         end
-	 if !params[:weight].blank?
-	 item.update(weight: params[:weight])
-	 end
+         if found == true
+          item = @item.first
+          item.update(last_seen: Date.today)
+          if(found_by == "tagid")
+   	   item.update(tagged: true)
+	  end
+          CheckoutItem.where("item_id = ?", item.id).where(returned: false).each do |t|
+           t.update(returned: true)
+          end
+          if item.save
+	   flash.now[:notice] = "Item #{item.to_label_user} updated, found by #{found_by}"
+          end
+	  if !params[:weight].blank?
+	  item.update(weight: params[:weight])
+	  end
 
         elsif (found == false) && (!params[:search].nil?)
          flash.now[:error] = "Not found"
         end
  end
+
  def copy
         @source = Item.find(params[:id])
         @item = @source.dup
+        @item.tagged = false
+	@item.tagid = nil
 	if @item.serial?
 	 @item.serial = nil
         end
         render 'new'
-      end
+ end
+
   def reset_filterrific
     # Clear session persistence
     session[:filterrific_items] = nil
@@ -157,6 +168,7 @@ rescue ActiveRecord::RecordNotFound
   def new
     @item = Item.new
   end
+
 def import
   Item.import(params[:file])
   redirect_to root_url, notice: "Items imported."
@@ -167,30 +179,13 @@ end
 
   # POST /items
   # POST /items.json
-  def tagid
-   if request.xhr?
-    a = Category.find(params[:category_id])
-    b = SubCategory.find(params[:sub_category_id])
-    c = 14
-#    c = params[:purchased_at_date].strftime(%y)
-    abc = a + b + c
-    find = Item.where("tagid LIKE 'abc%'").last
-    if find.size.nil?
-     d = 01.to_s
-    else
-     d = find[-2,2].to_i +=1
-     d = d.to_s.rjust(2, '0')
-    end
-    if Item.where("tagid = abc+d").size.nil?
-    @tagid = abc + d
-    end
-   end
-  end
-
   def create
     @item = Item.new(item_params)
     @item.department_id = current_user.department_id
-
+    if item_params[:tagid].upcase.strip == "AUTO"
+     @item.tagid = Item.tagid(item_params[:category_id], item_params[:sub_category_id], item_params[:purchased_at_date])
+    end
+    @item.tagid = @item.tagid.upcase
     respond_to do |format|
       if @item.save
         format.html { redirect_to @item, notice: 'Item was successfully created.' }

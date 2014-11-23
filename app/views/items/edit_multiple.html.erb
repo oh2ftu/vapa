@@ -1,4 +1,4 @@
-<%= form_tag update_multiple_items_path, method: :put do %>
+<%= form_tag update_multiple_items_path, method: :put, class: "form-horizontal" do %>
   <ul>
   <% @items.each do |item| %>
     <li>
@@ -15,7 +15,7 @@
   <%= simple_fields_for :item do |f| %>
 <div class="row">
 <div class="col-lg-3">
-      <%= f.input :make  %>
+ <%= f.input :make, input_html: {class: 'form-control' }  %>
   <div class="control-group">
     <%= f.label :model, :class => 'control-label' %>
     <div class="controls">
@@ -24,86 +24,73 @@
   </div>
 <!-- Test starts -->
     <% if current_user.superuser %>
-     <%= f.label :department_id %><br>
-     <%= f.collection_select :department_id, Department.order("name"), :id, :name, include_blank: true %><br>
+     <%= f.input :department_id, collection: Department.order("name"), include_blank: true, input_html: {class: 'form-control' } %>
     <% end %>
-<%= f.label :category_id %><br />
-<%= f.collection_select :category_id, Category.order("name"), :id, :name, include_blank: true %>
-<%= f.input :sub_category_id, collection: @categories, as: :grouped_select, group_method: :sub_categories, include_blank: true %>
+
+<%= f.input :category_id, collection: Category.order(:name).all, include_blank: true, input_html: {class: 'form-control' } %>
+<%= f.input :sub_category_id, collection: @categories, as: :grouped_select, group_method: :sub_categories, include_blank: true, input_html: {class: 'form-control' } %>
+
 <!-- Test ends -->
 
   <div class="control-group">
-      <%= f.input :description, :class => 'form-control' %>
+      <%= f.input :description, input_html: {class: 'form-control' } %>
   </div>
   <div class="control-group">
-      <%= f.input :weight, :class => 'form-control' %>
+      <%= f.input :weight, input_html: {class: 'form-control' } %>
   </div>
   <div class="control-group">
-      <%= f.input :size, :class => 'form-control' %>
+      <%= f.input :size, input_html: {class: 'form-control' } %>
   </div>
 
 </div>
 <div class="col-lg-3">
 
-  <div class="control-group">
-	<%= f.label :owner %><br>
-      <%= f.collection_select :owner_id, Owner.order("name"), :id, :name, include_blank: true %>
-
-  </div>
-
-  <div class="control-group">
-        <%= f.label :vendor %><br>
-      <%= f.collection_select :vendor_id, Vendor.order("name"), :id, :name, include_blank: true %>
-  </div>
+      <%= f.input :owner_id, collection: Owner.where(department_id = current_user.department_id).order(:name).all, include_blank: true, input_html: {class: 'form-control' } %>
+      <%= f.input :vendor_id, collection: Vendor.order(:name).all, include_blank: true, input_html: {class: 'form-control' } %>
 
   <div class="control-group">
     <%= f.label :purchased_at_date, :class => 'control-label' %>
     <div class="controls">
-      <%= f.date_field :purchased_at_date %>
+      <%= f.date_field :purchased_at_date, :class => "form-control" %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :into_use, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.date_field :into_use %>
-    </div>
+      <%= f.input :into_use, input_html: {class: 'form-control' }  %>
   </div>
 
   <div class="control-group">
-      <%= f.input :warranty_time %>years
+      <%= f.input :warranty_time, input_html: {class: 'form-control' }  %>years
   </div>
   <div class="control-group">
-      <%= f.input :life_time %>years
-  </div>
-
-  <div class="control-group">
-      <%= f.input :price, :class => 'form-control' %>
+      <%= f.input :life_time, input_html: {class: 'form-control' }  %>years
   </div>
 
   <div class="control-group">
-      <%= f.input :service_interval, :class => 'form-control' %>
+      <%= f.input :price, input_html: {class: 'form-control' }  %>
+  </div>
+
+  <div class="control-group">
+      <%= f.input :service_interval, input_html: {class: 'form-control' }  %>
   </div>
   <div class="control-group">
-      <%= f.input :inspection_interval, :class => 'form-control' %>
+      <%= f.input :inspection_interval, input_html: {class: 'form-control' }  %>
   </div>
 
 </div>
 <div class="col-lg-3">
 
   <div class="control-group">
-      <%= f.input :memo, :class => 'form-control' %>
+      <%= f.input :memo, input_html: {class: 'form-control' }  %>
   </div>
  <div class="control-group">
-      <%= f.input :tag_list, :class => 'form-control' %>
+      <%= f.input :tag_list, input_html: {class: 'form-control' }  %>
   </div>
   <div class="control-group">
-        <%= f.label :status %><br>
-      <%= f.collection_select :status_id, Status.order("name"), :id, :name, include_blank: true %>
+      <%= f.input :status_id, collection: Status.where(department_id = current_user.department_id).order(:name).all, include_blank: true, input_html: {class: 'form-control' } %>
 
   </div>
   <div class="control-group">
-        <%= f.label :unit %><br>
-      <%= f.collection_select :unit_id, Unit.order("name"), :id, :name, include_blank: true %>
+      <%= f.input :unit_id, collection: Unit.where(department_id = current_user.department_id).order(:name).all, include_blank: true, input_html: {class: 'form-control' } %>
   </div>
   <div class="control-group">
     <%= f.label :parent_id, :class => 'control-label' %>
@@ -124,12 +111,9 @@
 
   <div class="control-group">
       <%= f.label :tagged %><br />
-      <%= f.select :tagged, [["Yes", true], ["No", false]], include_blank: true %>  </div>
+      <%= f.select :tagged, [["Yes", true], ["No", false]], include_blank: true, :class => "form-control" %>  </div>
   <div class="control-group">
-    <%= f.label :last_seen, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.date_field :last_seen %>
-    </div>
+      <%= f.input :last_seen, input_html: {class: 'form-control' }  %>
   </div>
 
 </div>

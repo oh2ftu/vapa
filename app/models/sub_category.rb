@@ -2,6 +2,7 @@ class SubCategory < ActiveRecord::Base
   has_paper_trail
   has_many :items, :dependent => :restrict_with_error
   belongs_to :category
+  has_and_belongs_to_many :service_events, :dependent => :restrict_with_error
 def to_label_item
   "#{acronym} #{name}"
 end

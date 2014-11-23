@@ -22,7 +22,7 @@
     <% if @item.tagged? %>
      <%= f.input :tagid, disabled: true, hint: 'Already tagged' %>
     <% else %>
-     <%= f.input :tagid, :autofocus => true, :validate => true %>
+     <%= f.input :tagid, :autofocus => true, :validate => true, :placeholder => "Enter AUTO for automatic creation" %>
      <%= error_span(@item[:tagid]) %>
     <% end %>
     <%= f.input :rfid %>
@@ -54,7 +54,7 @@
     <%= error_span(@item[:description]) %>
   </div>
   <div class="control-group">
-      <%= f.input :weight, :class => 'form-control' %>
+      <%= f.input :weight, :class => 'form-control', :placeholder => "Enter weight, in kg. Decimal separator \".\"" %>
 
     <%= error_span(@item[:weight]) %>
   </div>

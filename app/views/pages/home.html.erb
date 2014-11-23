@@ -5,6 +5,30 @@ Vielä ei ole mitään versionumerointia, mutta tässä alettaneen näyttää vi
 <div class="row">
  <div class="col-xs-12 col-sm-12 col-md-6 col-lg 6">
 <h2>Changelog</h2>
+<h3>2014-11-23</h3>
+- Korjattu item-shown alta linkit new commentiin ja new identifieriin<br>
+- Muutettu item-listauksen actions-linkkejä</br>
+- Muutettu item-shown näkymää<br>
+- Tuunattu näkymiä siellä-täällä<br>
+- Lisätty relaatio (many-to-many) service_events ja commenttien välille<br>
+<h3>2014-11-20</h3>
+- Korjattu bugi, jossa tyhjä haku merkkaa hassulla identifierillä olevan itemin<br>
+- Lisätty huoltotapahtumien näkymiä itemin alle<br>
+- Lisätty huoltotapahtumien listaukseen tehdyt työt<br>
+- Lisätty items-listaan "discard"-hakuoptio<br>
+<h3>2014-11-19</h3>
+- Muutettu last_seen näkymä näyttämään kuinka kauan aikaa sitten viimeksi nähty<br>
+<h3>2014-11-17</h3>
+- Korjattu bugi, jonka johdosta ei käytännössä voinut kopioida jo tägättyä itemiä.<br>
+- Inventaariohaku ei merkkaa tuotetta tägätyksi, jollei luettu viivakoodi ole tagid.<br>
+<h3>2014-11-12</h3>
+- Lisätty "AUTO" -ominaisuus tagid:lle -> luo automaattisesti TAGID:n.<br>
+- Siistitty edit_multiple -kaavaketta<br>
+- Siistitty vähän devisen nappeja<br>
+- Korjattu bugi, joka aiheutti ettei pääse vaihtamaan salasanaa<br>
+- Lisätty maileri toimintaan<br>
+<h3>2014-11-11</h3>
+- Korjattu bugi, jossa items-osiossa numeroilla hakeminen ei onnistunut<br>
 <h3>2014-11-09</h3>
 - Lisätty itemin hakutoiminto navigointivalikkoon</br>
 - Lisätty "inventory"-hakuun myös muita attribuutteja: tagid, jos ei niin serial, jos ei sitäkään niin identifiereistä, jos niitä löytyy vain yksi.<br>
@@ -54,7 +78,12 @@ Koko projekti löytyy <a href="http://github.com/oh2ftu/vapa">githubista</a>.<br
 Lisää tekijöitä tarvitaan, tässä on vielä paljon työsarkaa edessä.<br><br>
  </div>
  <div class="col-xs-12 col-sm-12 col-md-6 col-lg 6">
-  <h3>Todo:</h3>
+
+
+<h3>Todo:</h3>
+- File upload many-to-many<br>
+- Picture upload joka kuuluu tuotteelle<br>
+- Varaosien hallinta?<br>
 - Scopet hakuja varten:<br>
 -- service/inspection overdue<br>
 -- Superuserin haku by UnitType (matala prioriteetti)<br>

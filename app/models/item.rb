@@ -1,6 +1,6 @@
 class Item < ActiveRecord::Base
 validates :category, :sub_category, :owner, :description, :vendor_id, :status_id, :life_time, :warranty_time, :unit_id, :purchased_at_date, presence: true
-validates :tagid, presence: true, uniqueness: true
+validates :tagid, presence: true, uniqueness: { case_sensitive: false }
 #validates :weight, numericality: { only_integer: true, greater_than: 0 }
 belongs_to :department
 belongs_to :category
@@ -27,12 +27,35 @@ scope :helmet_lights, -> { where(sub_category_id: "33") }
 
 scope :filtered, -> { where(department_id: current_user.department_id) }
 scope :foruser, -> { where(user_id: [nil, @user.id]) }
-def to_label_user
+ def to_label_user
   "#{tagid} #{make} #{description}"
-end
+ end
 #acts_as_taggable_on :category, :sub_category, :owner
-include Tree
-has_ancestry :orphan_strategy => :rootify
+ include Tree
+ has_ancestry :orphan_strategy => :rootify
+
+ def self.tagid(cat,subcat,pur)
+    a = Category.find(cat).try(:acronym)
+    b = SubCategory.find(subcat).try(:acronym)
+    c = Date.parse(pur).strftime('%y')
+
+    tag = a + b + c
+    find = Item.where("tagid LIKE ?", "#{tag}%").order(:tagid)
+
+    if (find.size == 0)
+     d = 1
+     d = d.to_s.rjust(2, '0')
+    else
+     d = find.last.tagid[-2,2].to_i
+     d +=1
+     d = d.to_s.rjust(2, '0')
+    end
+    tagid = tag + d
+    if (Item.where("tagid = ?", tagid).size == 0)
+     @tagid = tagid
+     return @tagid
+    end
+ end
 
 self.per_page = 25
 
@@ -166,12 +189,13 @@ filterrific(
     :with_unit_type_id,
     :with_assigned_only,
     :with_unassigned_only,
+    :with_discarded_only,
     :with_tagged_only
   ]
 )
 scope :search_query, lambda { |query|
   return nil  if query.blank?
-  terms = query.downcase.split(/\s+/)
+  terms = query.to_s.downcase.split(/\s+/)
   terms = terms.map { |e|
     (e.gsub('*', '%') + '%').gsub(/%+/, '%')
   }
@@ -262,6 +286,11 @@ scope :with_last_seen_overdue, lambda {|flag|
   return nil  if 0 == flag
   where("last_seen < ?", 1.year.ago)
 }
+scope :with_discarded_only, lambda {|flag|
+  return nil  if 0 == flag
+  where(terminate_at_eol: true).where("date_add(COALESCE(into_use, purchased_at_date), INTERVAL life_time DAY) < now() ")
+}
+
 scope :with_assigned_only, lambda {|flag|
   return nil  if 0 == flag
   where.not(user_id: [nil, false])

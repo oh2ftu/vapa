@@ -14,7 +14,6 @@
  *= require_self
  */
 /*
-footer { margin-top: 50px; }
 table, td, th { vertical-align: middle; border: none; padding: 3px; }
 th { border-bottom: 1px solid #DDD; }
 */
@@ -30,7 +29,6 @@ th { border-bottom: 1px solid #DDD; }
  *= require select2-bootstrap
  *= require jquery-ui
  *= require select2
- *= require bootstrap-datepicker3
  */
 .hiddenRow {
     padding: 0 !important;

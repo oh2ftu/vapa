@@ -9,7 +9,14 @@
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @sub_category.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:category_id) %>:</strong></dt>
-  <dd><%= @sub_category.category_id %></dd>
+  <dd><%= link_to @sub_category.category.try(:name), category_path(@sub_category.category) %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:service_events) %>:</strong></dt>
+  <dd>
+   <% @sub_category.service_events.each do |sevent| %>
+    <li><%= link_to sevent.name, service_event_path(sevent) %></li>
+   <% end %>
+  </dd>
+
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

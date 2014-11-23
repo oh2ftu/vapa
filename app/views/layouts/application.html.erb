@@ -51,14 +51,16 @@
 	   <% if user_signed_in? %>
 	    <li><%= link_to "Items", items_path %></li>
           </ul>
+<% if controller_name != "registrations" %>
           <div class="visible-lg visible-md">
-           <%= form_tag({ :controller => 'items', :action => 'last_seen', :role => 'search', method: "get" }, {class: "navbar-form navbar-left" }) do %>
+           <%= form_tag({ :controller => :items, :action => 'last_seen', :role => 'search', method: "get" }, {class: "navbar-form navbar-left" }) do %>
             <div class="form-group">
-            <%= text_field_tag :search, params[:search], :value => "", :class => "form-control", :autofocus => "true" %></li>
+            <%= text_field_tag :search, params[:search], :value => "", :class => "form-control", :autofocus => "true", :placeholder => "Scan barcode" %></li>
             </div>
             <%= submit_tag "Search", :class => 'btn btn-default', :name => nil %>
            <% end %>
           </div>
+<% end %>
           <ul class="nav navbar-nav">
             <li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Global <span class="caret"></span></a>
@@ -140,10 +142,20 @@
        </div>
 
       <footer>
-        <p>&copy; Martin Koskinen 2014</p>
-        <%= link_to 'home', home_path %> |
-        <%= link_to 'about', about_path %> |
-        <%= link_to 'contact', contact_path %>
+<div class="hidden-xs hidden-sm">
+ <div class="navbar navbar-default navbar-inverse navbar-fixed-bottom">
+  <div class="container-fluid">
+   <div class="navbar-collapse collapse navbar-responsive-collapse">
+    <ul class="nav navbar-nav">
+         <li><a href="#"><p>&copy; Martin Koskinen 2014-<%= Date.today.year %></p></a></li>
+         <li><%= link_to 'home', home_path %></li>
+         <li><%= link_to 'about', about_path %></li>
+         <li><%= link_to 'contact', contact_path %></li>
+    </ul>
+   </div>
+  </div>
+ </div>
+</div>
       </footer>
 
     </div> <!-- /container -->

@@ -25,7 +25,16 @@
     <% @comments.reverse.each do |comment| %>
       <tr>
         <td><%= comment.user.try(:to_label_sms) %></td>
-        <td class="hidden-xs"><%= comment.body %></td>
+        <% if comment.service_events.size > 0 %>
+         <td data-toggle="collapse" data-target="#<%= comment.id %>" class="accordion-toggle hidden-xs">
+        <% else %>
+         <td class="hidden-xs">
+        <% end %>
+         <%= comment.body %>
+        <% if comment.service_events.size > 0 %>
+         expand (<%= comment.service_events.size %>)
+        <% end %>
+        </td>
         <td class="visible-lg"><%= comment.department.try(:name) %></td>
         <% if comment.items.size > 1 %>
          <td data-toggle="collapse" data-target="#<%= comment.id %>" class="accordion-toggle">Click to show items (<%= comment.items.size %>)</td>
@@ -59,7 +68,14 @@
       <tr>
        <td colspan="10" style="padding: 0 !important;">
          <div class="accordian-body collapse" id="<%= comment.id %>">
-          <%= render partial: "items", locals: { items: comment.items } %>
+          <div class="col-xs-6">
+           <% comment.service_events.each do |event| %>
+            <%= event.name %><br>
+           <% end %>
+          </div>
+          <div class="col-xs-6">
+           <%= render partial: "items", locals: { items: comment.items } %>
+          </div>
          </div>
        </td>
       </tr>

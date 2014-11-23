@@ -1,0 +1,43 @@
+<div class="btn-group">
+   <% if can? :read, item %>
+    <%= link_to "Show", item_path(item), :class => "btn btn-xs btn-info" %>
+   <% end %>
+
+ <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+ <span class="caret"></span>
+ <span class="sr-only">Toggle dropdown</span>
+ </button>
+ <ul class="dropdown-menu" role="menu">
+   <% if can? :update, item %>
+    <li>
+    <%= link_to "edit", edit_item_path(item) %>
+    </li>
+   <% end %>
+   <li class="divider"></li>
+   <% if can? :create, Comment %>
+    <li>
+    <%= link_to "Service", new_comment_path(:presel => item.id) %>
+    </li>
+   <% end %>
+   <% if can? :create, Checkout %>
+    <li>
+    <%= link_to "Checkout", new_checkout_path(:presel => item.id) %>
+    </li>
+   <% end %>
+
+   <% if can? :create, Identifier %>
+   <li>
+    <%= link_to "Identifier", new_identifier_path(:presel => item.id) %>
+   </li>
+   <% end %>
+
+  <li class="divider"></li>
+  <li>
+   <% if can? :destroy, Item %>
+     <%= link_to "Delete",
+                 item_path(item),
+                 :method => :delete %>
+   <% end %>
+  </li>
+ </ul>
+</div>

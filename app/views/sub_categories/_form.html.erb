@@ -1,4 +1,5 @@
-<%= form_for @sub_category, :html => { :class => "form-horizontal sub_category" } do |f| %>
+<div class="col-xs-12 col-sm-6">
+<%= simple_form_for @sub_category, :html => { :class => "form-horizontal sub_category" }, :defaults => { :input_html => {:class => "form-control" } } do |f| %>
 
     <% if @sub_category.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
@@ -15,31 +16,19 @@
     </div>
   <% end %>
 
-  <div class="control-group">
-    <%= f.label :acronym, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :acronym, :class => 'form-control' %>
-    </div>
+    <%= f.input :acronym %>
     <%= error_span(@sub_category[:acronym]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
-    </div>
+    <%= f.input :name %>
     <%= error_span(@sub_category[:name]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :category_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :category_id, :class => 'form-control' %>
-    </div>
+    <%= f.association :category %>
     <%= error_span(@sub_category[:category_id]) %>
-  </div>
-
+    <%= f.association :service_events, :input_html => { :id => "service-select1" } %>
+    <%= error_span(@sub_category[:service_events]) %>
+<br>	
 
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             sub_categories_path, :class => 'btn btn-default' %>
 
 <% end %>
+</div>

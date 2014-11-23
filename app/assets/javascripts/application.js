@@ -18,7 +18,6 @@
 //= require_tree .
 //= require chardinjs
 //= require bootstrap
-//= require bootstrap-datepicker
 //= require jquery-ui
 //= require autocomplete-rails
 //= require underscore

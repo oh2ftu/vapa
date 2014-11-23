@@ -49,6 +49,6 @@ load_and_authorize_resource
     end
 
     def checkout_params
-      params.require(:checkout).permit(:user_id, :checkout, :return, :item_ids,  {:item_ids => []}, :returned, :department_id, :presel)
+      params.require(:checkout).permit(:user_id, :checkout, :return, :item_ids,  {:item_ids => []}, :returned, :department_id, :presel, :body)
     end
 end

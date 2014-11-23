@@ -55,6 +55,6 @@ load_and_authorize_resource
  
   private
     def service_event_params
-      params.require(:service_event).permit(:name,  {:item_ids => []}, :user_id, :service_event_ids, {:service_event_ids => []}, :show)
+      params.require(:service_event).permit(:name,  {:item_ids => []}, :user_id, :service_event_ids, {:service_event_ids => []}, :show, :sub_category_ids, {:sub_category_ids => []})
     end
 end
